@@ -1,6 +1,6 @@
 __files_group(${CMAKE_CURRENT_SOURCE_DIR}/fmesh/ SRCS)
 
-set(LIBS trimesh2 clipper)
+set(LIBS trimesh2 clipper mmesh freetype)
 
 __add_real_target(fmesh dll SOURCE ${SRCS} INC ${INCS} LIB ${LIBS} DEF ${DEFS})
 
