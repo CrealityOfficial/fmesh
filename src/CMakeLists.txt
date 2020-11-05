@@ -2,7 +2,7 @@ __files_group(${CMAKE_CURRENT_SOURCE_DIR}/fmesh/ SRCS)
 
 set(LIBS trimesh2 clipper mmesh freetype)
 
-__add_real_target(fmesh dll SOURCE ${SRCS} INC ${INCS} LIB ${LIBS} DEF ${DEFS})
+__add_real_target(fmesh lib SOURCE ${SRCS} INC ${INCS} LIB ${LIBS} DEF ${DEFS})
 
 INSTALL(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/fmesh DESTINATION include/ FILES_MATCHING PATTERN "*.h")
 set_property(TARGET fmesh PROPERTY INTERFACE_INCLUDE_DIRECTORIES ${CMAKE_CURRENT_SOURCE_DIR})
