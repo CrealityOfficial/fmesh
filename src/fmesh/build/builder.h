@@ -19,8 +19,6 @@ public:
 	ClipperLib::Paths* paths();
 
 	ClipperLib::PolyTree* polyTree();
-	ClipperLib::PolyTree* extendPolyTree();
-	ClipperLib::PolyTree* oddevenPolyTree();
 
 	trimesh::TriMesh* build(const std::string& method, std::vector<std::string>& args);
 protected:
@@ -28,7 +26,6 @@ protected:
 protected:
 	std::unique_ptr<ClipperLib::Paths> m_paths;
 	std::unique_ptr<ClipperLib::PolyTree> m_polyTree;
-	std::unique_ptr<ClipperLib::PolyTree> m_extendPolyTree;
 
 	std::map<std::string, BuildImpl*> m_buildImpls;
 

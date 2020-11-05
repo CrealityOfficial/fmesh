@@ -22,11 +22,6 @@ namespace fmesh
 		float thickness;
 	};
 
-	class OutMeshParam
-	{
-		float expectLen;
-	};
-
 	class GenParam
 	{
 	public:
@@ -38,6 +33,10 @@ namespace fmesh
 		float totalH;
 		float bottomH;
 		float thickness;
+		float topH;
+
+		//steps
+		float connectDepth;
 	};
 }
 

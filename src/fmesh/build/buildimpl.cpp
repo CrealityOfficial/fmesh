@@ -119,6 +119,16 @@ Layer* BuildImpl::createOffsetLayerWithoutInsert(Layer* oLayer, offsetFunc func)
 	return layer;
 }
 
+Layer* BuildImpl::createLayerWithoutInsert_offset(double stretch, double delta, const trimesh::dvec3& offset /*= trimesh::dvec3(0.0, 0.0, 0.0)*/)
+{
+	Layer* layer = new Layer();
+	ClipperLib::PolyTree* tree = offsetAndExtend(stretch, delta);
+	layer->build(tree, offset);
+
+	delete tree;
+	return layer;
+}
+
 void BuildImpl::buildFromParallelLayers(Layer* layer1, Layer* layer2)
 {
 	RefTriangle* triRef = new RefTriangle();
@@ -255,6 +265,8 @@ trimesh::TriMesh* BuildImpl::build()
 #include "fmesh/build/waveimpl.h"
 #include "fmesh/build/bottomimpl.h"
 #include "fmesh/build/frustumimpl.h"
+#include "fmesh/build/stepsimpl.h"
+#include "fmesh/build/domeimpl.h"
 void createBuildImpls(BuildImplMap& impls)
 {
 	REGISTER("simple", SimpleImpl)
@@ -264,6 +276,8 @@ void createBuildImpls(BuildImplMap& impls)
 	REGISTER("wave", WaveImpl)
 	REGISTER("bottom", BottomImpl)
 	REGISTER("frustum", FrustumImpl)
+	REGISTER("steps", StepsImpl)
+	REGISTER("dome", DomeImpl)
 }
 
 void destroyBuildImpls(BuildImplMap& impls)

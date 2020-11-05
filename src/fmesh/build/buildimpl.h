@@ -32,6 +32,9 @@ protected:
 	Layer* createOffsetLayer(Layer* oLayer, offsetFunc func);
 	Layer* createOffsetLayerWithoutInsert(Layer* oLayer, offsetFunc func);
 
+	Layer* createLayerWithoutInsert_offset(double stretch,double delta, const trimesh::dvec3& offset = trimesh::dvec3(0.0, 0.0, 0.0));
+	ClipperLib::PolyTree* extend_offset(double delta);
+
 	void buildFromParallelLayers(Layer* layer1, Layer* layer2);
 	void buildFromParallelLayersWithFlag(Layer* layer1, Layer* layer2, bool outter);
 	RefTriangle* buildFromParalleLayersInto(Layer* layer1, Layer* layer2);

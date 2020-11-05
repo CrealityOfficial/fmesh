@@ -16,7 +16,7 @@ namespace fmesh
 
 		void load(const std::string& name);
 		ClipperLib::PolyTree* get(int charCode);
-		ClipperLib::Paths* getPath(int charCode);
+		ClipperLib::Paths* getPath(int charCode, double expectLen = 50.0);
 
 		void addSearchPath(const std::string& dir);
 	protected:

@@ -1,6 +1,8 @@
 #include "polyfiller.h"
+#include "fmesh/common/dvecutil.h"
 #include "earpolygon.h"
 
+using namespace fmesh;
 RefTriangle* fillSimplePoly(RefPoly* poly)
 {
 	EarPolygon ear;
