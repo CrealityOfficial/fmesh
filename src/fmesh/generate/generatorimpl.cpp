@@ -92,4 +92,11 @@ namespace fmesh
 	{
 		addPatch(buildFromSamePolyTree(treeLower, treeUp, flag));
 	}
+
+	void GeneratorImpl::_buildFromDiffPolyTree(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp, int flag)
+	{
+		std::vector<Patch*> patches;
+		buildFromDiffPolyTree(treeLower, treeUp, patches, flag);
+		addPatches(patches);
+	}
 }

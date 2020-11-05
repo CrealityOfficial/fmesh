@@ -1,5 +1,6 @@
 #include "triangularization.h"
 #include "mmesh/clipper/circurlar.h"
+#include "fmesh/generate/wovener.h"
 
 namespace fmesh
 {
@@ -48,6 +49,45 @@ namespace fmesh
 		mmesh::loopPolyTree(f1, treeLower);
 		buildFromPathes(pathsLower, pathsUp, *patch);
 		return patch;
+	}
+
+	void buildFromDiffPolyTree(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp,
+		std::vector<Patch*>& patches, int flag)
+	{
+		std::vector<ClipperLib::Path*> pathsUp;
+		std::vector<ClipperLib::Path*> pathsLower;
+		size_t count = 0;
+		auto f = [&count, &pathsUp, &flag](ClipperLib::PolyNode* node) {
+			if (!checkFlag(node, flag))
+				return;
+			pathsUp.push_back(&node->Contour);
+		};
+		auto f1 = [&pathsLower, &flag](ClipperLib::PolyNode* node) {
+			if (!checkFlag(node, flag))
+				return;
+			pathsLower.push_back(&node->Contour);
+		};
+
+		mmesh::loopPolyTree(f, treeUp);
+		mmesh::loopPolyTree(f1, treeLower);
+
+		size_t size = pathsUp.size();
+		if (size != pathsLower.size() && size > 0)
+			return;
+		
+		std::vector<Patch*> tmp(size);
+		for (size_t i = 0; i < size; ++i)
+			tmp.at(i) = buildFromDiffPath(pathsLower.at(i), pathsUp.at(i));
+
+		for (Patch* patch : tmp)
+			if (patch)
+				patches.push_back(patch);
+	}
+
+	Patch* buildFromDiffPath(ClipperLib::Path* pathLower, ClipperLib::Path* pathUp)
+	{
+		Wovener wovener;
+		return wovener.woven(pathLower, pathUp);
 	}
 
 	void buildFromPathes(std::vector<ClipperLib::Path*>& pathsLower, std::vector<ClipperLib::Path*>& pathsUp, Patch& patch)

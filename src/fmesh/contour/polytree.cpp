@@ -50,9 +50,15 @@ namespace fmesh
 
 	void offsetAndExtendPolyTree(ClipperLib::PolyTree& source, double offset, double delta, double z, ClipperLib::PolyTree& dest)
 	{
-		offsetPolyTree(source, offset, dest);
-		extendPolyTree(dest, delta, dest);
-
+		if (offset == 0.0)
+		{
+			extendPolyTree(source, delta, dest);
+		}
+		else
+		{
+			offsetPolyTree(source, offset, dest);
+			extendPolyTree(dest, delta, dest);
+		}
 		polyNodeFunc func = [&func, &z](ClipperLib::PolyNode* node) {
 			for (ClipperLib::IntPoint& point : node->Contour)
 				point.Z += (int)(1000.0 * z);

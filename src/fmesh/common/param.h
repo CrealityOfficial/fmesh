@@ -33,6 +33,10 @@ namespace fmesh
 		float totalH;
 		float bottomH;
 		float thickness;
+		float topH;
+
+		//steps
+		float connectDepth;
 	};
 }
 

@@ -7,6 +7,9 @@ namespace fmesh
 {
 	bool checkFlag(ClipperLib::PolyNode* node, int flag);
 	Patch* buildFromSamePolyTree(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp, int flag = 0);
+	void buildFromDiffPolyTree(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp,
+		std::vector<Patch*>& patches, int flag = 0);
+	Patch* buildFromDiffPath(ClipperLib::Path* pathLower, ClipperLib::Path* pathUp);
 	void buildFromPathes(std::vector<ClipperLib::Path*>& pathsLower, std::vector<ClipperLib::Path*>& pathsUp, Patch& patch);
 	void buildFromPath(ClipperLib::Path* pathLower, ClipperLib::Path* pathUp, Patch& patch);
 

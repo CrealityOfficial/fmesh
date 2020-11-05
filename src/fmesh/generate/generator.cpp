@@ -6,6 +6,7 @@
 #include "fmesh/generate/fillgenerator.h"
 #include "fmesh/generate/bottomgenerator.h"
 #include "fmesh/generate/frustumgenerator.h"
+#include "fmesh/generate/stepsgenerator.h"
 namespace fmesh
 {
 #define REGISTER(x, y)  { GeneratorIterator it = impls.find(x); \
@@ -22,6 +23,7 @@ namespace fmesh
 		REGISTER("fill", FillGenerator)
 		REGISTER("bottom", BottomGenerator)
 		REGISTER("frustum", FrustumGenerator)
+		REGISTER("steps", StepsGenerator)
 	}
 
 	void destroyBuildImpls(GeneratorImplMap& impls)
