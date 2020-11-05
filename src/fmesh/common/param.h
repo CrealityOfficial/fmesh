@@ -22,11 +22,6 @@ namespace fmesh
 		float thickness;
 	};
 
-	class OutMeshParam
-	{
-		float expectLen;
-	};
-
 	class GenParam
 	{
 	public:

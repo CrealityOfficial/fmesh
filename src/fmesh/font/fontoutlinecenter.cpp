@@ -2,6 +2,7 @@
 #include "fmesh/font/fontlibrary.h"
 #include "fmesh/font/outline.h"
 #include "fmesh/contour/contour.h"
+#include "fmesh/contour/path.h"
 
 #include <iostream>
 namespace fmesh
@@ -57,13 +58,14 @@ namespace fmesh
 		return fmesh::convertOutline2PolyTree(outline);
 	}
 
-	ClipperLib::Paths* FontOutlineCenter::getPath(int charCode)
+	ClipperLib::Paths* FontOutlineCenter::getPath(int charCode, double expectLen)
 	{
 		if (!font) return nullptr;
 		Outline* outline = font->get((FT_ULong)charCode);
 
 		ClipperLib::Paths* paths = new ClipperLib::Paths();
 		*paths = outline->pathes();
+		scalePath2ExpectLen(paths, expectLen);
 
 		return paths;
 	}
