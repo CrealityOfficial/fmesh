@@ -22,6 +22,14 @@ namespace fmesh
 		float thickness;
 	};
 
+	enum class EBottomMode
+	{
+		STEP,
+		WIDEN,
+		CLOSED,
+		NONE
+	};
+
 	class GenParam
 	{
 	public:
@@ -37,6 +45,13 @@ namespace fmesh
 
 		//steps
 		float connectDepth;
+
+		//bottom surface
+		EBottomMode bottomMode;
+		float bottomStepH;
+		float bottomStepW;
+		float bottomWidenW;
+
 	};
 }
 

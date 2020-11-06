@@ -11,7 +11,10 @@ namespace fmesh
 		, thickness(1.0f)
 		, connectDepth(1.0f)
 	{
-
+		bottomMode = EBottomMode::WIDEN;
+		bottomStepH = 3.0;
+		bottomStepW = 0.6;
+		bottomWidenW = 3.0;
 	}
 
 	GenParam::~GenParam()
