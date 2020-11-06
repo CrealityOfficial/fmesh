@@ -42,6 +42,17 @@ namespace fmesh
 		offset.Execute(dest, microDelta);
 	}
 
+	void offsetPaths(std::vector<ClipperLib::Path*>& source, double delta, ClipperLib::PolyTree& dest)
+	{
+		double microDelta = 1000.0 * delta;
+
+		ClipperLib::ClipperOffset offset;
+		for(ClipperLib::Path* path : source)
+			offset.AddPath(*path, ClipperLib::jtRound, ClipperLib::EndType::etClosedPolygon);
+
+		offset.Execute(dest, microDelta);
+	}
+
 	void extendPolyTree(ClipperLib::PolyTree& source, double delta, polyOffsetFunc offsetFunc, ClipperLib::PolyTree& dest)
 	{
 		extendPolyTree(source, delta, dest);
@@ -65,6 +76,26 @@ namespace fmesh
 		};
 
 		mmesh::loopPolyTree(func, &dest);
+	}
+
+	void offsetExterior(ClipperLib::PolyTree& source, double offset)
+	{
+		std::vector<ClipperLib::Path*> exterior;
+		std::vector<ClipperLib::Path*> interior;
+
+		mmesh::seperatePolyTree(&source, exterior, interior);
+		ClipperLib::PolyTree dest;
+		offsetPaths(exterior, offset, dest);
+
+		ClipperLib::Clipper clipper;
+		polyNodeFunc func = [&func, &clipper](ClipperLib::PolyNode* node) {
+			clipper.AddPath(node->Contour, ClipperLib::ptClip, true);
+		};
+		
+		mmesh::loopPolyTree(func, &dest);
+		for(ClipperLib::Path* path : interior)
+			clipper.AddPath(*path, ClipperLib::ptClip, true);
+		clipper.Execute(ClipperLib::ctUnion, source, ClipperLib::pftNonZero, ClipperLib::pftNonZero);
 	}
 
 	void polyTreeOffset(ClipperLib::PolyTree& source, polyOffsetFunc offsetFunc)

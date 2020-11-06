@@ -52,6 +52,8 @@ namespace fmesh
 		float bottomStepW;
 		float bottomWidenW;
 
+		//exterior
+		float exteriorH;
 	};
 }
 
