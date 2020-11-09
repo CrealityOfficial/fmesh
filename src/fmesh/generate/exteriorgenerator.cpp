@@ -31,23 +31,23 @@ namespace fmesh
 		offsetExterior(polys.at(0), offset);
 		offsetExterior(polys.at(1), offset);
 
-		auto f = [this, &heights](const ClipperLib::IntPoint& point)->ClipperLib::IntPoint {
-			ClipperLib::IntPoint p = point;
-			p.Z += (ClipperLib::cInt)(1000.0 * heights.at(1));
-			return p;
-		};
-
-		polyTreeOffset(polys.at(1), f);
+		//auto f = [this, &heights](const ClipperLib::IntPoint& point)->ClipperLib::IntPoint {
+		//	ClipperLib::IntPoint p = point;
+		//	p.Z += (ClipperLib::cInt)(1000.0 * heights.at(1));
+		//	return p;
+		//};
+		//
+		//polyTreeOffset(polys.at(1), f);
 
 		_fillPolyTree(&polys.at(0), true);
 		_fillPolyTree(&polys.at(3));	
 
 		ClipperLib::PolyTree out;
 		fmesh::xor2PolyTrees(&polys.at(1), &polys.at(2), out);
-
+		
 		_buildFromSamePolyTree(&polys.at(0), &polys.at(1));
 		_buildFromSamePolyTree(&polys.at(2), &polys.at(3));
-
+		
 		_buildFromDiffPolyTree_firstLayer(&out);
 	}
 }

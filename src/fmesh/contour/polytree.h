@@ -19,6 +19,7 @@ namespace fmesh
 	void polyTreeOffset(ClipperLib::PolyTree& source, polyOffsetFunc offsetFunc);
 	void offsetPolyTree(ClipperLib::PolyTree& source, double delta, ClipperLib::PolyTree& dest);
 	void offsetPaths(std::vector<ClipperLib::Path*>& source, double delta, ClipperLib::PolyTree& dest);
+	void offsetPath(ClipperLib::Path* source, double delta, ClipperLib::PolyTree& dest);
 
 	//xor
 	void xor2PolyTrees(ClipperLib::PolyTree* outer, ClipperLib::PolyTree* inner, ClipperLib::PolyTree& out);

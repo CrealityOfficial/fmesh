@@ -103,7 +103,7 @@ namespace fmesh
 	void GeneratorImpl::_buildFromDiffPolyTree_firstLayer(ClipperLib::PolyTree* treeLower, int flag /*= 0*/)
 	{
 		std::vector<Patch*> patches;
-		fillPolyNodeOutline(treeLower,patches);
+		fillComplexPolyTree(treeLower,patches);
 		addPatches(patches, flag);
 	}
 
