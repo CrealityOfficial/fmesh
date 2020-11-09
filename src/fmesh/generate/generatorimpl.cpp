@@ -99,4 +99,12 @@ namespace fmesh
 		buildFromDiffPolyTree(treeLower, treeUp, patches, flag);
 		addPatches(patches);
 	}
+	
+	void GeneratorImpl::_buildFromDiffPolyTree_firstLayer(ClipperLib::PolyTree* treeLower, int flag /*= 0*/)
+	{
+		std::vector<Patch*> patches;
+		fillPolyNodeOutline(treeLower,patches);
+		addPatches(patches, flag);
+	}
+
 }

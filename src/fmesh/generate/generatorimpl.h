@@ -33,6 +33,9 @@ namespace fmesh
 		void _fillPolyTreeInner(ClipperLib::PolyTree* tree, bool invert = false);
 		void _buildFromSamePolyTree(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp, int flag = 0);  //0 all, 1 outer, 2 inner
 		void _buildFromDiffPolyTree(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp, int flag = 0);
+
+		void _buildFromDiffPolyTree_firstLayer(ClipperLib::PolyTree* treeLower, int flag = 0);
+
 	protected:
 		ClipperLib::Paths* m_paths;
 		ClipperLib::PolyTree m_poly;

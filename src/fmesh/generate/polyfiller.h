@@ -12,6 +12,8 @@ namespace fmesh
 	void fillFirstLevelPolyNode(ClipperLib::PolyTree* polyTree, std::vector<Patch*>& patches);
 	void fillPolyNodeInner(ClipperLib::PolyTree* polyTree, std::vector<Patch*>& patches);
 
+	void fillPolyNodeOutline(ClipperLib::PolyTree* polyTree1, std::vector<Patch*>& patches);
+
 	void merge2SimplePoly(ClipperLib::PolyNode* polyNode, SimplePoly* poly, bool invert);
 	ClipperLib::cInt pathMaxX(ClipperLib::Path& path);
 }

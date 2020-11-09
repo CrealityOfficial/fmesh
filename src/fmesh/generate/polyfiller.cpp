@@ -3,6 +3,7 @@
 #include "fmesh/generate/triangularization.h"
 #include "fmesh/common/dvecutil.h"
 #include "mmesh/clipper/circurlar.h"
+#include "fmesh/contour/contour.h"
 
 namespace fmesh
 {
@@ -68,6 +69,18 @@ namespace fmesh
 		};
 
 		mmesh::loopPolyTree(func, polyTree);
+	}
+
+	void fillPolyNodeOutline(ClipperLib::PolyTree* polyTree1, std::vector<Patch*>& patches)
+	{
+		if (!polyTree1 )
+			return;
+
+		SimplePoly* newploy =new SimplePoly();
+		merge2SimplePoly(polyTree1->Childs.at(0), newploy, 0);
+		Patch* patch = fillSimplePolyTree(newploy);
+		if (patch) patches.push_back(patch);
+
 	}
 
 	ClipperLib::cInt pathMaxX(ClipperLib::Path& path)

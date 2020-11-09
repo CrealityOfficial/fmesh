@@ -1,5 +1,5 @@
 #include "exteriorgenerator.h"
-
+#include "fmesh/contour/contour.h"
 namespace fmesh
 {
 	ExteriorGenerator::ExteriorGenerator()
@@ -40,8 +40,14 @@ namespace fmesh
 		polyTreeOffset(polys.at(1), f);
 
 		_fillPolyTree(&polys.at(0), true);
-		_fillPolyTree(&polys.at(3));
-		_buildFromSamePolyTree(&polys.at(2), &polys.at(3));
+		_fillPolyTree(&polys.at(3));	
+
+		ClipperLib::PolyTree out;
+		fmesh::xor2PolyTrees(&polys.at(1), &polys.at(2), out);
+
 		_buildFromSamePolyTree(&polys.at(0), &polys.at(1));
+		_buildFromSamePolyTree(&polys.at(2), &polys.at(3));
+
+		_buildFromDiffPolyTree_firstLayer(&out);
 	}
 }
