@@ -102,9 +102,27 @@ namespace fmesh
 	{
 		std::vector<ClipperLib::Path*> exterior;
 		std::vector<ClipperLib::Path*> interior;
+		std::vector<int> iexterior;
+		std::vector<int> iinterior;
 
-		mmesh::seperatePolyTree(&source, exterior, interior);
+		mmesh::seperatePolyTree(&source, exterior, interior, iexterior, iinterior);
 
+		if(iexterior.size()>0 &&
+			iexterior.size() == iinterior.size())
+		{
+			for (size_t i = 0; i < iexterior.size(); ++i)
+			{
+				ClipperLib::Path* tmp = exterior.at(iexterior[i]-1);
+				exterior.at(iexterior[i] - 1) = interior.at(iinterior[i]-1);
+				
+				size_t size = tmp->size();
+				ClipperLib::Path* invertPath=new ClipperLib::Path(size);
+				for (size_t i = 0; i < size; ++i)
+					invertPath->at(i) = tmp->at(size - i - 1);
+				interior.at(iinterior[i] - 1) = invertPath;
+			}
+		}
+	
 		size_t outSize = exterior.size();
 		std::vector<ClipperLib::PolyTree> outTrees;
 		if (outSize > 0)
@@ -112,6 +130,14 @@ namespace fmesh
 			outTrees.resize(outSize);
 			for (size_t i = 0; i < outSize; ++i)
 			{
+				for (size_t j = 0; j < iinterior.size(); j++)
+				{
+					if (i == iinterior[j]-1)
+					{
+						offset = -offset;
+						break;
+					}
+				}
 				offsetPath(exterior.at(i), offset, outTrees.at(i));
 			}
 		}
@@ -127,6 +153,73 @@ namespace fmesh
 		}
 
 		for(ClipperLib::Path* path : interior)
+			clipper.AddPath(*path, ClipperLib::ptClip, true);
+		clipper.Execute(ClipperLib::ctUnion, source, ClipperLib::pftNonZero, ClipperLib::pftNonZero);
+	}
+
+	void offsetExteriorInner(ClipperLib::PolyTree& source, double offset)
+	{
+		std::vector<ClipperLib::Path*> exterior;
+		std::vector<ClipperLib::Path*> interior;
+		std::vector<int> iexterior;
+		std::vector<int> iinterior;
+
+		mmesh::seperatePolyTree(&source, exterior, interior, iexterior, iinterior);
+
+		if (iexterior.size() > 0 &&
+			iexterior.size() == iinterior.size())
+		{
+			for (size_t i = 0; i < iexterior.size(); ++i)
+			{
+				ClipperLib::Path* tmp = interior.at(iinterior[i] - 1);
+				interior.at(iinterior[i] - 1) = exterior.at(iexterior[i] - 1);
+
+				size_t size = tmp->size();
+				ClipperLib::Path* invertPath = new ClipperLib::Path(size);
+				for (size_t i = 0; i < size; ++i)
+					invertPath->at(i) = tmp->at(size - i - 1);
+				exterior.at(iexterior[i] - 1) = invertPath;
+			}
+		}
+		
+		size_t outSize = interior.size();
+		std::vector<ClipperLib::PolyTree> inTrees;
+		if (outSize > 0)
+		{
+			inTrees.resize(outSize);
+			for (size_t i = 0; i < outSize; ++i)
+			{
+				for (size_t j = 0; j < iexterior.size(); j++)
+				{
+					if (i == iexterior[j] - 1)
+					{
+						offset = -offset;
+						break;
+					}
+				}
+				offsetPath(interior.at(i), offset, inTrees.at(i));
+			}
+		}
+
+		ClipperLib::Clipper clipper;
+		polyNodeFunc func = [&func, &clipper](ClipperLib::PolyNode* node) {
+
+			size_t size = node->Contour.size();
+			if (size > 0)
+			{
+				ClipperLib::Path invertPath(size);
+				for (size_t i = 0; i < size; ++i)
+					invertPath.at(i) = node->Contour.at(size - i - 1);
+				clipper.AddPath(invertPath, ClipperLib::ptClip, true);
+			}
+		};
+
+		for (size_t i = 0; i < outSize; ++i)
+		{
+			mmesh::loopPolyTree(func, &inTrees.at(i));
+		}
+
+		for (ClipperLib::Path* path : exterior)
 			clipper.AddPath(*path, ClipperLib::ptClip, true);
 		clipper.Execute(ClipperLib::ctUnion, source, ClipperLib::pftNonZero, ClipperLib::pftNonZero);
 	}

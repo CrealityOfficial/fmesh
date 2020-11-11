@@ -10,9 +10,9 @@ namespace fmesh
 		, topH(3.0f)
 		, thickness(1.0f)
 		, connectDepth(1.0f)
-		, exteriorH(3.87f)
+		, exteriorH(3.0f)
 	{
-		bottomMode = EBottomMode::WIDEN;
+		bottomMode = EBottomMode::NONE;
 		bottomStepH = 3.0;
 		bottomStepW = 0.6;
 		bottomWidenW = 3.0;

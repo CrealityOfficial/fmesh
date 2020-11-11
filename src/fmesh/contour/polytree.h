@@ -14,6 +14,7 @@ namespace fmesh
 	void extendPolyTree(ClipperLib::PolyTree& source, double delta, polyOffsetFunc offsetFunc, ClipperLib::PolyTree& dest);
 	void offsetAndExtendPolyTree(ClipperLib::PolyTree& source, double offset, double delta, double z, ClipperLib::PolyTree& dest);
 	void offsetExterior(ClipperLib::PolyTree& source, double offset);
+	void offsetExteriorInner(ClipperLib::PolyTree& source, double offset);
 
 	//offset
 	void polyTreeOffset(ClipperLib::PolyTree& source, polyOffsetFunc offsetFunc);
