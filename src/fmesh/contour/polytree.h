@@ -24,6 +24,15 @@ namespace fmesh
 
 	//xor
 	void xor2PolyTrees(ClipperLib::PolyTree* outer, ClipperLib::PolyTree* inner, ClipperLib::PolyTree& out);
+
+	//seperate
+	struct PolyPair
+	{
+		bool clockwise;
+		ClipperLib::PolyNode* outer;
+		std::vector<ClipperLib::PolyNode*> inner;
+	};
+	void seperate1423(ClipperLib::PolyTree* polyTree, std::vector<PolyPair*>& polyPairs);
 }
 
 #endif // FMESH_POLYTREE_1604475054469_H

@@ -1,6 +1,7 @@
 #include "generatorimpl.h"
 #include "fmesh/contour/polytree.h"
 #include "fmesh/generate/trimeshbuilder.h"
+#include "fmesh/roof/roof.h"
 
 namespace fmesh
 {
@@ -107,4 +108,10 @@ namespace fmesh
 		addPatches(patches, flag);
 	}
 
+	void GeneratorImpl::_buildRoof(ClipperLib::PolyTree* polyTree, double roofHeight, double thickness)
+	{
+		std::vector<Patch*> patches;
+		buildRoofs(polyTree, patches, roofHeight, thickness);
+		addPatches(patches);
+	}
 }
