@@ -16,6 +16,9 @@ namespace fmesh
 	void offsetExterior(ClipperLib::PolyTree& source, double offset);
 	void offsetExteriorInner(ClipperLib::PolyTree& source, double offset);
 
+	//Polygon skeleton
+	void skeletonPolyTree(ClipperLib::PolyTree& source, double z,ClipperLib::PolyTree& dest);
+
 	//offset
 	void polyTreeOffset(ClipperLib::PolyTree& source, polyOffsetFunc offsetFunc);
 	void offsetPolyTree(ClipperLib::PolyTree& source, double delta, ClipperLib::PolyTree& dest);

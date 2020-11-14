@@ -54,6 +54,9 @@ namespace fmesh
 
 		//exterior
 		float exteriorH;
+
+		//drum
+		float drumH;
 	};
 }
 
