@@ -15,6 +15,10 @@ typedef CGAL::Polygon_with_holes_2<K> Polygon_with_holes;
 typedef CGAL::Straight_skeleton_2<K>  Straight_skeleton;
 typedef Straight_skeleton::Halfedge_const_iterator Halfedge_const_iterator;
 typedef Straight_skeleton::Halfedge_const_handle   Halfedge_const_handle;
+typedef Straight_skeleton::Vertex_const_iterator Vertex_const_iterator;
+typedef Straight_skeleton::Vertex_const_handle Vertex_const_handle;
+typedef Straight_skeleton::Face_const_iterator Face_const_iterator;
+typedef Straight_skeleton::Face_const_handle Face_const_handle;
 
 typedef boost::shared_ptr<Straight_skeleton> Straight_skeleton_ptr;
 
@@ -134,7 +138,8 @@ namespace fmesh
         return p;
     }
 
-    void roofLine(ClipperLib::PolyTree* polyTree, ClipperLib::PolyTree* roof)
+    void roofLine(ClipperLib::PolyTree* polyTree,
+        ClipperLib::PolyTree* roof, ClipperLib::PolyTree* roofPoint)
     {
         std::vector<PolyPair*> pairs;
         seperate1423(polyTree, pairs);
@@ -161,6 +166,13 @@ namespace fmesh
                         roof->Contour.push_back(cgal_to_point(h->vertex()->point()));
                         roof->Contour.push_back(cgal_to_point(h->opposite()->vertex()->point()));
                     }
+                }
+
+                for (Vertex_const_iterator vit = aSkeleton->vertices_begin();
+                    vit != aSkeleton->vertices_end(); ++vit)
+                {
+                    Vertex_const_handle h = vit;
+                    roofPoint->Contour.push_back(cgal_to_point(h->point()));
                 }
             }
             else
