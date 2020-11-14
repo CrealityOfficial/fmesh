@@ -1,5 +1,6 @@
 #include "polytree.h"
 #include "mmesh/clipper/circurlar.h"
+#include "fmesh/skeleton/tridegline.h"
 
 namespace fmesh
 {
@@ -222,6 +223,29 @@ namespace fmesh
 		for (ClipperLib::Path* path : exterior)
 			clipper.AddPath(*path, ClipperLib::ptClip, true);
 		clipper.Execute(ClipperLib::ctUnion, source, ClipperLib::pftNonZero, ClipperLib::pftNonZero);
+	}
+
+	void skeletonPolyTree(ClipperLib::PolyTree& source, double z, ClipperLib::PolyTree& dest)
+	{
+		std::vector<ClipperLib::Path*> path;
+		polyNodeFunc func1 = [&func1, &path](ClipperLib::PolyNode* node) {
+			path.push_back(&node->Contour);
+			for (ClipperLib::PolyNode* n : node->Childs)
+				func1(n);
+		};
+		func1(&source);
+
+		TRidegLine tride;
+		ClipperLib::Path* trideg = tride.excute(path[path.size()-1], z);
+		ClipperLib::Paths tris;
+		tris.push_back(*trideg);
+
+		fmesh::convertPaths2PolyTree(&tris, dest);
+
+		//dest=*polyTree;
+
+		//delete polyTree;
+		//return nullptr;
 	}
 
 	void polyTreeOffset(ClipperLib::PolyTree& source, polyOffsetFunc offsetFunc)
