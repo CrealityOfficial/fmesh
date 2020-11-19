@@ -9,7 +9,7 @@ namespace fmesh
 	void buildRoofs(ClipperLib::PolyTree* polyTree, std::vector<Patch*>& patches, double roofHeight, double thickness);
 
 	void roofLine(ClipperLib::PolyTree* polyTree,
-		ClipperLib::PolyTree* roof, ClipperLib::PolyTree* roofPoint);
+		ClipperLib::PolyTree* roof, ClipperLib::PolyTree* roofPoint, ClipperLib::Paths* paths=nullptr);
 }
 
 #endif // FMESH_ROOF_1605318972342_H

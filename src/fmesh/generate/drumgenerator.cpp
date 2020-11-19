@@ -1,5 +1,6 @@
 #include "drumgenerator.h"
 #include "fmesh/contour/contour.h"
+#include "fmesh/roof/roof.h"
 
 namespace fmesh
 {
@@ -33,58 +34,58 @@ namespace fmesh
 			offsetAndExtendPolyTree(m_poly, -offset, thickness, delta, polys.at(i));
 		}
 
-		skeletonPolyTree(m_poly, heights.at(1) + (drumHCount - 1) * 0.5, polys.at(1 + drumHCount));
-
-// 		ClipperLib::Paths* paths = m_fontCenter->getPath(charCode);
-// 		m_builder->setPaths(paths);
-// 		ClipperLib::PolyTree* poly = m_builder->polyTree();
-// 		updatePolyTree(poly);
-// 		home(polyTree2Box(poly));
+		std::vector<Patch*> patches;
+		skeletonPolyTree(polys.at(drumHCount), heights.at(1) + (drumHCount - 1) * 0.5, patches);
+		//sort(patches);
+		addPatches(patches);
 
 		_fillPolyTree(&polys.at(0), true);
-		_fillPolyTree(&polys.at( drumHCount+1));
+		//_fillPolyTree(&polys.at( drumHCount+1));
 
 		_buildFromSamePolyTree(&polys.at(0), &polys.at(1));
-		for (size_t i=1;i < polys.size()-1;i++)
+		for (size_t i=1;i < polys.size()-2;i++)
 		{
 			_buildFromDiffPolyTree(&polys.at(i), &polys.at(i+1));
 		}
+	}
 
+	void DrumGenerator::sort(std::vector<Patch*>& patches)
+	{
+		for (size_t num=0;num< patches.size();num++)
+		{
+			for (int i = 0; i < patches.at(num)->size() - 1; i++) {
+				//第i趟比较
+				for (int j = 0; j < patches.at(num)->size() - i - 1; j++) {
+					//开始进行比较，如果arr[j]比arr[j+1]的值大，那就交换位置
+					if (!cmp2(patches.at(num)->at(j), patches.at(num)->at(j+1))){
+						trimesh::vec3 temp = patches.at(num)->at(j);
+						patches.at(num)->at(j) = patches.at(num)->at(j+1);
+						patches.at(num)->at(j+1) = temp;
+					}
+				}
+			}
+		}
+	}
 
-// 		double thickness = m_param.thickness / 2.0f;
-// 		double offset = thickness;
-// 		std::vector<float> heights(4);
-// 		heights.at(0) = 0.0f;
-// 		heights.at(1) = m_param.exteriorH;
-// 		heights.at(2) = m_param.exteriorH;
-// 		heights.at(3) = m_param.totalH;
-// 
-// 		std::vector<ClipperLib::PolyTree> polys(4);
-// 
-// 		offsetAndExtendPolyTree(m_poly, 0.0, thickness, heights.at(0), polys.at(0));
-// 		offsetAndExtendPolyTree(m_poly, 0.0, thickness, heights.at(1), polys.at(1));
-// 		offsetAndExtendPolyTree(m_poly, 0.0, thickness, heights.at(2), polys.at(2));
-// 		offsetAndExtendPolyTree(m_poly, 0.0, thickness, heights.at(3), polys.at(3));
-// 		offsetExterior(polys.at(0), offset);
-// 		offsetExterior(polys.at(1), offset);
-// 
-// 		//auto f = [this, &heights](const ClipperLib::IntPoint& point)->ClipperLib::IntPoint {
-// 		//	ClipperLib::IntPoint p = point;
-// 		//	p.Z += (ClipperLib::cInt)(1000.0 * heights.at(1));
-// 		//	return p;
-// 		//};
-// 		//
-// 		//polyTreeOffset(polys.at(1), f);
-// 
-// 		_fillPolyTree(&polys.at(0), true);
-// 		_fillPolyTree(&polys.at(3));
-// 
-// 		ClipperLib::PolyTree out;
-// 		fmesh::xor2PolyTrees(&polys.at(1), &polys.at(2), out);
-// 
-// 		_buildFromSamePolyTree(&polys.at(0), &polys.at(1));
-// 		_buildFromSamePolyTree(&polys.at(2), &polys.at(3));
-// 
-// 		_buildFromDiffPolyTree_firstLayer(&out);
+	float DrumGenerator::cross(float x1, float y1, float x2, float y2)//计算叉积
+	{
+		return (x1 * y2 - x2 * y1);
+	}
+
+	float DrumGenerator::compare(trimesh::vec3 a, trimesh::vec3 b, trimesh::vec3 c)
+	{
+		float f = cross((b.x - a.x), (b.y - a.y), (c.x - a.x), (c.y - a.y));
+		return f;
+	}
+
+	bool DrumGenerator::cmp2(trimesh::vec3 a, trimesh::vec3 b)
+	{
+		trimesh::vec3 c;//原点
+		c.x = 0;
+		c.y = 0;
+		if (compare(c, a, b) == 0)//计算叉积，函数在上面有介绍，如果叉积相等，按照X从小到大排序
+			return a.x < b.x;
+		else 
+			return compare(c, a, b) > 0;
 	}
 }

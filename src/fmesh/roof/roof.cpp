@@ -139,41 +139,120 @@ namespace fmesh
     }
 
     void roofLine(ClipperLib::PolyTree* polyTree,
-        ClipperLib::PolyTree* roof, ClipperLib::PolyTree* roofPoint)
+        ClipperLib::PolyTree* roof, ClipperLib::PolyTree* roofPoint, ClipperLib::Paths* paths)
     {
         std::vector<PolyPair*> pairs;
         seperate1423(polyTree, pairs);
 
         for (PolyPair* pair : pairs)
         {
+            if (pair->clockwise) //outer
+            {
+                continue;
+            }
+
             Polygon_with_holes input;
             build_polygon_with_holes(&input, pair);
             if (!test_simple_polygon(input))
                 continue;
 
+            ClipperLib::PolyTree opposite;
             Straight_skeleton_ptr aSkeleton = CGAL::create_interior_straight_skeleton_2(input);
             if (aSkeleton)
             {
+                std::vector<int> vct;
+                std::vector<int> vctopposite;              
+
                 for (Halfedge_const_iterator hit = aSkeleton->halfedges_begin();
                     hit != aSkeleton->halfedges_end(); ++hit)
                 {
                     Halfedge_const_handle h = hit;
-
-                    if (h->is_bisector() && ((h->id() % 2) == 0) 
-                        && !h->has_infinite_time()
-                        && !h->opposite()->has_infinite_time())
+                    int idege = aSkeleton->size_of_halfedges();
+//                     if (/*h->is_bisector() &&*/ /*((h->id() % 2) == 0*/) 
+// //                         && !h->has_infinite_time()
+// //                         && !h->opposite()->has_infinite_time()
+//                         )
                     {
-                        roof->Contour.push_back(cgal_to_point(h->vertex()->point()));
-                        roof->Contour.push_back(cgal_to_point(h->opposite()->vertex()->point()));
+                        if (h->is_border() && (h->id() % 2)!=0)
+                            continue;
+
+						int i = h->face()->id();				
+
+						ClipperLib::IntPoint n = cgal_to_point(h->opposite()->vertex()->point());  
+						ClipperLib::IntPoint m = cgal_to_point(h->vertex()->point());
+
+                        if ((h->id() % 2) == 0)
+                        {
+							if (h->is_inner_bisector())
+							{
+								n.Z = 5000;
+							}
+							if (h->is_bisector())
+							{
+								m.Z = 5000;
+							}
+                            vct.push_back(i);
+                            vct.push_back(i);
+							roof->Contour.push_back(n);
+							roof->Contour.push_back(m);
+                        } 
+                        else
+                        {
+							if (h->is_inner_bisector())
+							{
+								m.Z = 5000;
+							}
+							if (h->is_bisector())
+							{
+								n.Z = 5000;
+							}
+
+                            vctopposite.push_back(i);
+                            vctopposite.push_back(i);
+                            opposite.Contour.push_back(m);
+                            opposite.Contour.push_back(n);
+                        }
                     }
                 }
 
-                for (Vertex_const_iterator vit = aSkeleton->vertices_begin();
-                    vit != aSkeleton->vertices_end(); ++vit)
+                paths->resize(aSkeleton->size_of_faces());
+                for (size_t i = 0; i < vct.size(); i++)
                 {
-                    Vertex_const_handle h = vit;
-                    roofPoint->Contour.push_back(cgal_to_point(h->point()));
+ 					bool isExit = false;
+  					for (size_t j = 0; j < paths->at(vct.at(i)).size(); j++)
+  					{
+  						if (paths->at(vct.at(i)).at(j).X == roof->Contour.at(i).X
+  							&& paths->at(vct.at(i)).at(j).Y == roof->Contour.at(i).Y
+  							&& paths->at(vct.at(i)).at(j).Z == roof->Contour.at(i).Z)
+  						{
+  							isExit = true;
+  							break;
+  						}
+  					}
+  					if (!isExit)
+  					{
+  						paths->at(vct.at(i)).push_back(roof->Contour.at(i));
+  					}
                 }
+
+				for (int i = vctopposite.size()- 1; i >=0; i--)
+ 				{
+					bool isExit = false;
+					for (size_t j = 0; j < paths->at(vctopposite.at(i)).size(); j++)
+					{
+						if (paths->at(vctopposite.at(i)).at(j).X == opposite.Contour.at(i).X
+							&& paths->at(vctopposite.at(i)).at(j).Y == opposite.Contour.at(i).Y
+							&& paths->at(vctopposite.at(i)).at(j).Z == opposite.Contour.at(i).Z)
+						{
+							isExit = true;
+							break;
+						}
+					}
+					if (!isExit)
+					{
+						paths->at(vctopposite.at(i)).push_back(opposite.Contour.at(i));
+					}
+				}                        
             }
             else
             {

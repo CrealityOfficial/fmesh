@@ -2,6 +2,7 @@
 #define FMESH_POLYTREE_1604475054469_H
 #include <clipper/clipper.hpp>
 #include "trimesh2/Vec.h"
+#include "fmesh/generate/patch.h"
 
 namespace fmesh
 {
@@ -17,7 +18,7 @@ namespace fmesh
 	void offsetExteriorInner(ClipperLib::PolyTree& source, double offset);
 
 	//Polygon skeleton
-	void skeletonPolyTree(ClipperLib::PolyTree& source, double z,ClipperLib::PolyTree& dest);
+	void skeletonPolyTree(ClipperLib::PolyTree& source, double z, std::vector<Patch*>& patches);
 
 	//offset
 	void polyTreeOffset(ClipperLib::PolyTree& source, polyOffsetFunc offsetFunc);

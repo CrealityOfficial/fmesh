@@ -1,6 +1,9 @@
 #include "polytree.h"
 #include "mmesh/clipper/circurlar.h"
 #include "fmesh/skeleton/tridegline.h"
+#include "fmesh/roof/roof.h"
+
+#include "fmesh/generate/polyfiller.h"
 
 namespace fmesh
 {
@@ -17,7 +20,7 @@ namespace fmesh
 
 		ClipperLib::ClipperOffset offset;
 		polyNodeFunc func = [&func, &offset](ClipperLib::PolyNode* node) {
-			offset.AddPath(node->Contour, ClipperLib::jtRound, ClipperLib::EndType::etClosedLine);
+			offset.AddPath(node->Contour, ClipperLib::jtSquare, ClipperLib::EndType::etClosedLine);
 
 			for (ClipperLib::PolyNode* n : node->Childs)
 				func(n);
@@ -33,7 +36,7 @@ namespace fmesh
 
 		ClipperLib::ClipperOffset offset;
 		polyNodeFunc func = [&func, &offset](ClipperLib::PolyNode* node) {
-			offset.AddPath(node->Contour, ClipperLib::jtRound, ClipperLib::EndType::etClosedPolygon);
+			offset.AddPath(node->Contour, ClipperLib::jtSquare, ClipperLib::EndType::etClosedPolygon);
 
 			for (ClipperLib::PolyNode* n : node->Childs)
 				func(n);
@@ -225,27 +228,31 @@ namespace fmesh
 		clipper.Execute(ClipperLib::ctUnion, source, ClipperLib::pftNonZero, ClipperLib::pftNonZero);
 	}
 
-	void skeletonPolyTree(ClipperLib::PolyTree& source, double z, ClipperLib::PolyTree& dest)
+	void skeletonPolyTree(ClipperLib::PolyTree& source, double z, std::vector<Patch*>& patches)
 	{
-		std::vector<ClipperLib::Path*> path;
-		polyNodeFunc func1 = [&func1, &path](ClipperLib::PolyNode* node) {
-			path.push_back(&node->Contour);
-			for (ClipperLib::PolyNode* n : node->Childs)
-				func1(n);
-		};
-		func1(&source);
+		ClipperLib::PolyTree roofLine;
+		ClipperLib::PolyTree roofPoint;
+		ClipperLib::Paths* paths = new ClipperLib::Paths;
+		fmesh::roofLine(&source, &roofLine, &roofPoint, paths);
 
-		TRidegLine tride;
-		ClipperLib::Path* trideg = tride.excute(path[path.size()-1], z);
-		ClipperLib::Paths tris;
-		tris.push_back(*trideg);
-
-		fmesh::convertPaths2PolyTree(&tris, dest);
-
-		//dest=*polyTree;
-
-		//delete polyTree;
-		//return nullptr;
+		for (size_t i=0;i< paths->size();i++)
+		{
+			ClipperLib::PolyNode pn;
+			pn.Contour = paths->at(i);
+			for (size_t i=0;i< pn.Contour.size();i++)
+			{				
+				if (pn.Contour.at(i).Z)
+				{
+					pn.Contour.at(i).Z = z*1000 + 5000;
+				}
+				else
+				{
+					pn.Contour.at(i).Z = z * 1000;
+				}
+			}
+			Patch* tpath = fillOneLevelPolyNode(&pn);
+			patches.push_back(tpath);
+		}
 	}
 
 	void polyTreeOffset(ClipperLib::PolyTree& source, polyOffsetFunc offsetFunc)
