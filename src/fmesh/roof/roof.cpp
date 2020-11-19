@@ -166,7 +166,7 @@ namespace fmesh
                 for (Halfedge_const_iterator hit = aSkeleton->halfedges_begin();
                     hit != aSkeleton->halfedges_end(); ++hit)
                 {
-                    Halfedge_const_handle h = hit;
+                    Halfedge_const_handle h = hit;                   
                     int idege = aSkeleton->size_of_halfedges();
 //                     if (/*h->is_bisector() &&*/ /*((h->id() % 2) == 0*/) 
 // //                         && !h->has_infinite_time()
