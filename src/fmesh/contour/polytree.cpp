@@ -233,7 +233,7 @@ namespace fmesh
 		ClipperLib::PolyTree roofLine;
 		ClipperLib::PolyTree roofPoint;
 		ClipperLib::Paths* paths = new ClipperLib::Paths;
-		fmesh::roofLine(&source, &roofLine, &roofPoint, paths);
+		fmesh::roofLine(&source, &roofLine, &roofPoint, nullptr);
 
 		for (size_t i=0;i< paths->size();i++)
 		{

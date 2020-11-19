@@ -138,8 +138,57 @@ namespace fmesh
         return p;
     }
 
+    void traitSkeletonPoints(ClipperLib::PolyTree* roofPoint, Straight_skeleton_ptr skeleton)
+    {
+        for (Vertex_const_iterator vit = skeleton->vertices_begin();
+            vit != skeleton->vertices_end(); ++vit)
+        {
+            Vertex_const_handle h = vit;
+            if(h->is_contour() || h->is_skeleton())
+                roofPoint->Contour.push_back(cgal_to_point(h->point()));
+        }
+    }
+
+    void traitSkeletonLine(ClipperLib::PolyTree* roofLine, Straight_skeleton_ptr skeleton)
+    {
+        for (Halfedge_const_iterator hit = skeleton->halfedges_begin();
+            hit != skeleton->halfedges_end(); ++hit)
+        {
+            Halfedge_const_handle h = hit;
+            
+            roofLine->Contour.push_back(cgal_to_point(h->vertex()->point()));
+            roofLine->Contour.push_back(cgal_to_point(h->opposite()->vertex()->point()));
+        }
+    }
+
+    void traitSkeletonFace(ClipperLib::Paths* roofFace, Straight_skeleton_ptr skeleton)
+    {
+        size_t faceSize = skeleton->size_of_faces();
+        if (faceSize > 0)
+            roofFace->resize(faceSize);
+
+        int index = 0;
+        for (Face_const_iterator fit = skeleton->faces_begin();
+            fit != skeleton->faces_end(); ++fit)
+        {
+            ClipperLib::Path& path = roofFace->at(index);
+            if (index == 5)
+            {
+                Halfedge_const_handle he = fit->halfedge();
+                Halfedge_const_handle h = he;
+                do
+                {
+                    path.push_back(cgal_to_point(h->vertex()->point()));
+                    h = h->next();
+                } while (h != he);
+            }
+
+            ++index;
+        }
+    }
+
     void roofLine(ClipperLib::PolyTree* polyTree,
-        ClipperLib::PolyTree* roof, ClipperLib::PolyTree* roofPoint, ClipperLib::Paths* paths)
+        ClipperLib::PolyTree* roof, ClipperLib::PolyTree* roofPoint, ClipperLib::Paths* roofFace)
     {
         std::vector<PolyPair*> pairs;
         seperate1423(polyTree, pairs);
@@ -160,99 +209,113 @@ namespace fmesh
             Straight_skeleton_ptr aSkeleton = CGAL::create_interior_straight_skeleton_2(input);
             if (aSkeleton)
             {
-                std::vector<int> vct;
-                std::vector<int> vctopposite;              
-
-                for (Halfedge_const_iterator hit = aSkeleton->halfedges_begin();
-                    hit != aSkeleton->halfedges_end(); ++hit)
+                if (roofPoint)
                 {
-                    Halfedge_const_handle h = hit;
-                    int idege = aSkeleton->size_of_halfedges();
-//                     if (/*h->is_bisector() &&*/ /*((h->id() % 2) == 0*/) 
-// //                         && !h->has_infinite_time()
-// //                         && !h->opposite()->has_infinite_time()
-//                         )
-                    {
-                        if (h->is_border() && (h->id() % 2)!=0)
-                            continue;
-
-						int i = h->face()->id();				
-
-						ClipperLib::IntPoint n = cgal_to_point(h->opposite()->vertex()->point());  
-						ClipperLib::IntPoint m = cgal_to_point(h->vertex()->point());
-
-                        if ((h->id() % 2) == 0)
-                        {
-							if (h->is_inner_bisector())
-							{
-								n.Z = 5000;
-							}
-							if (h->is_bisector())
-							{
-								m.Z = 5000;
-							}
-                            vct.push_back(i);
-                            vct.push_back(i);
-							roof->Contour.push_back(n);
-							roof->Contour.push_back(m);
-                        } 
-                        else
-                        {
-							if (h->is_inner_bisector())
-							{
-								m.Z = 5000;
-							}
-							if (h->is_bisector())
-							{
-								n.Z = 5000;
-							}
-
-                            vctopposite.push_back(i);
-                            vctopposite.push_back(i);
-                            opposite.Contour.push_back(m);
-                            opposite.Contour.push_back(n);
-                        }
-                    }
+                    traitSkeletonPoints(roofPoint, aSkeleton);
                 }
 
-                paths->resize(aSkeleton->size_of_faces());
-                for (size_t i = 0; i < vct.size(); i++)
+                if (roof)
                 {
- 					bool isExit = false;
-  					for (size_t j = 0; j < paths->at(vct.at(i)).size(); j++)
-  					{
-  						if (paths->at(vct.at(i)).at(j).X == roof->Contour.at(i).X
-  							&& paths->at(vct.at(i)).at(j).Y == roof->Contour.at(i).Y
-  							&& paths->at(vct.at(i)).at(j).Z == roof->Contour.at(i).Z)
-  						{
-  							isExit = true;
-  							break;
-  						}
-  					}
-  					if (!isExit)
-  					{
-  						paths->at(vct.at(i)).push_back(roof->Contour.at(i));
-  					}
+                    traitSkeletonLine(roof, aSkeleton);
                 }
 
-				for (int i = vctopposite.size()- 1; i >=0; i--)
- 				{
-					bool isExit = false;
-					for (size_t j = 0; j < paths->at(vctopposite.at(i)).size(); j++)
-					{
-						if (paths->at(vctopposite.at(i)).at(j).X == opposite.Contour.at(i).X
-							&& paths->at(vctopposite.at(i)).at(j).Y == opposite.Contour.at(i).Y
-							&& paths->at(vctopposite.at(i)).at(j).Z == opposite.Contour.at(i).Z)
-						{
-							isExit = true;
-							break;
-						}
-					}
-					if (!isExit)
-					{
-						paths->at(vctopposite.at(i)).push_back(opposite.Contour.at(i));
-					}
-				}                        
+                if (roofFace)
+                {
+                    traitSkeletonFace(roofFace, aSkeleton);
+                }
+                //std::vector<int> vct;
+                //std::vector<int> vctopposite;              
+
+                //for (Halfedge_const_iterator hit = aSkeleton->halfedges_begin();
+                //    hit != aSkeleton->halfedges_end(); ++hit)
+                //{
+                //    Halfedge_const_handle h = hit;
+                //    int idege = aSkeleton->size_of_halfedges();
+//              //       if (/*h->is_bisector() &&*/ /*((h->id() % 2) == 0*/) 
+// //           //              && !h->has_infinite_time()
+// //           //              && !h->opposite()->has_infinite_time()
+//              //           )
+                //    {
+                //        if (h->is_border() && (h->id() % 2)!=0)
+                //            continue;
+                //
+				//		int i = h->face()->id();				
+                //
+				//		ClipperLib::IntPoint n = cgal_to_point(h->opposite()->vertex()->point());  
+				//		ClipperLib::IntPoint m = cgal_to_point(h->vertex()->point());
+                //
+                //        if ((h->id() % 2) == 0)
+                //        {
+				//			if (h->is_inner_bisector())
+				//			{
+				//				n.Z = 5000;
+				//			}
+				//			if (h->is_bisector())
+				//			{
+				//				m.Z = 5000;
+				//			}
+                //            vct.push_back(i);
+                //            vct.push_back(i);
+				//			roof->Contour.push_back(n);
+				//			roof->Contour.push_back(m);
+                //        } 
+                //        else
+                //        {
+				//			if (h->is_inner_bisector())
+				//			{
+				//				m.Z = 5000;
+				//			}
+				//			if (h->is_bisector())
+				//			{
+				//				n.Z = 5000;
+				//			}
+                //
+                //            vctopposite.push_back(i);
+                //            vctopposite.push_back(i);
+                //            opposite.Contour.push_back(m);
+                //            opposite.Contour.push_back(n);
+                //        }
+                //    }
+                //}
+                //
+                //paths->resize(aSkeleton->size_of_faces());
+                //for (size_t i = 0; i < vct.size(); i++)
+                //{
+ 				//	bool isExit = false;
+  				//	for (size_t j = 0; j < paths->at(vct.at(i)).size(); j++)
+  				//	{
+  				//		if (paths->at(vct.at(i)).at(j).X == roof->Contour.at(i).X
+  				//			&& paths->at(vct.at(i)).at(j).Y == roof->Contour.at(i).Y
+  				//			&& paths->at(vct.at(i)).at(j).Z == roof->Contour.at(i).Z)
+  				//		{
+  				//			isExit = true;
+  				//			break;
+  				//		}
+  				//	}
+  				//	if (!isExit)
+  				//	{
+  				//		paths->at(vct.at(i)).push_back(roof->Contour.at(i));
+  				//	}
+                //}
+                //
+				//for (int i = vctopposite.size()- 1; i >=0; i--)
+ 				//{
+				//	bool isExit = false;
+				//	for (size_t j = 0; j < paths->at(vctopposite.at(i)).size(); j++)
+				//	{
+				//		if (paths->at(vctopposite.at(i)).at(j).X == opposite.Contour.at(i).X
+				//			&& paths->at(vctopposite.at(i)).at(j).Y == opposite.Contour.at(i).Y
+				//			&& paths->at(vctopposite.at(i)).at(j).Z == opposite.Contour.at(i).Z)
+				//		{
+				//			isExit = true;
+				//			break;
+				//		}
+				//	}
+				//	if (!isExit)
+				//	{
+				//		paths->at(vctopposite.at(i)).push_back(opposite.Contour.at(i));
+				//	}
+				//}                        
             }
             else
             {
