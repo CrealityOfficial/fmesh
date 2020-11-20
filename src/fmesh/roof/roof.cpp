@@ -70,7 +70,7 @@ namespace fmesh
                 return;
 
             Polygon_2 hole;
-            fill_polygon(hole, &npath, !inverse);
+            fill_polygon(hole, &npath, inverse);
 
             input->add_hole(hole);
         }
@@ -172,13 +172,18 @@ namespace fmesh
             fit != skeleton->faces_end(); ++fit)
         {
             ClipperLib::Path& path = roofFace->at(index);
-            if (index == 5)
+            if (index < faceSize)
             {
                 Halfedge_const_handle he = fit->halfedge();
                 Halfedge_const_handle h = he;
                 do
                 {
-                    path.push_back(cgal_to_point(h->vertex()->point()));
+                    ClipperLib::IntPoint& p= cgal_to_point(h->vertex()->point());
+                    if (h->vertex()->is_skeleton())
+                    {
+                        p.Z = 5000;
+                    }
+                    path.push_back(p);
                     h = h->next();
                 } while (h != he);
             }

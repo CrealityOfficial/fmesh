@@ -36,7 +36,7 @@ namespace fmesh
 
 		ClipperLib::ClipperOffset offset;
 		polyNodeFunc func = [&func, &offset](ClipperLib::PolyNode* node) {
-			offset.AddPath(node->Contour, ClipperLib::jtSquare, ClipperLib::EndType::etClosedPolygon);
+			offset.AddPath(node->Contour, ClipperLib::jtRound, ClipperLib::EndType::etClosedPolygon);
 
 			for (ClipperLib::PolyNode* n : node->Childs)
 				func(n);
@@ -233,7 +233,7 @@ namespace fmesh
 		ClipperLib::PolyTree roofLine;
 		ClipperLib::PolyTree roofPoint;
 		ClipperLib::Paths* paths = new ClipperLib::Paths;
-		fmesh::roofLine(&source, &roofLine, &roofPoint, nullptr);
+		fmesh::roofLine(&source, &roofLine, &roofPoint, paths);
 
 		for (size_t i=0;i< paths->size();i++)
 		{
