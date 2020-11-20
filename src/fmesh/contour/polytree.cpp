@@ -4,6 +4,7 @@
 #include "fmesh/roof/roof.h"
 
 #include "fmesh/generate/polyfiller.h"
+#include <algorithm>
 
 namespace fmesh
 {
@@ -20,7 +21,7 @@ namespace fmesh
 
 		ClipperLib::ClipperOffset offset;
 		polyNodeFunc func = [&func, &offset](ClipperLib::PolyNode* node) {
-			offset.AddPath(node->Contour, ClipperLib::jtSquare, ClipperLib::EndType::etClosedLine);
+			offset.AddPath(node->Contour, ClipperLib::jtMiter, ClipperLib::EndType::etClosedLine);
 
 			for (ClipperLib::PolyNode* n : node->Childs)
 				func(n);
@@ -36,7 +37,7 @@ namespace fmesh
 
 		ClipperLib::ClipperOffset offset;
 		polyNodeFunc func = [&func, &offset](ClipperLib::PolyNode* node) {
-			offset.AddPath(node->Contour, ClipperLib::jtRound, ClipperLib::EndType::etClosedPolygon);
+			offset.AddPath(node->Contour, ClipperLib::jtMiter, ClipperLib::EndType::etClosedPolygon);
 
 			for (ClipperLib::PolyNode* n : node->Childs)
 				func(n);
@@ -239,18 +240,23 @@ namespace fmesh
 		{
 			ClipperLib::PolyNode pn;
 			pn.Contour = paths->at(i);
+			bool clockwise = false;
 			for (size_t i=0;i< pn.Contour.size();i++)
 			{				
-				if (pn.Contour.at(i).Z)
+				if (pn.Contour.at(i).Z == 1500)
 				{
-					pn.Contour.at(i).Z = z*1000 + 5000;
+					clockwise = true;
 				}
-				else
-				{
-					pn.Contour.at(i).Z = z * 1000;
-				}
+
+				pn.Contour.at(i).Z += z * 1000;
 			}
 			Patch* tpath = fillOneLevelPolyNode(&pn);
+
+			if (clockwise)
+			{
+				reverse(tpath->begin(), tpath->end());
+			}
+
 			patches.push_back(tpath);
 		}
 	}

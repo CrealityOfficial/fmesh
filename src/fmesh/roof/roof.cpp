@@ -57,7 +57,7 @@ namespace fmesh
         Polygon_2& poly = input->outer_boundary();
         ClipperLib::Path& path = pair->outer->Contour;
         size_t size = path.size();
-        if (size < 3 || inverse)
+        if (size < 3 /*|| inverse*/)
             return;
 
         fill_polygon(input->outer_boundary(), &path, inverse);
@@ -161,18 +161,19 @@ namespace fmesh
         }
     }
 
-    void traitSkeletonFace(ClipperLib::Paths* roofFace, Straight_skeleton_ptr skeleton)
+    void traitSkeletonFace(ClipperLib::Paths* roofFace, Straight_skeleton_ptr skeleton,bool clockwise=false)
     {
         size_t faceSize = skeleton->size_of_faces();
+        size_t roofFase = roofFace->size();
         if (faceSize > 0)
-            roofFace->resize(faceSize);
+            roofFace->resize(roofFase +faceSize);
 
-        int index = 0;
+        int index = roofFase;
         for (Face_const_iterator fit = skeleton->faces_begin();
             fit != skeleton->faces_end(); ++fit)
         {
             ClipperLib::Path& path = roofFace->at(index);
-            if (index < faceSize)
+            //if (index < roofFase + faceSize)
             {
                 Halfedge_const_handle he = fit->halfedge();
                 Halfedge_const_handle h = he;
@@ -181,11 +182,16 @@ namespace fmesh
                     ClipperLib::IntPoint& p= cgal_to_point(h->vertex()->point());
                     if (h->vertex()->is_skeleton())
                     {
-                        p.Z = 5000;
+                        p.Z = 2000;
+						if (clockwise)
+						{
+                            p.Z = 1500;
+						}
                     }
                     path.push_back(p);
                     h = h->next();
                 } while (h != he);
+
             }
 
             ++index;
@@ -200,10 +206,10 @@ namespace fmesh
 
         for (PolyPair* pair : pairs)
         {
-            if (pair->clockwise) //outer
-            {
-                continue;
-            }
+//             if (pair->clockwise) //outer
+//             {
+//                 continue;
+//             }
 
             Polygon_with_holes input;
             build_polygon_with_holes(&input, pair);
@@ -226,7 +232,7 @@ namespace fmesh
 
                 if (roofFace)
                 {
-                    traitSkeletonFace(roofFace, aSkeleton);
+                    traitSkeletonFace(roofFace, aSkeleton, pair->clockwise);
                 }
 
 			 //   Halfedge_const_handle h = hit;
