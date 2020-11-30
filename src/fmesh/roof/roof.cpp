@@ -182,10 +182,10 @@ namespace fmesh
                     ClipperLib::IntPoint& p= cgal_to_point(h->vertex()->point());
                     if (h->vertex()->is_skeleton())
                     {
-                        p.Z = 2000;
+                        p.Z = 500;
 						if (clockwise)
 						{
-                            p.Z = 1500;
+                            p.Z = 300;
 						}
                     }
                     path.push_back(p);

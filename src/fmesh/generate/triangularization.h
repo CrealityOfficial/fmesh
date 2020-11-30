@@ -13,6 +13,9 @@ namespace fmesh
 	void buildFromPathes(std::vector<ClipperLib::Path*>& pathsLower, std::vector<ClipperLib::Path*>& pathsUp, Patch& patch);
 	void buildFromPath(ClipperLib::Path* pathLower, ClipperLib::Path* pathUp, Patch& patch);
 
+	void buildFromDiffPolyTree_drum(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp,
+		std::vector<Patch*>& patches, int flag, ClipperLib::PolyTree& out);
+
 	inline trimesh::vec3 CInt2V(const ClipperLib::IntPoint& point)
 	{
 		return trimesh::vec3(INT2MM(point.X), INT2MM(point.Y), INT2MM(point.Z));
