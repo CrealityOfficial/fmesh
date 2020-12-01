@@ -18,7 +18,7 @@ namespace fmesh
 		GeneratorImpl();
 		virtual ~GeneratorImpl();
 
-		trimesh::TriMesh* build(ClipperLib::Paths* paths, const GenParam& param, const Args& args);
+		trimesh::TriMesh* generate(ClipperLib::Paths* paths, const GenParam& param, const Args& args);
 
 		virtual void build() = 0;
 	protected:

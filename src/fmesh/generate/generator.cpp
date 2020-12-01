@@ -94,7 +94,7 @@ namespace fmesh
 			return nullptr;
 		
 		GeneratorImpl* impl = findImpl(method);
-		trimesh::TriMesh* mesh = impl ? impl->build(paths, m_param, args) : nullptr;
+		trimesh::TriMesh* mesh = impl ? impl->generate(paths, m_param, args) : nullptr;
 		return mesh;
 	}
 }
