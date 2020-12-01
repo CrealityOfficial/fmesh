@@ -36,6 +36,37 @@ namespace fmesh
 		mmesh::loopPolyTree(func, polyTree);
 	}
 
+	void fillComplexPolyTreeReverseInner(ClipperLib::PolyTree* polyTree, std::vector<Patch*>& patches)
+	{
+		if (!polyTree)
+			return;
+
+		int parentChilds = 0;
+		polyNodeFunc func = [&patches,&parentChilds](ClipperLib::PolyNode* node) {
+			if (!node->IsHole())
+			{
+				Patch* patch = fillOneLevelPolyNode(node);
+				if (parentChilds)
+				{
+					Patch* _path = new Patch;
+					for (int i = patch->size() - 1; i >= 0; i--)
+					{
+						_path->push_back(patch->at(i));
+					}
+					--parentChilds;
+					patches.push_back(_path);					
+				}
+				else
+				{
+					patches.push_back(patch);
+					parentChilds = node->ChildCount();
+				}					 				
+			}
+		};
+
+		mmesh::loopPolyTree(func, polyTree);
+	}
+
 	Patch* fillOneLevelPolyNode(ClipperLib::PolyNode* polyNode, bool invert)
 	{
 		SimplePoly poly;

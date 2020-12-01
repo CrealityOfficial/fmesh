@@ -101,6 +101,22 @@ namespace fmesh
 		addPatches(patches);
 	}
 	
+	void GeneratorImpl::_buildFromDiffPolyTree_drum(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp, int flag, ClipperLib::PolyTree& out)
+	{
+		std::vector<Patch*> patches;
+		buildFromDiffPolyTree_drum(treeLower, treeUp, patches, flag,out);
+		if (patches.size())
+			addPatches(patches);
+	}
+
+	void GeneratorImpl::_fillPolyTreeReverseInner(ClipperLib::PolyTree* tree, bool invert /*= false*/)
+	{
+		std::vector<Patch*> patches;
+		fillComplexPolyTreeReverseInner(tree, patches);
+
+		addPatches(patches, invert);
+	}
+
 	void GeneratorImpl::_buildFromDiffPolyTree_firstLayer(ClipperLib::PolyTree* treeLower, int flag /*= 0*/)
 	{
 		std::vector<Patch*> patches;

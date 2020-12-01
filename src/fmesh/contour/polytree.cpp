@@ -243,7 +243,7 @@ namespace fmesh
 			bool clockwise = false;
 			for (size_t i=0;i< pn.Contour.size();i++)
 			{				
-				if (pn.Contour.at(i).Z == 1500)
+				if (pn.Contour.at(i).Z == 300)
 				{
 					clockwise = true;
 				}
