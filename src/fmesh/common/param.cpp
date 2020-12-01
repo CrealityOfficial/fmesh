@@ -17,6 +17,9 @@ namespace fmesh
 		bottomStepW = 0.6;
 		bottomWidenW = 3.0;
 		drumH = 5.0;
+
+		italicsAngle=10;
+		italicsBottomH=3.0;
 	}
 
 	GenParam::~GenParam()

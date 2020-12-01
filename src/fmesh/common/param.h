@@ -57,6 +57,10 @@ namespace fmesh
 
 		//drum
 		float drumH;
+
+		//italics
+		float italicsAngle;
+		float italicsBottomH;
 	};
 }
 

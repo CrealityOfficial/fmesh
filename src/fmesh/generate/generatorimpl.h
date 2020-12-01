@@ -35,6 +35,7 @@ namespace fmesh
 		void _buildFromDiffPolyTree(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp, int flag = 0);
 
 		void _buildFromDiffPolyTree_drum(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp, int flag, ClipperLib::PolyTree& out);
+		void _fillPolyTreeReverseInner(ClipperLib::PolyTree* tree, bool invert = false);
 
 		void _buildFromDiffPolyTree_firstLayer(ClipperLib::PolyTree* treeLower, int flag = 0);
 		void _buildRoof(ClipperLib::PolyTree* polyTree, double roofHeight, double thickness);
