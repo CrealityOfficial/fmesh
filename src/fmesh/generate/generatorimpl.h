@@ -19,6 +19,7 @@ namespace fmesh
 		virtual ~GeneratorImpl();
 
 		trimesh::TriMesh* generate(ClipperLib::Paths* paths, const GenParam& param, const Args& args);
+		trimesh::TriMesh* generate(ClipperLib::Paths* paths, const ADParam& param);
 
 		virtual void build() = 0;
 	protected:
@@ -44,6 +45,7 @@ namespace fmesh
 		ClipperLib::PolyTree m_poly;
 
 		GenParam m_param;
+		ADParam m_adParam;
 		std::vector<std::string> m_args;
 
 		std::vector<Patch*> m_patches;

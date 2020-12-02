@@ -12,6 +12,8 @@
 #include "fmesh/generate/roofgenerator.h"
 #include "fmesh/generate/drumgenerator.h"
 #include "fmesh/generate/italicsgenerator.h"
+
+#include <memory>
 namespace fmesh
 {
 #define REGISTER(x, y)  { GeneratorIterator it = impls.find(x); \
@@ -97,6 +99,48 @@ namespace fmesh
 		
 		GeneratorImpl* impl = findImpl(method);
 		trimesh::TriMesh* mesh = impl ? impl->generate(paths, m_param, args) : nullptr;
+		return mesh;
+	}
+
+	GeneratorImpl* createGenerator(const ADParam& param)
+	{
+		GeneratorImpl* impl = nullptr;
+		switch (param.shape_type)
+		{
+		case ADShapeType::adst_none:
+			impl = new SimpleGenerator();
+		case ADShapeType::adst_xiebian:
+		case ADShapeType::adst_gubian:
+		case ADShapeType::adst_cemianjianjiao:
+		case ADShapeType::adst_yuanding:
+		case ADShapeType::adst_jianjiao:
+		case ADShapeType::adst_xiemian:
+		case ADShapeType::adst_dingmianjieti:
+			impl = new SimpleGenerator();
+		default:
+			impl = new SimpleGenerator();
+			break;
+		}
+		return impl;
+	}
+
+	GeneratorProxy::GeneratorProxy()
+	{
+
+	}
+
+	GeneratorProxy::~GeneratorProxy()
+	{
+
+	}
+
+	trimesh::TriMesh* GeneratorProxy::build(const ADParam& param, ClipperLib::Paths* paths)
+	{
+		if (!paths)
+			return nullptr;
+
+		std::unique_ptr<GeneratorImpl> impl(createGenerator(param));
+		trimesh::TriMesh* mesh = impl ? impl->generate(paths, param) : nullptr;
 		return mesh;
 	}
 }

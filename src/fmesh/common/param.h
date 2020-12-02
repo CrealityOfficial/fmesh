@@ -62,6 +62,59 @@ namespace fmesh
 		float italicsAngle;
 		float italicsBottomH;
 	};
+
+	enum class ADTopType
+	{
+		adtt_none,
+		adtt_step,
+		adtt_close,
+		adtt_round
+	};
+
+	enum class ADBottomType
+	{
+		adbt_none,
+		adbt_close,
+		adbt_extend_outter,
+		adbt_extend_inner,
+		adbt_step
+	};
+
+	enum class ADShapeType
+	{
+		adst_none,
+		adst_xiebian,
+		adst_gubian,
+		adst_cemianjianjiao,
+		adst_yuanding,
+		adst_jianjiao,
+		adst_xiemian,
+		adst_dingmianjieti
+	};
+
+	class ADParam
+	{
+	public:
+		ADParam();
+		~ADParam();
+
+		//global
+		float extend_width;
+		float total_height;
+
+		//top
+		ADTopType top_type;
+		float top_height;
+		float top_extend_width;
+
+		//bottom
+		ADBottomType bottom_type;
+		float bottom_height;
+		float bottom_extend_width;
+
+		//shape type
+		ADShapeType shape_type;
+	};
 }
 
 #endif // FMESH_PARAM_1604458181746_H
