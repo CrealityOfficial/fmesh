@@ -61,6 +61,9 @@ namespace fmesh
 		//italics
 		float italicsAngle;
 		float italicsBottomH;
+
+		//slope
+		float slopeRightH;
 	};
 }
 

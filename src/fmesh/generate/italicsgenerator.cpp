@@ -14,8 +14,8 @@ namespace fmesh
 
 	void ItalicsGenerator::build()
 	{
-		double thickness = m_param.thickness / 4.0f;
-		int count = 10;
+		double thickness = m_param.thickness / 2.0f;
+		int count = 5;
 		double offset = m_param.totalH * std::sin(m_param.italicsAngle/2 * 3.1415926 / 180.0) / (double)count;
 		double h = m_param.totalH / (double)count;
 		std::vector<ClipperLib::PolyTree> polys(count + 1);
