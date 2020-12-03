@@ -28,4 +28,28 @@ namespace fmesh
 	{
 
 	}
+
+	ADParam::ADParam()
+	{
+		extend_width = 1.0f;
+		total_height = 15.0f;
+
+		//top
+		top_type = ADTopType::adtt_none;
+		top_height = 2.0f;
+		top_extend_width = 1.0f;
+
+		//bottom
+		bottom_type = ADBottomType::adbt_none;
+		bottom_height = 2.0f;
+		bottom_extend_width = 1.0f;
+
+		//shape type
+		shape_type = ADShapeType::adst_none;
+	}
+
+	ADParam::~ADParam()
+	{
+
+	}
 }

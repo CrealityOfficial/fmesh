@@ -70,4 +70,9 @@ namespace fmesh
 		return paths;
 	}
 
+	ClipperLib::Paths* FontOutlineCenter::getPath(const std::string& font, int charCode, double expectLen)
+	{
+		load(font);
+		return getPath(charCode, expectLen);
+	}
 }

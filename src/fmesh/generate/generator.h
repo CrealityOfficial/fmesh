@@ -40,6 +40,16 @@ namespace fmesh
 		GenParam m_param;
 		F2MParam m_modelparam;
 	};
+
+	GeneratorImpl* createGenerator(const ADParam& param);
+	class GeneratorProxy
+	{
+	public:
+		GeneratorProxy();
+		virtual ~GeneratorProxy();
+
+		trimesh::TriMesh* build(const ADParam& param, ClipperLib::Paths* paths);
+	};
 }
 
 #endif // FMESH_GENERATOR_1604462758368_H

@@ -33,6 +33,22 @@ namespace fmesh
 		return mesh;
 	}
 
+	trimesh::TriMesh* GeneratorImpl::generate(ClipperLib::Paths* paths, const ADParam& param)
+	{
+		m_paths = paths;
+		m_adParam = param;
+
+		fmesh::convertPaths2PolyTree(m_paths, m_poly);
+		if (!paths || paths->size() == 0)
+			return nullptr;
+
+		build();
+
+		trimesh::TriMesh* mesh = generateFromPatches();
+		releaseResources();
+		return mesh;
+	}
+
 	void GeneratorImpl::addPatch(Patch* patch, bool invert)
 	{
 		if (patch)

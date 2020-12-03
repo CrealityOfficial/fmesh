@@ -19,6 +19,7 @@ namespace fmesh
 		virtual ~GeneratorImpl();
 
 		trimesh::TriMesh* build(ClipperLib::Paths* paths, const GenParam& param, const F2MParam& modelparam, const Args& args);
+		trimesh::TriMesh* generate(ClipperLib::Paths* paths, const ADParam& param);
 
 		virtual void build() = 0;
 	protected:
@@ -46,6 +47,8 @@ namespace fmesh
 
 		GenParam m_param;
 		F2MParam m_modelparam;
+		ADParam m_adParam;
+
 		std::vector<std::string> m_args;
 
 		std::vector<Patch*> m_patches;
