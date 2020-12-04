@@ -114,6 +114,20 @@ namespace fmesh
 
 	}
 
+	void dealPolyTreeAxisZ(ClipperLib::PolyTree* polyTree, double slope, double dminY)
+	{
+		if (!polyTree)
+			return;
+		polyNodeFunc func = [&slope,&dminY](ClipperLib::PolyNode* node) {
+			for (size_t i = 0; i < node->Contour.size(); i++)
+			{
+				node->Contour.at(i).Z += slope * (node->Contour.at(i).Y/* - dminY*/);
+			}
+		};
+
+		mmesh::loopPolyTree(func, polyTree);
+	}
+
 	ClipperLib::cInt pathMaxX(ClipperLib::Path& path)
 	{
 		ClipperLib::cInt x = -999999;

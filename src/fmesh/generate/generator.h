@@ -38,6 +38,7 @@ namespace fmesh
 		
 		std::map<std::string, GeneratorImpl*> m_generateImpls;
 		GenParam m_param;
+		F2MParam m_modelparam;
 	};
 
 	GeneratorImpl* createGenerator(const ADParam& param);

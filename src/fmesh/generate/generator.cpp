@@ -1,6 +1,7 @@
 #include "generator.h"
 #include "fmesh/contour/contour.h"
 #include "fmesh/generate/generatorimpl.h"
+#include "fmesh/contour/path.h"
 
 #include "fmesh/generate/simplegenerator.h"
 #include "fmesh/generate/fillgenerator.h"
@@ -12,6 +13,7 @@
 #include "fmesh/generate/roofgenerator.h"
 #include "fmesh/generate/drumgenerator.h"
 #include "fmesh/generate/italicsgenerator.h"
+#include "fmesh/generate/slopegenerator.h"
 
 #include <memory>
 namespace fmesh
@@ -36,6 +38,7 @@ namespace fmesh
 		REGISTER("roof", RoofGenerator)
 		REGISTER("drum", DrumGenerator)
 		REGISTER("italics", ItalicsGenerator)
+		REGISTER("slope", SlopeGenerator)
 	}
 
 	void destroyBuildImpls(GeneratorImplMap& impls)
@@ -69,8 +72,19 @@ namespace fmesh
 	void Generator::setPaths(ClipperLib::Paths* paths)
 	{
 		m_paths.reset(paths);
+
+		ClipperLib::IntPoint bmin;
+		ClipperLib::IntPoint bmax;
+		fmesh::calculatePathBox(paths, bmin, bmax);
+		//scale
+		trimesh::vec3 bMin = trimesh::vec3(INT2MM(bmin.X), INT2MM(bmin.Y), INT2MM(bmin.Z));
+		trimesh::vec3 bMax = trimesh::vec3(INT2MM(bmax.X), INT2MM(bmax.Y), INT2MM(bmax.Z));
+
+		m_modelparam.dmin = trimesh::vec2(bMin);
+		m_modelparam.dmax = trimesh::vec2(bMax);
+
 		m_polyTree.reset();
-	}
+	} 
 
 	ClipperLib::PolyTree* Generator::polyTree()
 	{
@@ -98,7 +112,7 @@ namespace fmesh
 			return nullptr;
 		
 		GeneratorImpl* impl = findImpl(method);
-		trimesh::TriMesh* mesh = impl ? impl->generate(paths, m_param, args) : nullptr;
+		trimesh::TriMesh* mesh = impl ? impl->build(paths, m_param, m_modelparam,args) : nullptr;
 		return mesh;
 	}
 

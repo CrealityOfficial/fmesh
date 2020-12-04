@@ -15,10 +15,11 @@ namespace fmesh
 	{
 	}
 
-	trimesh::TriMesh* GeneratorImpl::generate(ClipperLib::Paths* paths, const GenParam& param, const Args& args)
+	trimesh::TriMesh* GeneratorImpl::build(ClipperLib::Paths* paths, const GenParam& param, const F2MParam& modelparam, const Args& args)
 	{
 		m_paths = paths;
 		m_param = param;
+		m_modelparam = modelparam;
 		m_args = args;
 
 		fmesh::convertPaths2PolyTree(m_paths, m_poly);
@@ -131,6 +132,11 @@ namespace fmesh
 		fillComplexPolyTreeReverseInner(tree, patches);
 
 		addPatches(patches, invert);
+	}
+
+	void GeneratorImpl::_dealPolyTreeAxisZ(ClipperLib::PolyTree* tree, double slope, double dminY)
+	{	
+		dealPolyTreeAxisZ(tree, slope, dminY);
 	}
 
 	void GeneratorImpl::_buildFromDiffPolyTree_firstLayer(ClipperLib::PolyTree* treeLower, int flag /*= 0*/)

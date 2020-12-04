@@ -18,7 +18,7 @@ namespace fmesh
 		GeneratorImpl();
 		virtual ~GeneratorImpl();
 
-		trimesh::TriMesh* generate(ClipperLib::Paths* paths, const GenParam& param, const Args& args);
+		trimesh::TriMesh* build(ClipperLib::Paths* paths, const GenParam& param, const F2MParam& modelparam, const Args& args);
 		trimesh::TriMesh* generate(ClipperLib::Paths* paths, const ADParam& param);
 
 		virtual void build() = 0;
@@ -37,6 +37,7 @@ namespace fmesh
 
 		void _buildFromDiffPolyTree_drum(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp, int flag, ClipperLib::PolyTree& out);
 		void _fillPolyTreeReverseInner(ClipperLib::PolyTree* tree, bool invert = false);
+		void _dealPolyTreeAxisZ(ClipperLib::PolyTree* tree, double slope, double dminY);
 
 		void _buildFromDiffPolyTree_firstLayer(ClipperLib::PolyTree* treeLower, int flag = 0);
 		void _buildRoof(ClipperLib::PolyTree* polyTree, double roofHeight, double thickness);
@@ -45,7 +46,9 @@ namespace fmesh
 		ClipperLib::PolyTree m_poly;
 
 		GenParam m_param;
+		F2MParam m_modelparam;
 		ADParam m_adParam;
+
 		std::vector<std::string> m_args;
 
 		std::vector<Patch*> m_patches;

@@ -20,6 +20,8 @@ namespace fmesh
 
 		italicsAngle=10;
 		italicsBottomH=3.0;
+
+		slopeRightH = 5.0;
 	}
 
 	GenParam::~GenParam()
