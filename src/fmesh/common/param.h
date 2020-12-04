@@ -83,12 +83,14 @@ namespace fmesh
 	enum class ADShapeType
 	{
 		adst_none,
-		adst_xiebian,
+		adst_xiebian_top,
+		adst_xiebian_bottom,
 		adst_gubian,
 		adst_cemianjianjiao,
 		adst_yuanding,
 		adst_jianjiao,
-		adst_xiemian,
+		adst_xiemian_front,
+		adst_xiemian_back,
 		adst_dingmianjieti
 	};
 
@@ -114,6 +116,10 @@ namespace fmesh
 
 		//shape type
 		ADShapeType shape_type;
+		float shape_bottom_height;
+		float shape_top_height;
+		float shape_middle_width;
+		float shape_angle;
 	};
 }
 
