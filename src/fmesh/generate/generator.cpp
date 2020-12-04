@@ -123,12 +123,14 @@ namespace fmesh
 		{
 		case ADShapeType::adst_none:
 			impl = new SimpleGenerator();
-		case ADShapeType::adst_xiebian:
+		case ADShapeType::adst_xiebian_top:
+		case ADShapeType::adst_xiebian_bottom:
 		case ADShapeType::adst_gubian:
 		case ADShapeType::adst_cemianjianjiao:
 		case ADShapeType::adst_yuanding:
 		case ADShapeType::adst_jianjiao:
-		case ADShapeType::adst_xiemian:
+		case ADShapeType::adst_xiemian_front:
+		case ADShapeType::adst_xiemian_back:
 		case ADShapeType::adst_dingmianjieti:
 			impl = new SimpleGenerator();
 		default:
