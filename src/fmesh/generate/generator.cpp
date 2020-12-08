@@ -14,6 +14,7 @@
 #include "fmesh/generate/drumgenerator.h"
 #include "fmesh/generate/italicsgenerator.h"
 #include "fmesh/generate/slopegenerator.h"
+#include "fmesh/generate/drumedgegenerator.h"
 
 #include <memory>
 namespace fmesh
@@ -123,9 +124,14 @@ namespace fmesh
 		{
 		case ADShapeType::adst_none:
 			impl = new SimpleGenerator();
+			break;
 		case ADShapeType::adst_xiebian_top:
+			impl = new ItalicsGenerator();
+			break;
 		case ADShapeType::adst_xiebian_bottom:
 		case ADShapeType::adst_gubian:
+			impl = new DrumedgeGenerator();
+			break;
 		case ADShapeType::adst_cemianjianjiao:
 		case ADShapeType::adst_yuanding:
 		case ADShapeType::adst_jianjiao:
@@ -133,6 +139,7 @@ namespace fmesh
 		case ADShapeType::adst_xiemian_back:
 		case ADShapeType::adst_dingmianjieti:
 			impl = new SimpleGenerator();
+			break;
 		default:
 			impl = new SimpleGenerator();
 			break;
