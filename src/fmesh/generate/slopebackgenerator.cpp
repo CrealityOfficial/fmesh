@@ -1,19 +1,19 @@
-#include "slopegenerator.h"
+#include "slopebackgenerator.h"
 #include "fmesh/build/layer.h"
 
 namespace fmesh
 {
-	SlopeGenerator::SlopeGenerator()
+	SlopebackGenerator::SlopebackGenerator()
 	{
 
 	}
 
-	SlopeGenerator::~SlopeGenerator()
+	SlopebackGenerator::~SlopebackGenerator()
 	{
 
 	}
 
-	void SlopeGenerator::build()
+	void SlopebackGenerator::build()
 	{
 		double thickness = m_adParam.extend_width / 4.0;;
 

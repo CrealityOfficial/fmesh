@@ -15,6 +15,8 @@
 #include "fmesh/generate/italicsgenerator.h"
 #include "fmesh/generate/slopegenerator.h"
 #include "fmesh/generate/drumedgegenerator.h"
+#include "fmesh/generate/sharpsidegenerator.h"
+#include "fmesh/generate/slopebackgenerator.h"
 
 #include <memory>
 namespace fmesh
@@ -133,10 +135,16 @@ namespace fmesh
 			impl = new DrumedgeGenerator();
 			break;
 		case ADShapeType::adst_cemianjianjiao:
+			impl = new SharpsideGenerator();
+			break;
 		case ADShapeType::adst_yuanding:
 		case ADShapeType::adst_jianjiao:
 		case ADShapeType::adst_xiemian_front:
+			impl = new SlopeGenerator();
+			break;
 		case ADShapeType::adst_xiemian_back:
+			impl = new SlopebackGenerator();
+			break;
 		case ADShapeType::adst_dingmianjieti:
 			impl = new SimpleGenerator();
 			break;
