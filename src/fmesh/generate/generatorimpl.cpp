@@ -2,6 +2,7 @@
 #include "fmesh/contour/polytree.h"
 #include "fmesh/generate/trimeshbuilder.h"
 #include "fmesh/roof/roof.h"
+#include "fmesh/contour/path.h"
 
 namespace fmesh
 {
@@ -37,6 +38,15 @@ namespace fmesh
 	{
 		m_paths = paths;
 		m_adParam = param;
+
+		ClipperLib::IntPoint bmin;
+		ClipperLib::IntPoint bmax;
+		fmesh::calculatePathBox(paths, bmin, bmax);
+		//scale
+		trimesh::vec3 bMin = trimesh::vec3(INT2MM(bmin.X), INT2MM(bmin.Y), INT2MM(bmin.Z));
+		trimesh::vec3 bMax = trimesh::vec3(INT2MM(bmax.X), INT2MM(bmax.Y), INT2MM(bmax.Z));
+		dmin = trimesh::vec2(bMin);
+		dmax = trimesh::vec2(bMax);
 
 		fmesh::convertPaths2PolyTree(m_paths, m_poly);
 		if (!paths || paths->size() == 0)

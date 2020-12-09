@@ -47,7 +47,10 @@ namespace fmesh
 
 		GenParam m_param;
 		F2MParam m_modelparam;
+
 		ADParam m_adParam;
+		trimesh::vec2 dmin;
+		trimesh::vec2 dmax;
 
 		std::vector<std::string> m_args;
 
