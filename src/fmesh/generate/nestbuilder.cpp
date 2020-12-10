@@ -13,6 +13,10 @@ namespace fmesh
 		ADParam param1, param2;
 		param1.extend_width = 2.0f;
 		param1.bottom_type = ADBottomType::adbt_close;
+		param1.bottom_height = 3;
+		param1.bottom_extend_width = 0.5f;
+		param1.bottom_offset = 0;
+
 		param2.extend_width = 0.5f;
 		param2.bottom_offset = 4.0f;
 		param2.bottom_type = ADBottomType::adbt_close;
