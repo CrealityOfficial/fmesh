@@ -192,7 +192,7 @@ namespace fmesh
 
 	void GeneratorImpl::_buildBottom(ClipperLib::PolyTree& treeBottom, double& hBottom)
 	{
-		hBottom = 0.0;
+		hBottom = m_adParam.bottom_offset;
 		double thickness = m_adParam.extend_width / 2.0f;
 
 		if (m_adParam.bottom_type == ADBottomType::adbt_close
@@ -210,7 +210,7 @@ namespace fmesh
 		else if (m_adParam.bottom_type == ADBottomType::adbt_close)
 		{
 			ClipperLib::PolyTree closeBottom;
-			double hCloseBottom = 0.0;
+			double hCloseBottom = m_adParam.bottom_offset;
 			offsetAndExtendPolyTree(m_poly, 0.0, thickness, hCloseBottom, closeBottom);
 
 			_fillPolyTreeOutline(&closeBottom, true);

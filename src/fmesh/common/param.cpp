@@ -33,6 +33,7 @@ namespace fmesh
 	{
 		extend_width = 2.0f;
 		total_height = 15.0f;
+		bottom_offset = 0.0f;
 
 		//top
 		top_type = ADTopType::adtt_none;

@@ -9,7 +9,10 @@ namespace fmesh
 		SimpleGenerator generator1, generator2;
 		ADParam param1, param2;
 		param1.extend_width = 2.0f;
+
 		param2.extend_width = 0.5f;
+		param2.bottom_offset = 4.0f;
+		param2.bottom_type = ADBottomType::adbt_close;
 		float gap = 0.1f;
 		ClipperLib::Paths outer, inner;
 

@@ -106,6 +106,7 @@ namespace fmesh
 		//global
 		float extend_width;
 		float total_height;
+		float bottom_offset;
 
 		//top
 		ADTopType top_type;
