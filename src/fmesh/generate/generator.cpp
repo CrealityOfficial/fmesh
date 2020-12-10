@@ -42,6 +42,9 @@ namespace fmesh
 		REGISTER("drum", DrumGenerator)
 		REGISTER("italics", ItalicsGenerator)
 		REGISTER("slope", SlopeGenerator)
+		REGISTER("drumedge", DrumedgeGenerator)
+		REGISTER("sharpside", SharpsideGenerator)
+		REGISTER("slopeback", SlopebackGenerator)
 	}
 
 	void destroyBuildImpls(GeneratorImplMap& impls)
