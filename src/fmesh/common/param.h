@@ -117,6 +117,10 @@ namespace fmesh
 
 		//shape type
 		ADShapeType shape_type;
+		float shape_bottom_height;
+		float shape_top_height;
+		float shape_middle_width;
+		float shape_angle;
 	};
 }
 

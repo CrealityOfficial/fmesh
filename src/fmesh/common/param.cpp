@@ -13,8 +13,8 @@ namespace fmesh
 		, exteriorH(3.0f)
 	{
 		bottomMode = EBottomMode::NONE;
-		bottomStepH = 3.0;
-		bottomStepW = 0.6;
+		bottomStepH =1.5;
+		bottomStepW = 0.2;
 		bottomWidenW = 3.0;
 		drumH = 5.0;
 
@@ -31,7 +31,7 @@ namespace fmesh
 
 	ADParam::ADParam()
 	{
-		extend_width = 1.0f;
+		extend_width = 0.8f;
 		total_height = 15.0f;
 
 		//top
@@ -46,6 +46,11 @@ namespace fmesh
 
 		//shape type
 		shape_type = ADShapeType::adst_none;
+
+		shape_bottom_height=2.0;
+		shape_top_height=2.0;
+		shape_middle_width=2.0;
+		shape_angle=20;
 	}
 
 	ADParam::~ADParam()

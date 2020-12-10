@@ -14,6 +14,9 @@
 #include "fmesh/generate/drumgenerator.h"
 #include "fmesh/generate/italicsgenerator.h"
 #include "fmesh/generate/slopegenerator.h"
+#include "fmesh/generate/drumedgegenerator.h"
+#include "fmesh/generate/sharpsidegenerator.h"
+#include "fmesh/generate/slopebackgenerator.h"
 
 #include <memory>
 namespace fmesh
@@ -39,6 +42,9 @@ namespace fmesh
 		REGISTER("drum", DrumGenerator)
 		REGISTER("italics", ItalicsGenerator)
 		REGISTER("slope", SlopeGenerator)
+		REGISTER("drumedge", DrumedgeGenerator)
+		REGISTER("sharpside", SharpsideGenerator)
+		REGISTER("slopeback", SlopebackGenerator)
 	}
 
 	void destroyBuildImpls(GeneratorImplMap& impls)
