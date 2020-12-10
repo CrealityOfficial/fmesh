@@ -139,8 +139,8 @@ namespace fmesh
 	void GeneratorImpl::_fillPolyTreeReverseInner(ClipperLib::PolyTree* tree, bool invert /*= false*/)
 	{
 		std::vector<Patch*> patches;
-		//fillComplexPolyTreeReverseInner(tree, patches);
-		fillComplexPolyTree(tree, patches);
+		fillComplexPolyTreeReverseInner(tree, patches);
+		//fillComplexPolyTree(tree, patches);
 
 		addPatches(patches, invert);
 	}
