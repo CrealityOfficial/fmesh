@@ -9,7 +9,8 @@ namespace fmesh
 	typedef std::function<ClipperLib::IntPoint(const ClipperLib::IntPoint& point)> polyOffsetFunc;
 	//all parameters are in mm
 	void convertPaths2PolyTree(ClipperLib::Paths* paths, ClipperLib::PolyTree& polyTree);
-	
+	void copy2PolyTree(ClipperLib::PolyTree& source, ClipperLib::PolyTree& dest);
+
 	//extend
 	void extendPolyTree(ClipperLib::PolyTree& source, double delta, ClipperLib::PolyTree& dest);
 	void extendPolyTree(ClipperLib::PolyTree& source, double delta, polyOffsetFunc offsetFunc, ClipperLib::PolyTree& dest);

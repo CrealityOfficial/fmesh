@@ -15,6 +15,20 @@ namespace fmesh
 		clipper.Execute(ClipperLib::ctUnion, polyTree, ClipperLib::pftNonZero, ClipperLib::pftNonZero);
 	}
 
+	void copy2PolyTree(ClipperLib::PolyTree& source, ClipperLib::PolyTree& dest)
+	{
+		ClipperLib::Clipper clipper;
+		polyNodeFunc func = [&func, &clipper](ClipperLib::PolyNode* node) {
+			clipper.AddPath(node->Contour, ClipperLib::ptSubject, true);
+
+			for (ClipperLib::PolyNode* n : node->Childs)
+				func(n);
+		};
+
+		func(&source);
+		clipper.Execute(ClipperLib::ctUnion, dest, ClipperLib::pftNonZero, ClipperLib::pftNonZero);
+	}
+
 	void extendPolyTree(ClipperLib::PolyTree& source, double delta, ClipperLib::PolyTree& dest)
 	{
 		double microDelta = 1000.0 * delta;
