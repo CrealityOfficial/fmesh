@@ -41,6 +41,9 @@ namespace fmesh
 
 		void _buildFromDiffPolyTree_firstLayer(ClipperLib::PolyTree* treeLower, int flag = 0);
 		void _buildRoof(ClipperLib::PolyTree* polyTree, double roofHeight, double thickness);
+
+		void _buildTop(ClipperLib::PolyTree& treeTop, double& hTop);
+		void _buildBottom(ClipperLib::PolyTree& treeBottom, double& hBottom);
 	protected:
 		ClipperLib::Paths* m_paths;
 		ClipperLib::PolyTree m_poly;
