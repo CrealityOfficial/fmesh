@@ -14,7 +14,7 @@ namespace fmesh
 
 	void StepGenerator::build()
 	{
-		double thickness = m_param.thickness;// / 2.0f;
+		double thickness = m_param.thickness / 2.0f;// / 2.0f;
 		double offset = -m_param.bottomStepW;
 		std::vector<float> heights(5);
 		heights.at(0) = 0.0f;

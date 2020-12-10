@@ -23,7 +23,7 @@ namespace fmesh
 		offsetAndExtendPolyTree(m_poly, 0.0, thickness, m_adParam.shape_bottom_height + 1, polys.at(2));
 
 		double slope = (m_adParam.total_height - m_adParam.shape_bottom_height - 1) / (m_modelparam.dmax.y - m_modelparam.dmin.y);
-		_dealPolyTreeAxisZ(&polys.at(2), slope, m_modelparam.dmin.y);
+		_dealPolyTreeAxisZ(&polys.at(2), slope);
 
 		_buildFromSamePolyTree(&polys.at(0), &polys.at(1));
 		_buildFromSamePolyTree(&polys.at(1), &polys.at(2));
