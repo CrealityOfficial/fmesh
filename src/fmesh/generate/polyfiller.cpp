@@ -121,7 +121,7 @@ namespace fmesh
 		polyNodeFunc func = [&slope,&dminY](ClipperLib::PolyNode* node) {
 			for (size_t i = 0; i < node->Contour.size(); i++)
 			{
-				node->Contour.at(i).Z += slope * (node->Contour.at(i).Y/* - dminY*/);
+				node->Contour.at(i).Z += slope * (node->Contour.at(i).Y) + dminY;
 			}
 		};
 

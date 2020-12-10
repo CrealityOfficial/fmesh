@@ -20,11 +20,11 @@ namespace fmesh
 		float shape_bottom_height= m_adParam.shape_bottom_height;
 		float shape_top_height= m_adParam.shape_top_height;
 		float shape_middle_width= m_adParam.shape_middle_width;
-		float thickness = m_adParam.extend_width / 2.0;
+		float thickness = m_adParam.extend_width / 4.0;
 
-		int count = 10;
+		//int count = 10;
 		float middleHeight = m_adParam.total_height - shape_bottom_height - shape_top_height;
-		float h = middleHeight / (float)count;
+		//float h = middleHeight / (float)count;
 
 		std::vector<ClipperLib::PolyTree> polys(4);
 		offsetAndExtendPolyTree(m_poly, 0.0, thickness, 0, polys.at(0));
@@ -51,7 +51,7 @@ namespace fmesh
 			_buildFromDiffPolyTree_drum(&middlePolys.at(i), &middlePolys.at(i + 1),0,out);
 			if (out.ChildCount() > 0)
 			{
-				_fillPolyTreeReverseInner(&out);
+				_fillPolyTreeReverseInner(&out,true);
 			}
 		}
 

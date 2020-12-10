@@ -34,5 +34,13 @@ namespace fmesh
 		_buildFromSamePolyTree(&polys.at(3), &polys.at(4));
 		_fillPolyTree(&polys.front(),true);
 		_fillPolyTree(&polys.back());
+
+		//top close
+// 		ClipperLib::PolyTree toppolys;
+// 		offsetAndExtendPolyTree(m_poly, 0.0, thickness, m_adParam.total_height+0.5, toppolys);
+// 		
+// 		_fillPolyTreeOutline(&toppolys);
+// 		_fillPolyTreeInner(&polys.at(4),1);
+// 		_buildFromSamePolyTree(&polys.at(4), &toppolys,1);
 	}
 }

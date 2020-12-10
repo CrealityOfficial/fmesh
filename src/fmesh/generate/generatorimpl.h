@@ -41,19 +41,13 @@ namespace fmesh
 
 		void _buildFromDiffPolyTree_firstLayer(ClipperLib::PolyTree* treeLower, int flag = 0);
 		void _buildRoof(ClipperLib::PolyTree* polyTree, double roofHeight, double thickness);
-
-		void _buildTop(ClipperLib::PolyTree& treeTop, double& hTop);
-		void _buildBottom(ClipperLib::PolyTree& treeBottom, double& hBottom);
 	protected:
 		ClipperLib::Paths* m_paths;
 		ClipperLib::PolyTree m_poly;
 
 		GenParam m_param;
 		F2MParam m_modelparam;
-
 		ADParam m_adParam;
-		trimesh::vec2 dmin;
-		trimesh::vec2 dmax;
 
 		std::vector<std::string> m_args;
 

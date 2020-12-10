@@ -14,6 +14,11 @@ namespace fmesh
 
 	void ItalicsGenerator::build()
 	{
+		//test data
+		m_adParam.bottom_type = ADBottomType::adbt_close;
+		m_adParam.top_type = ADTopType::adtt_step;
+		//
+
 		//init
 		float btoomStepHeight = m_adParam.shape_bottom_height;
 		float bottomHeight = m_adParam.bottom_height;
@@ -35,26 +40,26 @@ namespace fmesh
 
 		//bottom
 		ClipperLib::PolyTree bottomPloy;
-		fmesh::offsetAndExtendPolyTree(m_poly, 0, thickness, 0, bottomPloy);
+		fmesh::offsetAndExtendPolyTree(m_poly, 0, thickness, 0, bottomPloy);		
 		std::vector<ClipperLib::PolyTree> botomSteppolys(3);
 		if (m_adParam.bottom_type == ADBottomType::adbt_step)
 		{
 			//step
 			if (btoomStepHeight <= bottomHeight)
 			{
-				fmesh::offsetAndExtendPolyTree(m_poly, 0, thickness, btoomStepHeight - 0.5, botomSteppolys.at(0));
+				fmesh::offsetAndExtendPolyTree(m_poly, 0, thickness, btoomStepHeight-0.5, botomSteppolys.at(0));
 				fmesh::offsetAndExtendPolyTree(m_poly, 0, thickness, btoomStepHeight, botomSteppolys.at(1));
 				fmesh::offsetAndExtendPolyTree(m_poly, 0, thickness, btoomStepHeight, botomSteppolys.at(2));
 				offsetExteriorInner(botomSteppolys.at(1), -btoomStepWiden);
 				_buildFromDiffPolyTree(&botomSteppolys.at(0), &botomSteppolys.at(1));
 				_buildFromDiffPolyTree(&botomSteppolys.at(1), &botomSteppolys.at(2));
 			}
-			_fillPolyTree(&bottomPloy, true);
+			_fillPolyTree(&bottomPloy,true);
 		}
 		else if (m_adParam.bottom_type == ADBottomType::adbt_close)
 		{
 			fmesh::offsetAndExtendPolyTree(m_poly, 0, thickness, btoomStepHeight, botomSteppolys.at(0));
-			_fillPolyTreeOutline(&bottomPloy, true);
+			_fillPolyTreeOutline(&bottomPloy,true);
 			_fillPolyTreeOutline(&botomSteppolys.at(0));
 		}
 		else
@@ -68,7 +73,7 @@ namespace fmesh
 		std::vector<ClipperLib::PolyTree> polys(count + 1);
 		for (int i = 0; i <= count; ++i)
 		{
-			fmesh::offsetAndExtendPolyTree(m_poly, -(float)i * offset, thickness, bottomHeight + (float)i * h, polys.at(i));
+			fmesh::offsetAndExtendPolyTree(m_poly, -(float)i * offset, thickness, bottomHeight+(float)i * h, polys.at(i));
 		}
 		for (int i = 0; i < count; ++i)
 		{
@@ -83,10 +88,10 @@ namespace fmesh
 		//top
 		if (m_adParam.top_type == ADTopType::adtt_step)
 		{
-			size_t num = count - h / topHeight;
+			size_t num = count - h /topHeight;
 			std::vector<ClipperLib::PolyTree> topSteppolys(3);
 
-			fmesh::offsetAndExtendPolyTree(m_poly, -(float)num * offset, thickness, bottomHeight + (float)num * h - 0.5, topSteppolys.at(0));
+			fmesh::offsetAndExtendPolyTree(m_poly, -(float)num * offset, thickness, bottomHeight + (float)num * h-0.5, topSteppolys.at(0));
 			fmesh::offsetAndExtendPolyTree(m_poly, -(float)num * offset, thickness, bottomHeight + (float)num * h, topSteppolys.at(1));
 			fmesh::offsetAndExtendPolyTree(m_poly, -(float)num * offset, thickness, bottomHeight + (float)num * h, topSteppolys.at(2));
 			offsetExteriorInner(topSteppolys.at(1), -topStepWiden);

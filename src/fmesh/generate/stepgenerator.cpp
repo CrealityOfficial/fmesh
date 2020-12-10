@@ -14,7 +14,7 @@ namespace fmesh
 
 	void StepGenerator::build()
 	{
-		double thickness = m_param.thickness / 2.0f;
+		double thickness = m_param.thickness;// / 2.0f;
 		double offset = -m_param.bottomStepW;
 		std::vector<float> heights(5);
 		heights.at(0) = 0.0f;
@@ -30,7 +30,7 @@ namespace fmesh
 		offsetAndExtendPolyTree(m_poly, 0.0, thickness, heights.at(2), polys.at(2));
 		offsetAndExtendPolyTree(m_poly, 0.0, thickness, heights.at(3), polys.at(3));
 		offsetAndExtendPolyTree(m_poly, 0.0, thickness, heights.at(4), polys.at(4));
-		offsetExteriorInner(polys.at(2), offset);
+		offsetExteriorInner(polys.at(2), offset*4);
 
 		_fillPolyTree(&polys.at(0), true);
 		_fillPolyTree(&polys.at(4));	
