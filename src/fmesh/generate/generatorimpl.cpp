@@ -140,6 +140,7 @@ namespace fmesh
 	{
 		std::vector<Patch*> patches;
 		fillComplexPolyTreeReverseInner(tree, patches);
+		//fillComplexPolyTree(tree, patches);
 
 		addPatches(patches, invert);
 	}

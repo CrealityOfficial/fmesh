@@ -46,21 +46,23 @@ namespace fmesh
 			if (!node->IsHole())
 			{
 				Patch* patch = fillOneLevelPolyNode(node);
-				if (parentChilds)
+				if (parentChilds % 2 == 1)
 				{
 					Patch* _path = new Patch;
 					for (int i = patch->size() - 1; i >= 0; i--)
 					{
 						_path->push_back(patch->at(i));
 					}
-					--parentChilds;
+
+					delete patch;
 					patches.push_back(_path);					
 				}
 				else
 				{
 					patches.push_back(patch);
-					parentChilds = node->ChildCount();
-				}					 				
+				}	
+
+				++parentChilds;
 			}
 		};
 

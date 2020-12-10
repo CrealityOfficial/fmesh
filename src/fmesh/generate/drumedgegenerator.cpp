@@ -38,11 +38,13 @@ namespace fmesh
 		float offset = 3.1415926 / drumHCount;
 
 		size_t middle = drumHCount / 2;
+		std::vector<float> offs(drumHCount + 1);
 		for (size_t i = 0; i < drumHCount + 1; i++)
 		{
 			float delta = shape_bottom_height + i * 0.5;
 			float _offset = shape_middle_width*sin((offset*i)>0? offset * i:0);
 			offsetAndExtendPolyTree(m_poly, _offset / 2, thickness, delta, middlePolys.at(i));
+			offs.at(i) = _offset;
 		}
 
 		for (size_t i = 0; i < middlePolys.size()-1; i++)
@@ -51,7 +53,7 @@ namespace fmesh
 			_buildFromDiffPolyTree_drum(&middlePolys.at(i), &middlePolys.at(i + 1),0,out);
 			if (out.ChildCount() > 0)
 			{
-				_fillPolyTreeReverseInner(&out,true);
+				_fillPolyTreeReverseInner(&out, offs.at(i) < offs.at(i + 1));
 			}
 		}
 
