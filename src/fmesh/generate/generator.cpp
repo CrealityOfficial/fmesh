@@ -129,14 +129,28 @@ namespace fmesh
 		{
 		case ADShapeType::adst_none:
 			impl = new SimpleGenerator();
-		case ADShapeType::adst_xiebian:
+			break;
+		case ADShapeType::adst_xiebian_top:
+			impl = new ItalicsGenerator();
+			break;
+		case ADShapeType::adst_xiebian_bottom:
 		case ADShapeType::adst_gubian:
+			impl = new DrumedgeGenerator();
+			break;
 		case ADShapeType::adst_cemianjianjiao:
+			impl = new SharpsideGenerator();
+			break;
 		case ADShapeType::adst_yuanding:
 		case ADShapeType::adst_jianjiao:
-		case ADShapeType::adst_xiemian:
+		case ADShapeType::adst_xiemian_front:
+			impl = new SlopeGenerator();
+			break;
+		case ADShapeType::adst_xiemian_back:
+			impl = new SlopebackGenerator();
+			break;
 		case ADShapeType::adst_dingmianjieti:
 			impl = new SimpleGenerator();
+			break;
 		default:
 			impl = new SimpleGenerator();
 			break;
