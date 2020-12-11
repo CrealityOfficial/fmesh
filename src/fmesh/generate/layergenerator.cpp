@@ -27,7 +27,8 @@ namespace fmesh
 
 		float middleHeight = m_adParam.total_height - shape_bottom_height - shape_top_height;
 
-		size_t drumHCount = middleHeight / 0.5;
+		size_t drumHCount = 32;
+		double drumDelta = middleHeight / (double)drumHCount;
 		std::vector<ClipperLib::PolyTree> middlePolys(1 + drumHCount);
 
 		float offset = 3.1415926 / drumHCount;
@@ -37,7 +38,7 @@ namespace fmesh
 		std::vector<float> offs(drumHCount + 1);
 		for (size_t i = 0; i < drumHCount + 1; i++)
 		{
-			float delta = shape_bottom_height + i * 0.5;
+			float delta = shape_bottom_height + i * drumDelta;
 			float _offset = shape_middle_width * sin((offset * i) > 0 ? offset * i : 0);
 			offsetAndExtendPolyTree(m_poly, _offset / 2, thickness, delta, middlePolys.at(i));
 			offs.at(i) = _offset;

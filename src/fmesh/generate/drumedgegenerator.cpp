@@ -32,7 +32,7 @@ namespace fmesh
 		offsetAndExtendPolyTree(m_poly, 0.0, thickness, m_adParam.total_height - shape_top_height, polys.at(2));
 		offsetAndExtendPolyTree(m_poly, 0.0, thickness, m_adParam.total_height, polys.at(3));
 
-		size_t drumHCount = 54;
+		size_t drumHCount = 32;
 		double drumDelta = middleHeight / (double)drumHCount;
 		std::vector<ClipperLib::PolyTree> middlePolys(1 + drumHCount);
 

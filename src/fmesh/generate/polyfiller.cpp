@@ -50,7 +50,6 @@ namespace fmesh
 				source.push_back(node);
 
 		int parentChilds = 0;
-
 		while (source.size() > 0)
 		{
 			for (ClipperLib::PolyNode* node : source)
@@ -62,6 +61,16 @@ namespace fmesh
 				Patch* patch = fillOneLevelPolyNode(node);
 				if (patch)
 				{
+					bool outer = parentChilds % 2 == 0;
+					if (outer)
+					{
+						int gson = 0;
+						for (ClipperLib::PolyNode* n : node->Childs)
+							gson += (int)n->ChildCount();
+						if(gson == 0)
+							outer = false;
+					}
+
 					bool lReverse = false;
 					if (node->Contour.size() > 0 && node->ChildCount() > 0
 						&& node->Childs.at(0)->Contour.size() > 0)
@@ -69,11 +78,8 @@ namespace fmesh
 						if (node->Contour.at(0).Z > node->Childs.at(0)->Contour.at(0).Z)
 							lReverse = true;
 					}
-
-					bool reverse = lReverse;
-					if (parentChilds % 2 == 1)
-						reverse = !reverse;
-					if (reverse)
+					
+					if ((outer && lReverse) ||(!outer && !lReverse))
 						std::reverse(patch->begin(), patch->end());
 					patches.push_back(patch);
 				}

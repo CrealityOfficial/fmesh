@@ -149,7 +149,7 @@ namespace fmesh
 		mmesh::loopPolyTree(f1, treeLower);
 
 		size_t size = pathsUp.size();
-		if (size != pathsLower.size() && size > 0)
+		//if (size != pathsLower.size() && size > 0)
 		{
 			fmesh::xor2PolyTrees(treeUp, treeLower, out);
 			return;
