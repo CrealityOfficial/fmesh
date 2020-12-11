@@ -201,7 +201,7 @@ namespace fmesh
 			|| m_adParam.bottom_type == ADBottomType::adbt_extend_outter)
 			hBottom += m_adParam.bottom_height;
 		else if (m_adParam.bottom_type == ADBottomType::adbt_step)
-			hBottom += (m_adParam.bottom_height/* + m_adParam.bottom_extend_width*/);
+			hBottom += (m_adParam.bottom_height + m_adParam.bottom_extend_width);
 		
 		
 		offsetAndExtendPolyTree(m_poly, 0.0, thickness, hBottom, treeBottom);

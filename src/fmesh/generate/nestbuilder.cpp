@@ -11,14 +11,16 @@ namespace fmesh
 		SlotGenerator generator1;
 		SimpleGenerator generator2;
 		ADParam param1, param2;
-		param1.extend_width = 2.0f;
+		param1.extend_width = 0.5f;
 		param1.bottom_type = ADBottomType::adbt_close;
-		param1.bottom_height = 3;
+		param1.bottom_height = 0.2f;
+		param1.shape_bottom_height = 3.0f;
 		param1.bottom_extend_width = 0.5f;
-		param1.bottom_offset = 0;
+		param1.bottom_offset = 0.0f;
 
-		param2.extend_width = 0.5f;
+		param2.extend_width = 0.2f;
 		param2.bottom_offset = 4.0f;
+		param2.bottom_height = 0.2f;
 		param2.bottom_type = ADBottomType::adbt_close;
 		float gap = 0.1f;
 		ClipperLib::Paths outer, inner;
