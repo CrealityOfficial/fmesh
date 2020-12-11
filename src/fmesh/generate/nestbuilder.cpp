@@ -18,11 +18,11 @@ namespace fmesh
 		param1.bottom_extend_width = 0.5f;
 		param1.bottom_offset = 0.0f;
 
-		param2.extend_width = 0.2f;
+		param2.extend_width = 0.4f;
 		param2.bottom_offset = 4.0f;
 		param2.bottom_height = 0.2f;
 		param2.bottom_type = ADBottomType::adbt_close;
-		float gap = 0.1f;
+		float gap = 0.2f;
 		ClipperLib::Paths outer, inner;
 
 		ClipperLib::ClipperOffset offset;

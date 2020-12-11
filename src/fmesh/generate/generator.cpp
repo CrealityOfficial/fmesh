@@ -143,6 +143,8 @@ namespace fmesh
 			impl = new SharpsideGenerator();
 			break;
 		case ADShapeType::adst_yuanding:
+			impl = new DrumGenerator();
+			break;
 		case ADShapeType::adst_jianjiao:
 		case ADShapeType::adst_xiemian_front:
 			impl = new SlopeGenerator();
