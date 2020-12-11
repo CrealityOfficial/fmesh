@@ -4,6 +4,7 @@
 #include "fmesh/common/dvecutil.h"
 #include "mmesh/clipper/circurlar.h"
 #include "fmesh/contour/contour.h"
+#include <algorithm>
 
 namespace fmesh
 {
@@ -41,32 +42,56 @@ namespace fmesh
 		if (!polyTree)
 			return;
 
-		int parentChilds = 0;
-		polyNodeFunc func = [&patches,&parentChilds](ClipperLib::PolyNode* node) {
+		std::vector<ClipperLib::PolyNode*> source;
+		std::vector<ClipperLib::PolyNode*> tmp;
+
+		for (ClipperLib::PolyNode* node : polyTree->Childs)
 			if (!node->IsHole())
+				source.push_back(node);
+
+		int parentChilds = 0;
+
+		while (source.size() > 0)
+		{
+			for (ClipperLib::PolyNode* node : source)
 			{
+#ifdef _DEBUG
+				double area = ClipperLib::Area(node->Contour);
+				std::cout << area << std::endl;
+#endif
 				Patch* patch = fillOneLevelPolyNode(node);
-				if (parentChilds % 2 == 1)
+				if (patch)
 				{
-					Patch* _path = new Patch;
-					for (int i = patch->size() - 1; i >= 0; i--)
+					bool lReverse = false;
+					if (node->Contour.size() > 0 && node->ChildCount() > 0
+						&& node->Childs.at(0)->Contour.size() > 0)
 					{
-						_path->push_back(patch->at(i));
+						if (node->Contour.at(0).Z > node->Childs.at(0)->Contour.at(0).Z)
+							lReverse = true;
 					}
 
-					delete patch;
-					patches.push_back(_path);					
-				}
-				else
-				{
+					bool reverse = lReverse;
+					if (parentChilds % 2 == 1)
+						reverse = !reverse;
+					if (reverse)
+						std::reverse(patch->begin(), patch->end());
 					patches.push_back(patch);
-				}	
+				}
 
-				++parentChilds;
+				for (ClipperLib::PolyNode* n : node->Childs)
+				{
+					for (ClipperLib::PolyNode* cn : n->Childs)
+					{
+						if (!cn->IsHole())
+							tmp.push_back(cn);
+					}
+				}
 			}
-		};
 
-		mmesh::loopPolyTree(func, polyTree);
+			source.swap(tmp);
+			tmp.clear();
+			++parentChilds;
+		}
 	}
 
 	Patch* fillOneLevelPolyNode(ClipperLib::PolyNode* polyNode, bool invert)

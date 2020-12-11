@@ -50,7 +50,7 @@ namespace fmesh
 			_buildFromDiffPolyTree_drum(&middlePolys.at(index), &middlePolys.at(index + 1), 0, out);
 			if (out.ChildCount() > 0)
 			{
-				_fillPolyTreeReverseInner(&out, offs.at(index) < offs.at(index + 1));
+				_fillPolyTreeReverseInner(&out, false);
 			}
 
 			if (m_tracer)
