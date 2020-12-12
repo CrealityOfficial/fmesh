@@ -146,6 +146,8 @@ namespace fmesh
 			impl = new DrumGenerator();
 			break;
 		case ADShapeType::adst_jianjiao:
+			impl = new StepsGenerator();
+			break;
 		case ADShapeType::adst_xiemian_front:
 			impl = new SlopeGenerator();
 			break;
