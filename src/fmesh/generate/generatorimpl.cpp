@@ -103,8 +103,8 @@ namespace fmesh
 	void GeneratorImpl::_fillPolyTreeOutline(ClipperLib::PolyTree* tree, bool invert)
 	{
 		std::vector<Patch*> patches;
-		fillFirstLevelPolyNode(tree, patches);
 
+		fillFirstLevelPolyNode(tree, patches);
 		addPatches(patches, invert);
 	}
 
@@ -214,9 +214,9 @@ namespace fmesh
 			double hCloseBottom = m_adParam.bottom_offset;
 			offsetAndExtendPolyTree(m_poly, 0.0, thickness, hCloseBottom, closeBottom);
 
-			_fillPolyTreeOutline(&closeBottom, true);
+			//_fillPolyTreeOutline(&closeBottom, true);
 			_fillPolyTreeInner(&treeBottom);
-			_buildFromSamePolyTree(&closeBottom, &treeBottom, 1);
+			//_buildFromSamePolyTree(&closeBottom, &treeBottom, 1);
 		}
 		else if (m_adParam.bottom_type == ADBottomType::adbt_step)
 		{

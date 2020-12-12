@@ -164,4 +164,25 @@ namespace fmesh
 				patches.push_back(patch);
 	}
 
+	void buildXORFrom2PolyTree(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp, ClipperLib::PolyTree& out, int flag)
+	{
+		std::vector<ClipperLib::Path*> pathsUp;
+		std::vector<ClipperLib::Path*> pathsLower;
+		size_t count = 0;
+		auto f = [&count, &pathsUp, &flag](ClipperLib::PolyNode* node) {
+			if (!checkFlag(node, flag))
+				return;
+			pathsUp.push_back(&node->Contour);
+		};
+		auto f1 = [&pathsLower, &flag](ClipperLib::PolyNode* node) {
+			if (!checkFlag(node, flag))
+				return;
+			pathsLower.push_back(&node->Contour);
+		};
+
+		mmesh::loopPolyTree(f, treeUp);
+		mmesh::loopPolyTree(f1, treeLower);
+
+		fmesh::xor2PolyTrees(treeUp, treeLower, out);
+	}
 }

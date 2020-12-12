@@ -14,27 +14,14 @@ namespace fmesh
 
 	void BottomGenerator::build()
 	{
-		ClipperLib::PolyTree poly0, polyH, polyB;
-		double thickness = m_param.thickness / 2.0f;
-		extendPolyTree(m_poly, thickness, poly0);
+		ClipperLib::PolyTree treeTop, treeBottom;
+		double hTop, hBottom;
 
-		auto fNormalB = [this](const ClipperLib::IntPoint& point)->ClipperLib::IntPoint {
-			ClipperLib::IntPoint p = point;
-			p.Z += (ClipperLib::cInt)(1000.0 * m_param.bottomH);
-			return p;
-		};
-		auto fNormalH = [this](const ClipperLib::IntPoint& point)->ClipperLib::IntPoint {
-			ClipperLib::IntPoint p = point;
-			p.Z += (ClipperLib::cInt)(1000.0 * m_param.totalH);
-			return p;
-		};
-		extendPolyTree(m_poly, thickness, fNormalH, polyH);
-		extendPolyTree(m_poly, thickness, fNormalB, polyB);
+		_buildTop(treeTop, hTop);
 
-		_fillPolyTree(&polyH);
-		_fillPolyTreeOutline(&poly0, true);
-		_fillPolyTreeInner(&polyB);
-		_buildFromSamePolyTree(&polyB, &polyH);
-		_buildFromSamePolyTree(&poly0, &polyB, 1);
+		m_adParam.bottom_type = ADBottomType::adbt_close;
+		_buildBottom(treeBottom, hBottom);
+
+		//_buildFromSamePolyTree(&treeBottom, &treeTop);
 	}
 }
