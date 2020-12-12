@@ -18,6 +18,8 @@
 #include "fmesh/generate/sharpsidegenerator.h"
 #include "fmesh/generate/slopebackgenerator.h"
 #include "fmesh/generate/layergenerator.h"
+#include "fmesh/generate/sharptopgenerator.h"
+#include "fmesh/generate/reitalicsgenerator.h"
 
 #include <memory>
 namespace fmesh
@@ -47,6 +49,8 @@ namespace fmesh
 		REGISTER("sharpside", SharpsideGenerator)
 		REGISTER("slopeback", SlopebackGenerator)
 		REGISTER("layer", LayerGenerator)
+		REGISTER("sharptop", SharptopGenerator)
+		REGISTER("reitalics", ReItalicsGenerator)
 	}
 
 	void destroyBuildImpls(GeneratorImplMap& impls)
@@ -136,6 +140,8 @@ namespace fmesh
 			impl = new ItalicsGenerator();
 			break;
 		case ADShapeType::adst_xiebian_bottom:
+			impl = new ReItalicsGenerator();
+			break;
 		case ADShapeType::adst_gubian:
 			impl = new DrumedgeGenerator();
 			break;
