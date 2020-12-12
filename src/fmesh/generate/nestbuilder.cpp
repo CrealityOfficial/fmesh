@@ -14,15 +14,16 @@ namespace fmesh
 		param1.extend_width = 0.5f;
 		param1.bottom_type = ADBottomType::adbt_close;
 		param1.bottom_height = 0.2f;
-		param1.shape_bottom_height = 3.0f;
+		param1.shape_bottom_height = 4.0f;//down  groove height
+		param1.shape_top_height = 5.0f;//up  groove height
 		param1.bottom_extend_width = 0.5f;
 		param1.bottom_offset = 0.0f;
 
-		param2.extend_width = 0.4f;
-		param2.bottom_offset = 4.0f;
+		param2.extend_width = 0.4f;//2²ã
+		param2.bottom_offset = param2.total_height- param1.shape_top_height;
 		param2.bottom_height = 0.2f;
 		param2.bottom_type = ADBottomType::adbt_close;
-		float gap = 0.2f;
+		float gap = 0.3f;
 		ClipperLib::Paths outer, inner;
 
 		ClipperLib::ClipperOffset offset;
