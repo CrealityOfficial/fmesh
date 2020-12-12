@@ -2,8 +2,55 @@
 #include "fmesh/generate/triangularization.h"
 #include "fmesh/common/dvecutil.h"
 
+#include <fstream>
 namespace fmesh
 {
+	SimplePolyWrapper::SimplePolyWrapper()
+	{
+
+	}
+
+	SimplePolyWrapper::~SimplePolyWrapper()
+	{
+
+	}
+
+	void SimplePolyWrapper::load(const std::string& file)
+	{
+		std::fstream in(file, std::ios::binary | std::ios::in);
+		if (in.is_open())
+		{
+			int size = 0;
+			in.read((char*)&size, sizeof(int));
+			if (size > 0)
+			{
+				source.resize(size);
+				poly.resize(size);
+				for (int i = 0; i < size; ++i)
+				{
+					in.read((char*)&source, sizeof(ClipperLib::IntPoint));
+					poly.at(i) = &source.at(i);
+				}
+			}
+		}
+		in.close();
+	}
+
+	void saveSimplePoly(const SimplePoly& poly, const std::string& file)
+	{
+		std::fstream out(file, std::ios::binary | std::ios::out);
+		if (out.is_open())
+		{
+			int size = (int)poly.size();
+			out.write((const char*)&size, sizeof(int));
+			for (ClipperLib::IntPoint* point : poly)
+			{
+				out.write((const char*)&point, sizeof(ClipperLib::IntPoint));
+			}
+		}
+		out.close();
+	}
+
 	EarPolygon::EarPolygon()
 		: m_root(nullptr)
 		, m_circleSize(0)

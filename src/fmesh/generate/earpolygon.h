@@ -16,6 +16,20 @@ namespace fmesh
 		double dot;
 	};
 
+	class SimplePolyWrapper
+	{
+	public:
+		SimplePolyWrapper();
+		~SimplePolyWrapper();
+
+		void load(const std::string& file);
+
+		std::vector<ClipperLib::IntPoint> source;
+		SimplePoly poly;
+	};
+
+	void saveSimplePoly(const SimplePoly& poly, const std::string& file);
+
 	class EarPolygon
 	{
 	public:

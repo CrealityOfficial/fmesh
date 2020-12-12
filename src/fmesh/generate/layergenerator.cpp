@@ -73,24 +73,81 @@ namespace fmesh
 		}
 	}
 
-	void LayerGenerator::saveXOR(const ADParam& param)
+	void LayerGenerator::saveXOR(ClipperLib::PolyTree& tree, const ADParam& param)
 	{
 		size_t drumHCount = 32;
 		float shape_middle_width = param.shape_middle_width;
-		float thickness = m_adParam.extend_width / 4.0;
+		float thickness = param.extend_width / 4.0;
 		std::vector<ClipperLib::PolyTree> middlePolys(1 + drumHCount);
 
 		float offset = 3.1415926 / drumHCount;
 		for (size_t i = 0; i < drumHCount + 1; i++)
 		{
 			float _offset = shape_middle_width * sin((offset * i) > 0 ? offset * i : 0);
-			offsetAndExtendPolyTree(m_poly, _offset / 2, thickness, 0.0, middlePolys.at(i));
+			offsetAndExtendPolyTree(tree, _offset / 2, thickness, 0.0, middlePolys.at(i));
 		}
 
-		for (size_t i = 0; i < drumHCount + 1; i++)
+		int index = 0;
+		auto time_string = [&index]()->std::string {
+			++index;
+			char szTime[100] = { '\0' };
+
+			time_t time2 = time(nullptr);
+			tm pTm;
+			localtime_s(&pTm, &time2);
+			pTm.tm_year += 1900;
+			pTm.tm_mon += 1;
+
+			sprintf_s(szTime, "%04d-%02d-%02d-%02d-%02d-%02d-%d",
+				pTm.tm_year,
+				pTm.tm_mon,
+				pTm.tm_mday,
+				pTm.tm_hour,
+				pTm.tm_min,
+				pTm.tm_sec,
+				index);
+
+			std::string strTime = szTime;
+
+			return strTime;
+		};
+
+		for (size_t i = 0; i < drumHCount; i++)
 		{
 			ClipperLib::PolyTree out;
 			buildXORFrom2PolyTree(&middlePolys.at(i), &middlePolys.at(i + 1), out);
+
+			std::vector<ClipperLib::PolyNode*> source;
+			std::vector<ClipperLib::PolyNode*> tmp;
+
+			for (ClipperLib::PolyNode* node : out.Childs)
+				if (!node->IsHole())
+					source.push_back(node);
+
+			int parentChilds = 0;
+			while (source.size() > 0)
+			{
+				for (ClipperLib::PolyNode* node : source)
+				{
+					SimplePoly poly;
+					merge2SimplePoly(node, &poly, false);
+					
+					saveSimplePoly(poly, time_string());
+
+					for (ClipperLib::PolyNode* n : node->Childs)
+					{
+						for (ClipperLib::PolyNode* cn : n->Childs)
+						{
+							if (!cn->IsHole())
+								tmp.push_back(cn);
+						}
+					}
+				}
+
+				source.swap(tmp);
+				tmp.clear();
+				++parentChilds;
+			}
 		}
 	}
 }
