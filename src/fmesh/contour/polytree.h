@@ -28,6 +28,8 @@ namespace fmesh
 
 	//Polygon skeleton
 	void skeletonPolyTree(ClipperLib::PolyTree& source, double z, std::vector<Patch*>& patches);
+	//Polygon sharp 
+	void skeletonPolyTreeSharp(ClipperLib::PolyTree& source, double z,double height, std::vector<Patch*>& patches);
 
 	//offset
 	void polyTreeOffset(ClipperLib::PolyTree& source, polyOffsetFunc offsetFunc);

@@ -300,6 +300,42 @@ namespace fmesh
 		}
 	}
 
+	void skeletonPolyTreeSharp(ClipperLib::PolyTree& source, double z, double height, std::vector<Patch*>& patches)
+	{
+		ClipperLib::PolyTree roofLine;
+		ClipperLib::PolyTree roofPoint;
+		ClipperLib::Paths* paths = new ClipperLib::Paths;
+		fmesh::roofLine(&source, &roofLine, &roofPoint, paths);
+
+		for (size_t i = 0; i < paths->size(); i++)
+		{
+			ClipperLib::PolyNode pn;
+			pn.Contour = paths->at(i);
+			bool clockwise = false;
+			for (size_t i = 0; i < pn.Contour.size(); i++)
+			{
+				if (pn.Contour.at(i).Z == 300)
+				{
+					clockwise = true;
+				}
+				else if (pn.Contour.at(i).Z == 500)
+				{
+					pn.Contour.at(i).Z = height * 1000;
+				}
+
+				pn.Contour.at(i).Z += z * 1000;
+			}
+			Patch* tpath = fillOneLevelPolyNode(&pn);
+
+			if (clockwise)
+			{
+				reverse(tpath->begin(), tpath->end());
+			}
+
+			patches.push_back(tpath);
+		}
+	}
+
 	void polyTreeOffset(ClipperLib::PolyTree& source, polyOffsetFunc offsetFunc)
 	{
 		polyNodeFunc func = [&func, &offsetFunc](ClipperLib::PolyNode* node) {

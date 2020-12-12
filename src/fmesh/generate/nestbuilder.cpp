@@ -37,7 +37,7 @@ namespace fmesh
 		trimesh::TriMesh* mesh = new trimesh::TriMesh();
 		std::vector<trimesh::TriMesh*> meshes;
 		meshes.push_back(mesh1);
-		//meshes.push_back(mesh2);
+		meshes.push_back(mesh2);
 		mmesh::mergeTriMesh(mesh, meshes);
 
 		delete mesh1;
