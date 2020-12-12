@@ -26,8 +26,8 @@ namespace fmesh
 		fmesh::offsetAndExtendPolyTree(m_poly, 0, m_adParam.extend_width / 2.0, m_adParam.shape_bottom_height, Steppolys.at(1));		
 		fmesh::offsetAndExtendPolyTree(m_poly, 0, m_adParam.extend_width / 2.0, m_adParam.total_height - m_adParam.shape_top_height, Steppolys.at(2));
 		fmesh::offsetAndExtendPolyTree(m_poly, 0, m_adParam.extend_width / 2.0, m_adParam.total_height - m_adParam.shape_top_height, Steppolys.at(3));
-		offsetExteriorInner(Steppolys.at(1), -m_adParam.bottom_extend_width);
-		offsetExteriorInner(Steppolys.at(2), -m_adParam.bottom_extend_width);
+		offsetExteriorInner(Steppolys.at(1), m_adParam.bottom_extend_width);
+		offsetExteriorInner(Steppolys.at(2), m_adParam.bottom_extend_width);
 		_buildFromDiffPolyTree(&Steppolys.at(0), &Steppolys.at(1));
 		_buildFromDiffPolyTree(&Steppolys.at(2), &Steppolys.at(3));
 		_buildFromSamePolyTree(&Steppolys.at(1), &Steppolys.at(2));	

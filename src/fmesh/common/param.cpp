@@ -43,7 +43,7 @@ namespace fmesh
 		//bottom
 		bottom_type = ADBottomType::adbt_none;
 		bottom_height = 2.0f;
-		bottom_extend_width = 2.0f;
+		bottom_extend_width = 0.5f;
 
 		//shape type
 		shape_type = ADShapeType::adst_none;

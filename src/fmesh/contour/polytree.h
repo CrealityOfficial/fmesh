@@ -9,6 +9,8 @@ namespace fmesh
 	typedef std::function<ClipperLib::IntPoint(const ClipperLib::IntPoint& point)> polyOffsetFunc;
 
 	int testPolyNodeDepth(ClipperLib::PolyNode* node);
+	void seperatePolyTree1234(ClipperLib::PolyTree* tree, std::vector<std::vector<ClipperLib::PolyNode*>>& depthNodes);
+
 	//all parameters are in mm
 	void convertPaths2PolyTree(ClipperLib::Paths* paths, ClipperLib::PolyTree& polyTree);
 	void copy2PolyTree(ClipperLib::PolyTree& source, ClipperLib::PolyTree& dest);
@@ -20,6 +22,10 @@ namespace fmesh
 	void offsetExterior(ClipperLib::PolyTree& source, double offset);
 	void offsetExteriorInner(ClipperLib::PolyTree& source, double offset);
 
+	//set z
+	void setPolyTreeZ(ClipperLib::PolyTree& tree, double z);
+	void setPolyTreeZ(ClipperLib::PolyTree& tree, ClipperLib::cInt z);
+
 	//Polygon skeleton
 	void skeletonPolyTree(ClipperLib::PolyTree& source, double z, std::vector<Patch*>& patches);
 
@@ -28,7 +34,7 @@ namespace fmesh
 	void offsetPolyTree(ClipperLib::PolyTree& source, double delta, ClipperLib::PolyTree& dest);
 	void offsetPaths(std::vector<ClipperLib::Path*>& source, double delta, ClipperLib::PolyTree& dest);
 	void offsetPath(ClipperLib::Path* source, double delta, ClipperLib::PolyTree& dest);
-
+	void offsetPolyNodes(const std::vector<ClipperLib::PolyNode*>& polyNodes, double delta, ClipperLib::PolyTree& dest);
 	//xor
 	void xor2PolyTrees(ClipperLib::PolyTree* outer, ClipperLib::PolyTree* inner, ClipperLib::PolyTree& out);
 	void xor2PolyNodes(const std::vector<ClipperLib::PolyNode*>& outer, 
