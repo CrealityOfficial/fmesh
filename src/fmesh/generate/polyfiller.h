@@ -13,6 +13,7 @@ namespace fmesh
 	Patch* fillOneLevelPolyNode(ClipperLib::PolyNode* polyNode, bool invert = false);
 	void fillFirstLevelPolyNode(ClipperLib::PolyTree* polyTree, std::vector<Patch*>& patches);
 	void fillPolyNodeInner(ClipperLib::PolyTree* polyTree, std::vector<Patch*>& patches);
+	void fillPolyTreeDepth14(ClipperLib::PolyTree* polyTree, std::vector<Patch*>& patches);
 
 	void fillPolyNodeOutline(ClipperLib::PolyTree* polyTree1, std::vector<Patch*>& patches);
 

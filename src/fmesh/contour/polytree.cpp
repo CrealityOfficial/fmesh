@@ -8,6 +8,21 @@
 
 namespace fmesh
 {
+	int testPolyNodeDepth(ClipperLib::PolyNode* node)
+	{
+		if (!node || !node->Parent)
+			return 0;
+
+		int depth = 0;
+		ClipperLib::PolyNode* parent = node->Parent;
+		while (parent)
+		{
+			++depth;
+			parent = parent->Parent;
+		}
+		return depth;
+	}
+
 	void convertPaths2PolyTree(ClipperLib::Paths* paths, ClipperLib::PolyTree& polyTree)
 	{
 		ClipperLib::Clipper clipper;
@@ -309,6 +324,24 @@ namespace fmesh
 		};
 
 		func2(inner);
+
+		clipper.Execute(ClipperLib::ctXor, out, ClipperLib::pftNonZero, ClipperLib::pftNonZero);
+	}
+
+	void xor2PolyNodes(const std::vector<ClipperLib::PolyNode*>& outer,
+		const std::vector<ClipperLib::PolyNode*>& inner, ClipperLib::PolyTree& out)
+	{
+		ClipperLib::Clipper clipper;
+
+		for (ClipperLib::PolyNode* node : outer)
+		{
+			clipper.AddPath(node->Contour, ClipperLib::ptClip, true);
+		}
+
+		for (ClipperLib::PolyNode* node : inner)
+		{
+			clipper.AddPath(node->Contour, ClipperLib::ptSubject, true);
+		}
 
 		clipper.Execute(ClipperLib::ctXor, out, ClipperLib::pftNonZero, ClipperLib::pftNonZero);
 	}

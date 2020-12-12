@@ -13,6 +13,12 @@ namespace fmesh
 		if (flag == 2 && !node->IsHole() && !node->Parent)
 			return false;
 
+		int depth = testPolyNodeDepth(node);
+		if (flag == 3 && depth != 1 && depth != 4)      // 1, 4
+			return false;
+	
+		if (flag == 4)      // 2, 3
+			return false;
 		return true;
 	}
 
@@ -24,19 +30,23 @@ namespace fmesh
 		std::vector<ClipperLib::Path*> pathsUp;
 		std::vector<ClipperLib::Path*> pathsLower;
 		size_t count = 0;
+
 		auto f = [&count, &pathsUp, &flag](ClipperLib::PolyNode* node) {
 			if (!checkFlag(node, flag))
+			{
 				return;
-
+			}
 			size_t size = node->Contour.size();
 			if (size > 2)
 				count += 2 * size;
 			pathsUp.push_back(&node->Contour);
 		};
+
 		auto f1 = [&pathsLower, &flag](ClipperLib::PolyNode* node) {
 			if (!checkFlag(node, flag))
+			{
 				return;
-
+			}
 			pathsLower.push_back(&node->Contour);
 		};
 

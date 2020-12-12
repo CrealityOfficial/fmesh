@@ -22,6 +22,6 @@ namespace fmesh
 		m_adParam.bottom_type = ADBottomType::adbt_close;
 		_buildBottom(treeBottom, hBottom);
 
-		//_buildFromSamePolyTree(&treeBottom, &treeTop);
+		_buildFromSamePolyTree(&treeBottom, &treeTop);
 	}
 }

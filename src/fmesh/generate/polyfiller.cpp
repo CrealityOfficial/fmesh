@@ -4,6 +4,7 @@
 #include "fmesh/common/dvecutil.h"
 #include "mmesh/clipper/circurlar.h"
 #include "fmesh/contour/contour.h"
+#include "fmesh/contour/polytree.h"
 #include <algorithm>
 
 namespace fmesh
@@ -119,20 +120,51 @@ namespace fmesh
 		}
 	}
 
+	void fillPolyTreeDepth14(ClipperLib::PolyTree* polyTree, std::vector<Patch*>& patches)
+	{
+		if (!polyTree)
+			return;
+		
+		std::vector<ClipperLib::PolyNode*> nodes1;
+		std::vector<ClipperLib::PolyNode*> nodes4;
+
+		polyNodeFunc func = [&patches, &nodes1, &nodes4](ClipperLib::PolyNode* node) {
+			int depth = testPolyNodeDepth(node);
+			if (depth == 1)
+				nodes1.push_back(node);
+			if (depth == 4)
+				nodes4.push_back(node);
+		};
+
+		mmesh::loopPolyTree(func, polyTree);
+
+		ClipperLib::PolyTree out;
+		xor2PolyNodes(nodes1, nodes4, out);
+
+		fillComplexPolyTree(&out, patches);
+	}
+
 	void fillPolyNodeInner(ClipperLib::PolyTree* polyTree, std::vector<Patch*>& patches)
 	{
 		if (!polyTree)
 			return;
 
-		polyNodeFunc func = [&patches](ClipperLib::PolyNode* node) {
-			if (node->IsHole() && node->Parent)
+		std::vector<ClipperLib::PolyNode*> nodes2;
+		for (ClipperLib::PolyNode* node1 : polyTree->Childs)
+		{
+			for (ClipperLib::PolyNode* node2 : node1->Childs)
 			{
-				Patch* patch = fillOneLevelPolyNode(node, true);
-				if (patch) patches.push_back(patch);
+				if (node2->IsHole() && node2->Contour.size() > 0)
+					nodes2.push_back(node2);
 			}
-		};
+		}
 
-		mmesh::loopPolyTree(func, polyTree);
+		for (ClipperLib::PolyNode* node : nodes2)
+		{
+			Patch* patch = fillOneLevelPolyNode(node, true);
+			if (patch)
+				patches.push_back(patch);
+		}
 	}
 
 	void fillPolyNodeOutline(ClipperLib::PolyTree* polyTree1, std::vector<Patch*>& patches)
@@ -217,36 +249,37 @@ namespace fmesh
 
 		while (insertedPolys.size() > 0)
 		{
-			ClipperLib::Path reversePath;
-			ClipperLib::Path* insertPoly = nullptr;
-			insertPoly = &insertedPolys.back()->Contour;
-			if (invert)
+			//ClipperLib::Path* insertPoly = nullptr;
+			std::vector<ClipperLib::IntPoint*> insertPoly;
+			int cSize = (int)insertedPolys.back()->Contour.size();
+			ClipperLib::Path& insertPath = insertedPolys.back()->Contour;
+			insertPoly.reserve(cSize);
+			if (invert && cSize > 0)
 			{
-				int cSize = insertPoly->size();
-				reversePath.reserve(cSize);
-				if (cSize > 0)
-				{
-					for (int i = cSize - 1; i >= 0; --i)
-						newPoly->push_back(&polyNode->Contour.at(i));
-				}
-				insertPoly = &reversePath;
+				for (int i = cSize - 1; i >= 0; --i)
+					insertPoly.push_back(&insertPath.at(i));
+			}
+			else
+			{
+				for (int i = 0; i < cSize; ++i)
+					insertPoly.push_back(&insertPath.at(i));
 			}
 
 			insertedPolys.pop_back();
 
-			int innerSize = (int)insertPoly->size();
+			int innerSize = (int)insertPoly.size();
 			float mx = -10000000.0f;
 
 			ClipperLib::IntPoint* maxVertex = nullptr;
 			int vertexIndex = -1;
 			for (int i = 0; i < innerSize; ++i)
 			{
-				trimesh::dvec3& v = CInt2VD(insertPoly->at(i));
+				trimesh::dvec3& v = CInt2VD(*insertPoly.at(i));
 				if (v.x > mx)
 				{
 					mx = v.x;
 					vertexIndex = i;
-					maxVertex = &insertPoly->at(i);
+					maxVertex = insertPoly.at(i);
 				}
 			}
 
@@ -374,9 +407,9 @@ namespace fmesh
 						if (i == mutaulIndex)
 						{// insert inner
 							for (j = vertexIndex; j < innerSize; ++j)
-								mergedPolygon.push_back(&insertPoly->at(j));
+								mergedPolygon.push_back(insertPoly.at(j));
 							for (j = 0; j <= vertexIndex; ++j)
-								mergedPolygon.push_back(&insertPoly->at(j));
+								mergedPolygon.push_back(insertPoly.at(j));
 							mergedPolygon.push_back(newPoly->at(i));
 						}
 					}

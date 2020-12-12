@@ -7,6 +7,8 @@
 namespace fmesh
 {
 	typedef std::function<ClipperLib::IntPoint(const ClipperLib::IntPoint& point)> polyOffsetFunc;
+
+	int testPolyNodeDepth(ClipperLib::PolyNode* node);
 	//all parameters are in mm
 	void convertPaths2PolyTree(ClipperLib::Paths* paths, ClipperLib::PolyTree& polyTree);
 	void copy2PolyTree(ClipperLib::PolyTree& source, ClipperLib::PolyTree& dest);
@@ -29,6 +31,8 @@ namespace fmesh
 
 	//xor
 	void xor2PolyTrees(ClipperLib::PolyTree* outer, ClipperLib::PolyTree* inner, ClipperLib::PolyTree& out);
+	void xor2PolyNodes(const std::vector<ClipperLib::PolyNode*>& outer, 
+		const std::vector<ClipperLib::PolyNode*>& inner, ClipperLib::PolyTree& out);
 
 	//seperate
 	struct PolyPair
