@@ -15,6 +15,7 @@ namespace fmesh
 
 	void buildFromDiffPolyTree_drum(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp,
 		std::vector<Patch*>& patches, int flag, ClipperLib::PolyTree& out);
+	void buildXORFrom2PolyTree(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp, ClipperLib::PolyTree& out, int flag = 0);
 
 	inline trimesh::vec3 CInt2V(const ClipperLib::IntPoint& point)
 	{

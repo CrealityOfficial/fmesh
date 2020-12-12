@@ -72,4 +72,25 @@ namespace fmesh
 			}
 		}
 	}
+
+	void LayerGenerator::saveXOR(const ADParam& param)
+	{
+		size_t drumHCount = 32;
+		float shape_middle_width = param.shape_middle_width;
+		float thickness = m_adParam.extend_width / 4.0;
+		std::vector<ClipperLib::PolyTree> middlePolys(1 + drumHCount);
+
+		float offset = 3.1415926 / drumHCount;
+		for (size_t i = 0; i < drumHCount + 1; i++)
+		{
+			float _offset = shape_middle_width * sin((offset * i) > 0 ? offset * i : 0);
+			offsetAndExtendPolyTree(m_poly, _offset / 2, thickness, 0.0, middlePolys.at(i));
+		}
+
+		for (size_t i = 0; i < drumHCount + 1; i++)
+		{
+			ClipperLib::PolyTree out;
+			buildXORFrom2PolyTree(&middlePolys.at(i), &middlePolys.at(i + 1), out);
+		}
+	}
 }

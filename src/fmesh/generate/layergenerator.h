@@ -22,6 +22,7 @@ namespace fmesh
 		void build() override;
 
 		void setLayerGeneratorTracer(LayerGeneratorTracer* tracer);
+		void saveXOR(const ADParam& param);
 	protected:
 		LayerGeneratorTracer* m_tracer;
 	};
