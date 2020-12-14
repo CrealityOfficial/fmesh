@@ -195,7 +195,7 @@ namespace fmesh
 
 			_fillPolyTreeDepth14(&closeTop);
 			_fillPolyTreeInner(&treeTop, true);
-			_buildFromSamePolyTree(&treeTop, &closeTop, 1);
+			_buildFromSamePolyTree(&treeTop, &closeTop, 3);
 		}
 	}
 
