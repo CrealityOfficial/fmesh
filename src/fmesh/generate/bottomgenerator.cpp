@@ -17,11 +17,10 @@ namespace fmesh
 		ClipperLib::PolyTree treeTop, treeBottom;
 		double hTop, hBottom;
 
+		m_adParam.top_type = ADTopType::adtt_close;
 		_buildTop(treeTop, hTop);
-
-		m_adParam.bottom_type = ADBottomType::adbt_close;
 		_buildBottom(treeBottom, hBottom);
 
-		_buildFromSamePolyTree(&treeBottom, &treeTop);
+		//_buildFromSamePolyTree(&treeBottom, &treeTop);
 	}
 }
