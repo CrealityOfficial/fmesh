@@ -14,11 +14,6 @@ namespace fmesh
 
 	void ItalicsGenerator::build()
 	{
-		//test data
-		m_adParam.bottom_type = ADBottomType::adbt_close;
-		m_adParam.top_type = ADTopType::adtt_step;
-		//
-
 		//init
 		float btoomStepHeight = m_adParam.shape_bottom_height;
 		float bottomHeight = m_adParam.bottom_height;
