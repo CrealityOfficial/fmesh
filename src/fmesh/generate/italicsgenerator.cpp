@@ -14,11 +14,6 @@ namespace fmesh
 
 	void ItalicsGenerator::build()
 	{
-		//test data
-		m_adParam.bottom_type = ADBottomType::adbt_close;
-		m_adParam.top_type = ADTopType::adtt_step;
-		//
-
 		//init
 		float btoomStepHeight = m_adParam.shape_bottom_height;
 		float bottomHeight = m_adParam.bottom_height;
@@ -88,16 +83,18 @@ namespace fmesh
 		//top
 		if (m_adParam.top_type == ADTopType::adtt_step)
 		{
-			size_t num = count - h /topHeight;
-			std::vector<ClipperLib::PolyTree> topSteppolys(3);
+			if (topHeight)
+			{
+				size_t num = count - h / topHeight;
+				std::vector<ClipperLib::PolyTree> topSteppolys(3);
 
-			fmesh::offsetAndExtendPolyTree(m_poly, -(float)num * offset, thickness, bottomHeight + (float)num * h-0.5, topSteppolys.at(0));
-			fmesh::offsetAndExtendPolyTree(m_poly, -(float)num * offset, thickness, bottomHeight + (float)num * h, topSteppolys.at(1));
-			fmesh::offsetAndExtendPolyTree(m_poly, -(float)num * offset, thickness, bottomHeight + (float)num * h, topSteppolys.at(2));
-			offsetExteriorInner(topSteppolys.at(1), -topStepWiden);
-			_buildFromDiffPolyTree(&topSteppolys.at(0), &topSteppolys.at(1));
-			_buildFromDiffPolyTree(&topSteppolys.at(1), &topSteppolys.at(2));
-
+				fmesh::offsetAndExtendPolyTree(m_poly, -(float)num * offset, thickness, bottomHeight + (float)num * h - 0.5, topSteppolys.at(0));
+				fmesh::offsetAndExtendPolyTree(m_poly, -(float)num * offset, thickness, bottomHeight + (float)num * h, topSteppolys.at(1));
+				fmesh::offsetAndExtendPolyTree(m_poly, -(float)num * offset, thickness, bottomHeight + (float)num * h, topSteppolys.at(2));
+				offsetExteriorInner(topSteppolys.at(1), -topStepWiden);
+				_buildFromDiffPolyTree(&topSteppolys.at(0), &topSteppolys.at(1));
+				_buildFromDiffPolyTree(&topSteppolys.at(1), &topSteppolys.at(2));
+			}
 		}
 		//top end 
 
