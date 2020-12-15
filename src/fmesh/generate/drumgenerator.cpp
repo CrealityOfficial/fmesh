@@ -49,7 +49,7 @@ namespace fmesh
 			_buildFromDiffPolyTree_drum(&middlePolys.at(i), &middlePolys.at(i + 1), 0, out);
 			if (out.ChildCount() > 0)
 			{
-				_fillPolyTree(&out);
+				_fillPolyTreeReverseInner(&out, false);
 			}
 		}
 
