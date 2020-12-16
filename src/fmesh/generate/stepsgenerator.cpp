@@ -14,24 +14,35 @@ namespace fmesh
 
 	void StepsGenerator::build()
 	{
+		//test data
+// 		m_adParam.top_type = ADTopType::adtt_step;
+// 		m_adParam.top_height = 1.0;
+// 		m_adParam.shape_top_height = 2.0;
+// 		m_adParam.bottom_type = ADBottomType::adbt_extend_outter;
+// 		m_adParam.bottom_height = 1.0;
+// 		m_adParam.shape_bottom_height = 3.0;
+		//
+
 		double thickness = m_adParam.extend_width / 2.0f;
 		double topHeight = m_adParam.top_height;
 		double bottomHeight = m_adParam.total_height - topHeight;
 
-		std::vector<ClipperLib::PolyTree> polyTrees(5);
-		offsetAndExtendPolyTree(m_poly, 0.0, thickness, 0, polyTrees.at(0));
-		offsetAndExtendPolyTree(m_poly, 0.0, thickness, bottomHeight- thickness, polyTrees.at(1));
-		offsetAndExtendPolyTree(m_poly, 0.0, thickness, bottomHeight, polyTrees.at(2));
-		offsetAndExtendPolyTree(m_poly, -thickness, thickness, bottomHeight, polyTrees.at(3));
-		offsetAndExtendPolyTree(m_poly, -thickness, thickness, m_adParam.total_height, polyTrees.at(4));
+		std::vector<ClipperLib::PolyTree> middlePolys(4);
+		offsetAndExtendPolyTree(m_poly, 0.0, thickness, bottomHeight- thickness, middlePolys.at(0));
+		offsetAndExtendPolyTree(m_poly, 0.0, thickness, bottomHeight, middlePolys.at(1));
+		offsetAndExtendPolyTree(m_poly, -thickness, thickness, bottomHeight, middlePolys.at(2));
+		offsetAndExtendPolyTree(m_poly, -thickness, thickness, m_adParam.total_height, middlePolys.at(3));
 
-		_buildFromSamePolyTree(&polyTrees.at(0), &polyTrees.at(1));
-		_buildFromDiffPolyTree(&polyTrees.at(2), &polyTrees.at(3));
-		_buildFromSamePolyTree(&polyTrees.at(3), &polyTrees.at(4));
-		offsetExteriorInner(polyTrees.at(2), -thickness);
-		_buildFromDiffPolyTree(&polyTrees.at(1), &polyTrees.at(2));
+		_buildFromDiffPolyTree(&middlePolys.at(1), &middlePolys.at(2));
+		_buildFromSamePolyTree(&middlePolys.at(2), &middlePolys.at(3));
+		offsetExteriorInner(middlePolys.at(1), thickness);
+		_buildFromDiffPolyTree(&middlePolys.at(0), &middlePolys.at(1));
 
-		_fillPolyTree(&polyTrees.front(), true);
-		_fillPolyTree(&polyTrees.back());
+		_fillPolyTree(&middlePolys.back());
+
+		ClipperLib::PolyTree treeBottom;
+		double hBottom;
+		_buildBottom(treeBottom, hBottom);
+		_buildFromSamePolyTree(&treeBottom, &middlePolys.front());
 	}
 }

@@ -16,6 +16,15 @@ namespace fmesh
 
 	void DrumGenerator::build()
 	{
+		//test data
+// 		m_adParam.top_type = ADTopType::adtt_step;
+// 		m_adParam.top_height = 1.0;
+// 		m_adParam.shape_top_height = 2.0;
+// 		m_adParam.bottom_type = ADBottomType::adbt_step;
+// 		m_adParam.bottom_height = 1.0;
+// 		m_adParam.shape_bottom_height = 3.0;
+		//
+
 		double thickness = m_adParam.extend_width / 2.0;
 		double bottomHeight = m_adParam.total_height - m_adParam.shape_top_height;
 
@@ -30,18 +39,11 @@ namespace fmesh
 			offsetAndExtendPolyTree(m_poly, -offset, thickness, delta, middlePolys.at(i));
 		}
 
-		//bottom
-		std::vector<ClipperLib::PolyTree> bottomPolys(1);
-		offsetAndExtendPolyTree(m_poly, 0.0, thickness, 0, bottomPolys.at(0));
-
 		std::vector<Patch*> patches;
 		ClipperLib::PolyTree ploy;
 		offsetAndExtendPolyTree(m_poly, 0, 0.2, 0.5, ploy);
 		skeletonPolyTree(middlePolys.back(), delta, patches);
 		addPatches(patches);
-
-		_fillPolyTree(&bottomPolys.front(), true);
-		_buildFromSamePolyTree(&bottomPolys.back(), &middlePolys.front());
 
 		for (size_t i = 0; i < middlePolys.size() - 1; i++)
 		{
@@ -53,43 +55,9 @@ namespace fmesh
 			}
 		}
 
-// 		double thickness = m_param.thickness / 5.0f;
-// 		double offset = thickness;
-// 		std::vector<float> heights(2);
-// 		heights.at(0) = 0.0f;
-// 		heights.at(1) = m_param.totalH - m_param.drumH;
-// 
-// 		size_t drumHCount = m_param.drumH / 0.5;
-// 		std::vector<ClipperLib::PolyTree> polys(1 + drumHCount);
-// 
-// 		offsetAndExtendPolyTree(m_poly, 0.0, thickness, heights.at(0), polys.at(0));
-// 		offsetAndExtendPolyTree(m_poly, 0.0, thickness, heights.at(1), polys.at(1));
-// 		for (size_t i = 2; i < drumHCount + 1; i++)
-// 		{
-// 			double delta = heights.at(1) + (i - 1) * 0.5;
-// 			double offset = m_param.drumH - sqrt(m_param.drumH * m_param.drumH - 0.25 * i * i);
-// 			offsetAndExtendPolyTree(m_poly, -offset / 2, thickness, delta, polys.at(i));
-// 		}
-// 
-// 		std::vector<Patch*> patches;
-// 		ClipperLib::PolyTree ploy;
-// 		offsetAndExtendPolyTree(m_poly, 0, 0.2, 0.5, ploy);
-// 		skeletonPolyTree(polys.at(drumHCount - 1), heights.at(1) + (drumHCount - 2) * 0.5, patches);
-// 		//sort(patches);
-// 		addPatches(patches);
-// 
-// 		_fillPolyTree(&polys.at(0), true);
-// 		//_fillPolyTree(&polys.at( drumHCount+1));
-// 
-// 		_buildFromSamePolyTree(&polys.at(0), &polys.at(1));
-// 		for (size_t i = 1; i < polys.size() - 2; i++)
-// 		{
-// 			ClipperLib::PolyTree out;
-// 			_buildFromDiffPolyTree_drum(&polys.at(i), &polys.at(i + 1), 0, out);
-// 			if (out.ChildCount() > 0)
-// 			{
-// 				_fillPolyTree(&out);
-// 			}
-// 		}
+		ClipperLib::PolyTree treeBottom;
+		double hBottom;
+		_buildBottom(treeBottom, hBottom);
+		_buildFromSamePolyTree(&treeBottom, &middlePolys.front());
 	}
 }
