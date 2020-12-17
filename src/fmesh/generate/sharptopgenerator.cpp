@@ -17,12 +17,12 @@ namespace fmesh
 	void SharptopGenerator::build()
 	{
 		//test data
-		m_adParam.top_type = ADTopType::adtt_step;
-		m_adParam.top_height = 1.0;
-		m_adParam.shape_top_height = 2.0;
-		m_adParam.bottom_type = ADBottomType::adbt_step;
-		m_adParam.bottom_height = 1.0;
-		m_adParam.shape_bottom_height = 3.0;
+// 		m_adParam.top_type = ADTopType::adtt_step;
+// 		m_adParam.top_height = 1.0;
+// 		m_adParam.shape_top_height = 2.0;
+// 		m_adParam.bottom_type = ADBottomType::adbt_step;
+// 		m_adParam.bottom_height = 1.0;
+// 		m_adParam.shape_bottom_height = 3.0;
 		//
 
 		double thickness = m_adParam.extend_width / 2.0;

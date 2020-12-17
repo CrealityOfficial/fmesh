@@ -14,6 +14,15 @@ namespace fmesh
 
 	void ItalicsGenerator::build()
 	{
+		//test data
+// 		m_adParam.top_type = ADTopType::adtt_step;
+// 		m_adParam.top_height = 5.0;
+// 		m_adParam.shape_top_height = 2.0;
+// 		m_adParam.bottom_type = ADBottomType::adbt_close;
+// 		m_adParam.bottom_height = 1.0;
+// 		m_adParam.shape_bottom_height = 3.0;
+		//
+
 		//init
 		float btoomStepHeight = m_adParam.shape_bottom_height;
 		float bottomHeight = m_adParam.bottom_height;
@@ -28,52 +37,22 @@ namespace fmesh
 		{
 			bottomHeight = m_adParam.bottom_height < m_adParam.shape_bottom_height ? m_adParam.shape_bottom_height : m_adParam.bottom_height;
 		}
+
 		float middleHeight = m_adParam.total_height - bottomHeight;
 		int count = 10;
 		float offset = middleHeight * std::sin(10 / 2 * 3.1415926 / 180.0) / (float)count;
 		float h = middleHeight / (float)count;
 
-		//bottom
-		ClipperLib::PolyTree bottomPloy;
-		fmesh::offsetAndExtendPolyTree(m_poly, 0, thickness, 0, bottomPloy);		
-		std::vector<ClipperLib::PolyTree> botomSteppolys(3);
-		if (m_adParam.bottom_type == ADBottomType::adbt_step)
-		{
-			//step
-			if (btoomStepHeight <= bottomHeight)
-			{
-				fmesh::offsetAndExtendPolyTree(m_poly, 0, thickness, btoomStepHeight-0.5, botomSteppolys.at(0));
-				fmesh::offsetAndExtendPolyTree(m_poly, 0, thickness, btoomStepHeight, botomSteppolys.at(1));
-				fmesh::offsetAndExtendPolyTree(m_poly, 0, thickness, btoomStepHeight, botomSteppolys.at(2));
-				offsetExteriorInner(botomSteppolys.at(1), -btoomStepWiden);
-				_buildFromDiffPolyTree(&botomSteppolys.at(0), &botomSteppolys.at(1));
-				_buildFromDiffPolyTree(&botomSteppolys.at(1), &botomSteppolys.at(2));
-			}
-			_fillPolyTree(&bottomPloy,true);
-		}
-		else if (m_adParam.bottom_type == ADBottomType::adbt_close)
-		{
-			fmesh::offsetAndExtendPolyTree(m_poly, 0, thickness, btoomStepHeight, botomSteppolys.at(0));
-			_fillPolyTreeOutline(&bottomPloy,true);
-			_fillPolyTreeOutline(&botomSteppolys.at(0));
-		}
-		else
-		{
-			fmesh::offsetAndExtendPolyTree(m_poly, 0, thickness, btoomStepHeight, botomSteppolys.at(0));
-			_fillPolyTree(&bottomPloy, true);
-		}
-		//bottom end
-
 		//middle
-		std::vector<ClipperLib::PolyTree> polys(count + 1);
+		std::vector<ClipperLib::PolyTree> middlePolys(count + 1);
 		for (int i = 0; i <= count; ++i)
 		{
-			fmesh::offsetAndExtendPolyTree(m_poly, -(float)i * offset, thickness, bottomHeight+(float)i * h, polys.at(i));
+			fmesh::offsetAndExtendPolyTree(m_poly, -(float)i * offset, thickness, bottomHeight+(float)i * h, middlePolys.at(i));
 		}
 		for (int i = 0; i < count; ++i)
 		{
 			ClipperLib::PolyTree out;
-			_buildFromDiffPolyTree_drum(&polys.at(i), &polys.at(i + 1), 0, out);
+			_buildFromDiffPolyTree_drum(&middlePolys.at(i), &middlePolys.at(i + 1), 0, out);
 			if (out.ChildCount() > 0)
 			{
 				_fillPolyTreeReverseInner(&out);
@@ -85,21 +64,24 @@ namespace fmesh
 		{
 			if (topHeight)
 			{
-				size_t num = count - h / topHeight;
+				size_t num = count - topHeight / h;
 				std::vector<ClipperLib::PolyTree> topSteppolys(3);
 
 				fmesh::offsetAndExtendPolyTree(m_poly, -(float)num * offset, thickness, bottomHeight + (float)num * h - 0.5, topSteppolys.at(0));
 				fmesh::offsetAndExtendPolyTree(m_poly, -(float)num * offset, thickness, bottomHeight + (float)num * h, topSteppolys.at(1));
 				fmesh::offsetAndExtendPolyTree(m_poly, -(float)num * offset, thickness, bottomHeight + (float)num * h, topSteppolys.at(2));
-				offsetExteriorInner(topSteppolys.at(1), -topStepWiden);
+				offsetExteriorInner(topSteppolys.at(1), topStepWiden);
 				_buildFromDiffPolyTree(&topSteppolys.at(0), &topSteppolys.at(1));
 				_buildFromDiffPolyTree(&topSteppolys.at(1), &topSteppolys.at(2));
 			}
 		}
 		//top end 
 
-		_buildFromSamePolyTree(&bottomPloy, &botomSteppolys.at(0));
-		_buildFromSamePolyTree(&botomSteppolys.back(), &polys.front());
-		_fillPolyTree(&polys.back());
+		_fillPolyTree(&middlePolys.back());
+
+		ClipperLib::PolyTree treeBottom;
+		double hBottom;
+		_buildBottom(treeBottom, hBottom);
+		_buildFromSamePolyTree(&treeBottom, &middlePolys.front());
 	}
 }
