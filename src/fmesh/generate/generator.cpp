@@ -161,7 +161,7 @@ namespace fmesh
 			impl = new SlopebackGenerator();
 			break;
 		case ADShapeType::adst_dingmianjieti:
-			impl = new SimpleGenerator();
+			impl = new SharptopGenerator();
 			break;
 		default:
 			impl = new SimpleGenerator();

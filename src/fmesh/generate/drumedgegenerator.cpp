@@ -15,22 +15,30 @@ namespace fmesh
 	void DrumedgeGenerator::build()
 	{
 		//test data
-
+// 		m_adParam.top_type = ADTopType::adtt_step;
+// 		m_adParam.top_height = 1.0;
+// 		m_adParam.shape_top_height = 2.0;
+// 		m_adParam.bottom_type = ADBottomType::adbt_step;
+// 		m_adParam.bottom_height = 1.0;
+// 		m_adParam.shape_bottom_height = 3.0;
 		//
+
 		float shape_bottom_height= m_adParam.shape_bottom_height;
 		float shape_top_height= m_adParam.shape_top_height;
 		float shape_middle_width= m_adParam.shape_middle_width;
-		float thickness = m_adParam.extend_width / 4.0;
+		float thickness = m_adParam.extend_width / 2.0;
 
-		//int count = 10;
+		//modify
+		if (m_adParam.top_type == ADTopType::adtt_step)
+		{
+			shape_top_height = m_adParam.shape_top_height > m_adParam.top_height ? m_adParam.shape_top_height : m_adParam.top_height;
+		}
+		if (m_adParam.bottom_type == ADBottomType::adbt_step)
+		{
+			shape_bottom_height = m_adParam.shape_bottom_height > m_adParam.bottom_height ? m_adParam.shape_bottom_height : m_adParam.bottom_height;
+		}
+
 		float middleHeight = m_adParam.total_height - shape_bottom_height - shape_top_height;
-		//float h = middleHeight / (float)count;
-
-		std::vector<ClipperLib::PolyTree> polys(4);
-		offsetAndExtendPolyTree(m_poly, 0.0, thickness, 0, polys.at(0));
-		offsetAndExtendPolyTree(m_poly, 0.0, thickness, shape_bottom_height, polys.at(1));
-		offsetAndExtendPolyTree(m_poly, 0.0, thickness, m_adParam.total_height - shape_top_height, polys.at(2));
-		offsetAndExtendPolyTree(m_poly, 0.0, thickness, m_adParam.total_height, polys.at(3));
 
 		size_t drumHCount = 32;
 		double drumDelta = middleHeight / (double)drumHCount;
@@ -58,9 +66,11 @@ namespace fmesh
 			}
 		}
 
-		_buildFromSamePolyTree(&polys.at(0), &polys.at(1));
-		_buildFromSamePolyTree(&polys.at(2), &polys.at(3));
-		_fillPolyTree(&polys.front(),true);
-		_fillPolyTree(&polys.back());
+		ClipperLib::PolyTree treeTop, treeBottom;
+		double hTop, hBottom;
+		_buildTop(treeTop, hTop);		
+		_buildBottom(treeBottom, hBottom);
+		_buildFromDiffPolyTree(&middlePolys.back(), &treeTop);
+		_buildFromDiffPolyTree(&treeBottom, &middlePolys.front());
 	}
 }
