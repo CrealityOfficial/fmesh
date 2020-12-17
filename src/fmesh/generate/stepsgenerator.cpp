@@ -24,7 +24,7 @@ namespace fmesh
 		//
 
 		double thickness = m_adParam.extend_width / 2.0f;
-		double topHeight = m_adParam.top_height;
+		double topHeight = m_adParam.shape_top_height;
 		double bottomHeight = m_adParam.total_height - topHeight;
 
 		std::vector<ClipperLib::PolyTree> middlePolys(4);
