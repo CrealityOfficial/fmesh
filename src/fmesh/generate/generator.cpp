@@ -152,7 +152,7 @@ namespace fmesh
 			impl = new DrumGenerator();
 			break;
 		case ADShapeType::adst_jianjiao:
-			impl = new StepsGenerator();
+			impl = new SharptopGenerator();
 			break;
 		case ADShapeType::adst_xiemian_front:
 			impl = new SlopeGenerator();
@@ -161,7 +161,7 @@ namespace fmesh
 			impl = new SlopebackGenerator();
 			break;
 		case ADShapeType::adst_dingmianjieti:
-			impl = new SharptopGenerator();
+			impl = new StepsGenerator();
 			break;
 		default:
 			impl = new SimpleGenerator();
