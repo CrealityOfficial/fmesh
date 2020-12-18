@@ -20,29 +20,45 @@ namespace fmesh
 
 	void LayerGenerator::build()
 	{
-		float shape_bottom_height = m_adParam.shape_bottom_height;
-		float shape_top_height = m_adParam.shape_top_height;
-		float shape_middle_width = m_adParam.shape_middle_width;
-		float thickness = m_adParam.extend_width / 2.0;
-
-		float middleHeight = m_adParam.total_height - shape_bottom_height - shape_top_height;
-
-		size_t drumHCount = 32;
-		double drumDelta = middleHeight / (double)drumHCount;
-		std::vector<ClipperLib::PolyTree> middlePolys(1 + drumHCount);
-
-		float offset = 3.1415926 / drumHCount;
-
-		size_t middle = drumHCount / 2;
-
-		std::vector<float> offs(drumHCount + 1);
+		size_t drumHCount = 5;
+		std::vector<ClipperLib::PolyTree> middlePolys;
+#if 0
+		//float shape_bottom_height = m_adParam.shape_bottom_height;
+		//float shape_top_height = m_adParam.shape_top_height;
+		//float shape_middle_width = m_adParam.shape_middle_width;
+		//float thickness = m_adParam.extend_width / 2.0;
+		//
+		//float middleHeight = m_adParam.total_height - shape_bottom_height - shape_top_height;
+		//
+		//size_t drumHCount = 32;
+		//double drumDelta = middleHeight / (double)drumHCount;
+		//std::vector<ClipperLib::PolyTree> middlePolys(1 + drumHCount);
+		//
+		//float offset = 3.1415926 / drumHCount;
+		//
+		//size_t middle = drumHCount / 2;
+		//
+		//std::vector<float> offs(drumHCount + 1);
+		//for (size_t i = 0; i < drumHCount + 1; i++)
+		//{
+		//	float delta = shape_bottom_height + i * drumDelta;
+		//	float _offset = shape_middle_width * sin((offset * i) > 0 ? offset * i : 0);
+		//	offsetAndExtendPolyTree(m_poly, _offset / 2, thickness, delta, middlePolys.at(i));
+		//	offs.at(i) = _offset;
+		//}
+#else
+		double thickness = m_adParam.extend_width / 2.0;
+		double bottomHeight = m_adParam.total_height - m_adParam.shape_top_height;
+		drumHCount = (m_adParam.shape_top_height - 0.5) / 0.8;
+		middlePolys.resize(1 + drumHCount);
+		float delta = 0.0f;
 		for (size_t i = 0; i < drumHCount + 1; i++)
 		{
-			float delta = shape_bottom_height + i * drumDelta;
-			float _offset = shape_middle_width * sin((offset * i) > 0 ? offset * i : 0);
-			offsetAndExtendPolyTree(m_poly, _offset / 2, thickness, delta, middlePolys.at(i));
-			offs.at(i) = _offset;
+			delta = bottomHeight + i * 0.8;
+			double offset = m_adParam.shape_top_height - sqrt(m_adParam.shape_top_height * m_adParam.shape_top_height - thickness * thickness * i * i);
+			offsetAndExtendPolyTree(m_poly, -offset, thickness, delta, middlePolys.at(i));
 		}
+#endif
 
 		int index = m_tracer ? m_tracer->index() : 0;
 		if(index >= 0 && index < drumHCount - 1)
