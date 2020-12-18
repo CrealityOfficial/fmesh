@@ -41,6 +41,9 @@ namespace fmesh
 		size_t count = middleHeight / 0.5;
 		float offset = 0.5 * tan(m_adParam.shape_angle) / 4;
 
+		std::vector<ClipperLib::PolyTree> Steppolys(1);
+		size_t num =count - bottomHeight / 0.5;
+
 		//bottom
 		std::vector<ClipperLib::PolyTree> middlePolys(count + 1);
 		for (int i = 0; i <= count; ++i)
@@ -52,11 +55,28 @@ namespace fmesh
 			{
 				count = i;
 			}
+
+			if (m_adParam.bottom_type == ADBottomType::adbt_step)
+			{
+				if (i == num)
+				{
+					fmesh::offsetAndExtendPolyTree(m_poly, offset * i / 2, thickness, delta, Steppolys.at(0));
+					offsetExteriorInner(Steppolys.at(0), btoomStepWiden);
+					_buildFromDiffPolyTree(&Steppolys.at(0),& middlePolys.at(i));
+				}
+			}
 		}
 		for (int i = 0; i < count; ++i)
 		{
 			ClipperLib::PolyTree out;
-			_buildFromDiffPolyTree_drum(&middlePolys.at(i), &middlePolys.at(i + 1), 0, out);
+			//_buildFromDiffPolyTree_drum(&middlePolys.at(i), &middlePolys.at(i + 1), 0, out);
+
+			if (m_adParam.bottom_type == ADBottomType::adbt_step
+				&& num == i)
+				_buildFromDiffPolyTree_drum(&Steppolys.at(0), &middlePolys.at(i + 1), 0, out);
+			else
+				_buildFromDiffPolyTree_drum(&middlePolys.at(i), &middlePolys.at(i + 1), 0, out);
+
 			if (out.ChildCount() > 0)
 			{
 				_fillPolyTreeReverseInner(&out);
@@ -66,30 +86,33 @@ namespace fmesh
 		//bottom
 		if (m_adParam.bottom_type == ADBottomType::adbt_step)
 		{
-			size_t num = count -bottomHeight / 0.5;
-			std::vector<ClipperLib::PolyTree> bottomSteppolys(3);
-
-			fmesh::offsetAndExtendPolyTree(m_poly, offset * num / 2, thickness, middleHeight - ((float)num * 0.5 + 0.5), bottomSteppolys.at(0));
-			fmesh::offsetAndExtendPolyTree(m_poly, offset * num / 2, thickness, middleHeight - ((float)num * 0.5), bottomSteppolys.at(1));
-			fmesh::offsetAndExtendPolyTree(m_poly, offset * num / 2, thickness, middleHeight - ((float)num * 0.5), bottomSteppolys.at(2));
-			offsetExteriorInner(bottomSteppolys.at(1), btoomStepWiden);
-			_buildFromDiffPolyTree(&bottomSteppolys.at(0), &bottomSteppolys.at(1));
-			_buildFromDiffPolyTree(&bottomSteppolys.at(1), &bottomSteppolys.at(2));
+// 			size_t num = count -bottomHeight / 0.5;
+// 			std::vector<ClipperLib::PolyTree> bottomSteppolys(3);
+// 
+// 			fmesh::offsetAndExtendPolyTree(m_poly, offset * num / 2, thickness, middleHeight - ((float)num * 0.5 + 0.5), bottomSteppolys.at(0));
+// 			fmesh::offsetAndExtendPolyTree(m_poly, offset * num / 2, thickness, middleHeight - ((float)num * 0.5), bottomSteppolys.at(1));
+// 			fmesh::offsetAndExtendPolyTree(m_poly, offset * num / 2, thickness, middleHeight - ((float)num * 0.5), bottomSteppolys.at(2));
+// 			offsetExteriorInner(bottomSteppolys.at(1), btoomStepWiden);
+// 			_buildFromDiffPolyTree(&bottomSteppolys.at(0), &bottomSteppolys.at(1));
+// 			_buildFromDiffPolyTree(&bottomSteppolys.at(1), &bottomSteppolys.at(2));
 		}
 		else if(m_adParam.bottom_type == ADBottomType::adbt_close)
 		{
-			size_t num1 = count;
-			size_t num2 = count - bottomHeight / 0.5;
-			std::vector<ClipperLib::PolyTree> bottomSteppolys(2);
-			ClipperLib::PolyTree closeBottom;
-			double hCloseBottom = m_adParam.bottom_offset;
+// 			size_t num1 = count;
+// 			size_t num2 = count - bottomHeight / 0.5;
+// 			std::vector<ClipperLib::PolyTree> bottomSteppolys(2);
+// 			ClipperLib::PolyTree closeBottom;
+// 			double hCloseBottom = m_adParam.bottom_offset;
 
-			offsetAndExtendPolyTree(m_poly, offset * num1 / 2, thickness, middleHeight - ((float)num1 * 0.5), bottomSteppolys.at(0));
-			offsetAndExtendPolyTree(m_poly, offset * num2 / 2, thickness, middleHeight - ((float)num2 * 0.5), bottomSteppolys.at(1));
+// 			offsetAndExtendPolyTree(m_poly, offset * num1 / 2, thickness, middleHeight - ((float)num1 * 0.5), bottomSteppolys.at(0));
+// 			offsetAndExtendPolyTree(m_poly, offset * num2 / 2, thickness, middleHeight - ((float)num2 * 0.5), bottomSteppolys.at(1));
 
-			_fillPolyTreeDepth14(&bottomSteppolys.at(0), true);
-			_fillPolyTreeInner(&bottomSteppolys.at(1));
-			_buildFromDiffPolyTree(&bottomSteppolys.at(0), &bottomSteppolys.at(1), 3);
+			_fillPolyTreeDepth14(&middlePolys.back(), true);
+			if (num< middlePolys.size())
+			{
+				_fillPolyTreeInner(&middlePolys.at(num));
+			}
+			//_buildFromDiffPolyTree(&bottomSteppolys.at(0), &bottomSteppolys.at(1), 3);
 		}
 		//bottom end 
 
