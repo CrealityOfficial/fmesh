@@ -17,6 +17,9 @@ namespace fmesh
 
 	void SimplePolyWrapper::load(const std::string& file)
 	{
+		source.clear();
+		poly.clear();
+
 		std::fstream in(file, std::ios::binary | std::ios::in);
 		if (in.is_open())
 		{
@@ -28,7 +31,7 @@ namespace fmesh
 				poly.resize(size);
 				for (int i = 0; i < size; ++i)
 				{
-					in.read((char*)&source, sizeof(ClipperLib::IntPoint));
+					in.read((char*)&source.at(i), sizeof(ClipperLib::IntPoint));
 					poly.at(i) = &source.at(i);
 				}
 			}
@@ -45,7 +48,7 @@ namespace fmesh
 			out.write((const char*)&size, sizeof(int));
 			for (ClipperLib::IntPoint* point : poly)
 			{
-				out.write((const char*)&point, sizeof(ClipperLib::IntPoint));
+				out.write((const char*)point, sizeof(ClipperLib::IntPoint));
 			}
 		}
 		out.close();

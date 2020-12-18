@@ -177,6 +177,29 @@ namespace fmesh
 		mmesh::loopPolyTree(func, &tree);
 	}
 
+	void adjustPolyTreeZ(ClipperLib::PolyTree& tree)
+	{
+		polyNodeFunc func = [&func](ClipperLib::PolyNode* node) {
+			ClipperLib::cInt z = 0;
+			for (ClipperLib::IntPoint& point : node->Contour)
+			{
+				if (point.Z != 0)
+				{
+					z = point.Z;
+					break;
+				}
+			}
+
+			if (z != 0)
+			{
+				for (ClipperLib::IntPoint& point : node->Contour)
+					point.Z = z;
+			}
+		};
+
+		mmesh::loopPolyTree(func, &tree);
+	}
+
 	void offsetExterior(ClipperLib::PolyTree& source, double offset)
 	{
 		std::vector<ClipperLib::Path*> exterior;
@@ -372,6 +395,7 @@ namespace fmesh
 		func2(inner);
 
 		clipper.Execute(ClipperLib::ctXor, out, ClipperLib::pftNonZero, ClipperLib::pftNonZero);
+		adjustPolyTreeZ(out);
 	}
 
 	void xor2PolyNodes(const std::vector<ClipperLib::PolyNode*>& outer,

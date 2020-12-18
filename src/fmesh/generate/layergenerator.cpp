@@ -23,7 +23,7 @@ namespace fmesh
 		float shape_bottom_height = m_adParam.shape_bottom_height;
 		float shape_top_height = m_adParam.shape_top_height;
 		float shape_middle_width = m_adParam.shape_middle_width;
-		float thickness = m_adParam.extend_width / 4.0;
+		float thickness = m_adParam.extend_width / 2.0;
 
 		float middleHeight = m_adParam.total_height - shape_bottom_height - shape_top_height;
 
@@ -77,7 +77,7 @@ namespace fmesh
 	{
 		size_t drumHCount = 32;
 		float shape_middle_width = param.shape_middle_width;
-		float thickness = param.extend_width / 4.0;
+		float thickness = param.extend_width / 2.0;
 		std::vector<ClipperLib::PolyTree> middlePolys(1 + drumHCount);
 
 		float offset = 3.1415926 / drumHCount;
@@ -112,7 +112,7 @@ namespace fmesh
 			return strTime;
 		};
 
-		for (size_t i = 0; i < drumHCount; i++)
+		for (size_t i = 0; i < drumHCount - 1; i++)
 		{
 			ClipperLib::PolyTree out;
 			buildXORFrom2PolyTree(&middlePolys.at(i), &middlePolys.at(i + 1), out);
@@ -131,7 +131,6 @@ namespace fmesh
 				{
 					SimplePoly poly;
 					merge2SimplePoly(node, &poly, false);
-					
 					saveSimplePoly(poly, time_string());
 
 					for (ClipperLib::PolyNode* n : node->Childs)

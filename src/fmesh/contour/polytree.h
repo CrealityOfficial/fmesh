@@ -25,6 +25,7 @@ namespace fmesh
 	//set z
 	void setPolyTreeZ(ClipperLib::PolyTree& tree, double z);
 	void setPolyTreeZ(ClipperLib::PolyTree& tree, ClipperLib::cInt z);
+	void adjustPolyTreeZ(ClipperLib::PolyTree& tree);
 
 	//Polygon skeleton
 	void skeletonPolyTree(ClipperLib::PolyTree& source, double z, std::vector<Patch*>& patches);
