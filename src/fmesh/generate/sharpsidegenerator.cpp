@@ -40,7 +40,7 @@ namespace fmesh
 
 		float middleHeight = m_adParam.total_height - shape_bottom_height - shape_top_height;
 
-		size_t drumHCount = 32;
+		size_t drumHCount = middleHeight/0.5;
 		double drumDelta = middleHeight / (double)drumHCount;
 		std::vector<ClipperLib::PolyTree> middlePolys(1 + drumHCount);
 

@@ -161,7 +161,7 @@ namespace fmesh
 		size_t size = pathsUp.size();
 		//if (size != pathsLower.size() && size > 0)
 		{
-			fmesh::xor2PolyTrees(treeUp, treeLower, out);
+			fmesh::xor2PolyTrees(treeUp, treeLower, out,flag);
 			return;
 		}
 

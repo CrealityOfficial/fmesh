@@ -4,6 +4,7 @@
 #include "fmesh/roof/roof.h"
 
 #include "fmesh/generate/polyfiller.h"
+#include "fmesh/generate/triangularization.h"
 #include <algorithm>
 
 namespace fmesh
@@ -387,6 +388,37 @@ namespace fmesh
 
 		polyNodeFunc func2 = [&func2, &clipper](ClipperLib::PolyNode* node) {
 			clipper.AddPath(node->Contour, ClipperLib::ptSubject, true);
+
+			for (ClipperLib::PolyNode* n : node->Childs)
+				func2(n);
+		};
+
+		func2(inner);
+
+		clipper.Execute(ClipperLib::ctXor, out, ClipperLib::pftNonZero, ClipperLib::pftNonZero);
+		adjustPolyTreeZ(out);
+	}
+
+	void xor2PolyTrees(ClipperLib::PolyTree* outer, ClipperLib::PolyTree* inner, ClipperLib::PolyTree& out, int flag)
+	{
+		if (!outer || !inner)
+			return;
+
+		ClipperLib::Clipper clipper;
+
+		polyNodeFunc func1 = [&func1, &clipper, &flag](ClipperLib::PolyNode* node) {
+			if (checkFlag(node, flag))
+				clipper.AddPath(node->Contour, ClipperLib::ptClip, true);
+
+			for (ClipperLib::PolyNode* n : node->Childs)
+				func1(n);
+		};
+
+		func1(outer);
+
+		polyNodeFunc func2 = [&func2, &clipper, &flag](ClipperLib::PolyNode* node) {
+			if (checkFlag(node, flag))
+				clipper.AddPath(node->Contour, ClipperLib::ptSubject, true);
 
 			for (ClipperLib::PolyNode* n : node->Childs)
 				func2(n);

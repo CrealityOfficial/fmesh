@@ -73,13 +73,31 @@ namespace fmesh
 
 			if (m_adParam.bottom_type == ADBottomType::adbt_step
 				&& num == i)
+			{
 				_buildFromDiffPolyTree_drum(&Steppolys.at(0), &middlePolys.at(i + 1), 0, out);
+				if (out.ChildCount() > 0)
+				{
+					_fillPolyTreeReverseInner(&out);
+				}
+			}
+			else if (m_adParam.bottom_type == ADBottomType::adbt_close
+				&& num <= i)
+			{
+				_buildFromDiffPolyTree_drum(&middlePolys.at(i), &middlePolys.at(i + 1), 1, out);
+
+				if (out.ChildCount() > 0)
+				{
+					_fillPolyTreeReverseInner(&out, true);
+				}
+			}
 			else
+			{
 				_buildFromDiffPolyTree_drum(&middlePolys.at(i), &middlePolys.at(i + 1), 0, out);
 
-			if (out.ChildCount() > 0)
-			{
-				_fillPolyTreeReverseInner(&out);
+				if (out.ChildCount() > 0)
+				{
+					_fillPolyTreeReverseInner(&out);
+				}
 			}
 		}
 
