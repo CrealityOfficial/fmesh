@@ -25,7 +25,7 @@ namespace fmesh
 		Font* f = nullptr;
 		for (const std::string& dir : m_searchDirs)
 		{
-			std::string fontFile = dir + std::string("/fonts/") + name + std::string(".ttf");
+			std::string fontFile = dir + std::string("/resources/fonts/") + name + std::string(".ttf");
 			f = library->font(fontFile.c_str());
 
 			if (!f)
