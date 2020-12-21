@@ -79,11 +79,13 @@ namespace fmesh
 		}
 
 
-		ClipperLib::PolyTree treeTop, treeBottom;
-		double hTop, hBottom;
-		_buildTop(treeTop, hTop);
-		_buildBottom(treeBottom, hBottom);
-		_buildFromDiffPolyTree(&middlePolys.back(), &treeTop);
-		_buildFromDiffPolyTree(&treeBottom, &middlePolys.front());
+// 		ClipperLib::PolyTree treeTop, treeBottom;
+// 		double hTop, hBottom;
+// 		_buildTop(treeTop, hTop);
+// 		_buildBottom(treeBottom, hBottom);
+// 		_buildFromDiffPolyTree(&middlePolys.back(), &treeTop);
+// 		_buildFromDiffPolyTree(&treeBottom, &middlePolys.front());
+
+		_buildTopBottom(&middlePolys.front(), &middlePolys.back());
 	}
 }

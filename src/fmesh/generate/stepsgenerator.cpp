@@ -40,9 +40,11 @@ namespace fmesh
 
 		_fillPolyTree(&middlePolys.back());
 
-		ClipperLib::PolyTree treeBottom;
-		double hBottom;
-		_buildBottom(treeBottom, hBottom);
-		_buildFromSamePolyTree(&treeBottom, &middlePolys.front());
+// 		ClipperLib::PolyTree treeBottom;
+// 		double hBottom;
+// 		_buildBottom(treeBottom, hBottom);
+// 		_buildFromSamePolyTree(&treeBottom, &middlePolys.front());
+
+		_buildTopBottom(&middlePolys.front(), nullptr);
 	}
 }

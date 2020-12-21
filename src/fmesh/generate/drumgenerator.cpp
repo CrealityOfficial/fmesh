@@ -16,9 +16,9 @@ namespace fmesh
 
 	void DrumGenerator::build()
 	{
-		ClipperLib::PolyTree treeBottom;
-		double hBottom;
-		_buildBottom(treeBottom, hBottom);
+// 		ClipperLib::PolyTree treeBottom;
+// 		double hBottom;
+// 		_buildBottom(treeBottom, hBottom);
 
 		double thickness = m_adParam.extend_width / 2.0;
 		double bottomHeight = m_adParam.total_height - m_adParam.shape_top_height;
@@ -46,6 +46,8 @@ namespace fmesh
 			}
 		}
 
-		_buildFromSamePolyTree(&treeBottom, &middlePolys.front());
+		//_buildFromSamePolyTree(&treeBottom, &middlePolys.front());
+
+		_buildTopBottom(&middlePolys.front(),nullptr);
 	}
 }

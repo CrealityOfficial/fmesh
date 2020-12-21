@@ -45,6 +45,7 @@ namespace fmesh
 
 		void _buildTop(ClipperLib::PolyTree& treeTop, double& hTop);
 		void _buildBottom(ClipperLib::PolyTree& treeBottom, double& hBottom);
+		void _buildTopBottom(ClipperLib::PolyTree* treeBottom, ClipperLib::PolyTree* treeTop);
 	protected:
 		ClipperLib::Paths* m_paths;
 		ClipperLib::PolyTree m_poly;

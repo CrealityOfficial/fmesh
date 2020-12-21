@@ -294,4 +294,22 @@ namespace fmesh
 			_buildFromDiffPolyTree_firstLayer(&out);
 		}
 	}
+
+	void GeneratorImpl::_buildTopBottom(ClipperLib::PolyTree* treeBottom, ClipperLib::PolyTree* treeTop)
+	{
+ 		ClipperLib::PolyTree _treeTop, _treeBottom;
+  		double hTop, hBottom;
+
+		if (treeBottom != nullptr)
+		{
+			_buildBottom(_treeBottom, hBottom);
+			_buildFromDiffPolyTree(&_treeBottom, treeBottom);
+		}
+		if (treeTop != nullptr)
+		{
+			_buildTop(_treeTop, hTop);
+			_buildFromDiffPolyTree(treeTop, &_treeTop);
+		}
+	}
+
 }
