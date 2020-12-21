@@ -14,7 +14,7 @@ namespace fmesh
 			return false;
 
 		int depth = testPolyNodeDepth(node);
-		if (flag == 3 && depth != 1 && depth != 4)      // 1, 4
+		if (flag == 3 && depth != 1 && depth != 4 && depth != 5 && depth != 8)      // 1, 4
 			return false;
 	
 		if (flag == 4)      // 2, 3
