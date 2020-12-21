@@ -63,7 +63,7 @@ namespace fmesh
 
 		ClipperLib::ClipperOffset offset;
 		polyNodeFunc func = [&func, &offset](ClipperLib::PolyNode* node) {
-			offset.AddPath(node->Contour, ClipperLib::jtRound, ClipperLib::EndType::etClosedLine);
+			offset.AddPath(node->Contour, ClipperLib::jtMiter, ClipperLib::EndType::etClosedLine);
 
 			for (ClipperLib::PolyNode* n : node->Childs)
 				func(n);
@@ -79,7 +79,7 @@ namespace fmesh
 
 		ClipperLib::ClipperOffset offset;
 		polyNodeFunc func = [&func, &offset](ClipperLib::PolyNode* node) {
-			offset.AddPath(node->Contour, ClipperLib::jtRound, ClipperLib::EndType::etClosedPolygon);
+			offset.AddPath(node->Contour, ClipperLib::jtMiter, ClipperLib::EndType::etClosedPolygon);
 
 			for (ClipperLib::PolyNode* n : node->Childs)
 				func(n);
@@ -95,7 +95,7 @@ namespace fmesh
 
 		ClipperLib::ClipperOffset offset;
 		for(ClipperLib::Path* path : source)
-			offset.AddPath(*path, ClipperLib::jtRound, ClipperLib::EndType::etClosedPolygon);
+			offset.AddPath(*path, ClipperLib::jtMiter, ClipperLib::EndType::etClosedPolygon);
 
 		offset.Execute(dest, microDelta);
 	}
