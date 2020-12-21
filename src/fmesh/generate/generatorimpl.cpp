@@ -209,7 +209,7 @@ namespace fmesh
 			fmesh::offsetAndExtendPolyTree(m_poly, 0, thickness, m_adParam.total_height- m_adParam.top_height+ offset, botomSteppolys.at(0));
 			fmesh::offsetAndExtendPolyTree(m_poly, 0, thickness, m_adParam.total_height - m_adParam.top_height+ offset, botomSteppolys.at(1));
 			fmesh::offsetAndExtendPolyTree(m_poly, 0, thickness, m_adParam.total_height, botomSteppolys.at(2));
-			offsetExteriorInner(botomSteppolys.at(0), m_adParam.bottom_extend_width);
+			offsetExteriorInner(botomSteppolys.at(0), m_adParam.top_extend_width);
 
 			_buildFromSamePolyTree(&botomSteppolys.at(1), &botomSteppolys.at(2));
 			_buildFromDiffPolyTree(&treeTop, &botomSteppolys.at(0));
