@@ -144,6 +144,16 @@ namespace fmesh
 			addPatches(patches);
 	}
 
+	void GeneratorImpl::_buildFromDiffPolyTree_diff(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp, int flag)
+	{
+		ClipperLib::PolyTree out;
+		fmesh::xor2PolyTrees(treeUp, treeLower, out, flag);
+		if (out.ChildCount() > 0)
+		{
+			_fillPolyTreeReverseInner(&out, flag);
+		}
+	}
+
 	void GeneratorImpl::_fillPolyTreeReverseInner(ClipperLib::PolyTree* tree, bool invert /*= false*/)
 	{
 		std::vector<Patch*> patches;

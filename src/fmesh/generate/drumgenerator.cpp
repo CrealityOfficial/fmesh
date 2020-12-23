@@ -38,12 +38,13 @@ namespace fmesh
 
 		for (size_t i = 0; i < middlePolys.size() - 1; i++)
 		{
-			ClipperLib::PolyTree out;
-			_buildFromDiffPolyTree_drum(&middlePolys.at(i), &middlePolys.at(i + 1), 0, out);
-			if (out.ChildCount() > 0)
-			{
-				_fillPolyTreeReverseInner(&out, false);
-			}
+// 			ClipperLib::PolyTree out;
+// 			_buildFromDiffPolyTree_drum(&middlePolys.at(i), &middlePolys.at(i + 1), 0, out);
+// 			if (out.ChildCount() > 0)
+// 			{
+// 				_fillPolyTreeReverseInner(&out, false);
+// 			}
+			_buildFromDiffPolyTree_diff(&middlePolys.at(i), &middlePolys.at(i + 1));
 		}
 
 		//_buildFromSamePolyTree(&treeBottom, &middlePolys.front());

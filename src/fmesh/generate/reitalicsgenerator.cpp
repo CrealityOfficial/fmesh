@@ -60,13 +60,14 @@ namespace fmesh
 		}
 		for (int i = 0; i < count; ++i)
 		{
-			ClipperLib::PolyTree out;
-			_buildFromDiffPolyTree_drum(&middlePolys.at(i), &middlePolys.at(i + 1), 0, out);
-
-			if (out.ChildCount() > 0)
-			{
-				_fillPolyTreeReverseInner(&out);
-			}
+// 			ClipperLib::PolyTree out;
+// 			_buildFromDiffPolyTree_drum(&middlePolys.at(i), &middlePolys.at(i + 1), 0, out);
+// 
+// 			if (out.ChildCount() > 0)
+// 			{
+// 				_fillPolyTreeReverseInner(&out);
+// 			}
+			_buildFromDiffPolyTree_diff(&middlePolys.at(i), &middlePolys.at(i + 1));
 		}
 
 		if (m_adParam.top_type != ADTopType::adtt_none)
