@@ -162,6 +162,19 @@ namespace fmesh
 		mmesh::loopPolyTree(func, &dest);
 	}
 
+	void offsetAndExtendPolyTree(ClipperLib::PolyTree& source, double offset, double delta, ClipperLib::PolyTree& dest)
+	{
+		if (offset == 0.0)
+		{
+			extendPolyTree(source, delta, dest);
+		}
+		else
+		{
+			offsetPolyTree(source, offset, dest);
+			extendPolyTree(dest, delta, dest);
+		}
+	}
+
 	void setPolyTreeZ(ClipperLib::PolyTree& tree, double z)
 	{
 		ClipperLib::cInt cZ = (int)(1000.0 * z);
@@ -310,6 +323,10 @@ namespace fmesh
 				{
 					clockwise = true;
 				}
+				else if (pn.Contour.at(i).Z == 500)
+				{
+					pn.Contour.at(i).Z+=1000;
+				}
 
 				pn.Contour.at(i).Z += z * 1000;
 			}
@@ -446,6 +463,24 @@ namespace fmesh
 		}
 
 		clipper.Execute(ClipperLib::ctXor, out, ClipperLib::pftNonZero, ClipperLib::pftNonZero);
+	}
+
+	int GetPolyCount(ClipperLib::PolyTree* poly)
+	{
+		int num = 0;
+		int index = 0;
+		polyNodeFunc func = [&func, &num,&index](ClipperLib::PolyNode* node) {
+				num+= node->ChildCount()* index;
+
+			for (ClipperLib::PolyNode* n : node->Childs)
+			{
+				index++;
+				func(n);
+			}				
+		};
+
+		func(poly);
+		return num;
 	}
 
 	void seperate1423(ClipperLib::PolyTree* polyTree, std::vector<PolyPair*>& polyPairs)

@@ -147,7 +147,11 @@ namespace fmesh
 	void GeneratorImpl::_buildFromDiffPolyTree_diff(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp, int flag)
 	{
 		ClipperLib::PolyTree out;
-		fmesh::xor2PolyTrees(treeUp, treeLower, out, flag);
+		//fmesh::xor2PolyTrees(treeUp, treeLower, out, flag);
+		std::vector<Patch*> patches;
+		buildFromDiffPolyTree_SameAndDiff(treeLower, treeUp, patches, flag, out);
+		if (patches.size())
+			addPatches(patches);
 		if (out.ChildCount() > 0)
 		{
 			_fillPolyTreeReverseInner(&out, flag);
