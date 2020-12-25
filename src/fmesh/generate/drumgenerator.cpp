@@ -17,40 +17,46 @@ namespace fmesh
 	void DrumGenerator::build()
 	{
 		double thickness = m_adParam.extend_width / 2.0;
-		
-		size_t drumHCount = 32;
+
+		double x = dmax.x - dmin.x;
+		double y= dmax.y - dmin.y;
+
+		size_t drumHCount = x > y ? x/4 : y/4;
+		//size_t drumHCount = 60;
 		float offset = 3.1415926 / 2 / drumHCount;
 		float offsetH = 0.4;
 		//double bottomHeight = m_adParam.total_height - 	drumHCount* offsetH;
 
-		std::vector<ClipperLib::PolyTree> middlePolys(1 + drumHCount);	
-		for (size_t i = 0; i < drumHCount ; i++)
-		{			
+		std::vector<ClipperLib::PolyTree> middlePolys(1 + drumHCount);
+		for (size_t i = 0; i < drumHCount; i++)
+		{
 			float _offset = tan((offset * i) > 0 ? offset * i : 0);
-			offsetAndExtendPolyTree(m_poly, -_offset, thickness,middlePolys.at(i));
+			offsetAndExtendPolyTree(m_poly, -_offset, thickness, middlePolys.at(i));
 			if (i && GetPolyCount(&middlePolys.at(i)) != GetPolyCount(&middlePolys.at(i - 1)))
-			{			
+			{
 				middlePolys.at(i).Clear();
 				break;
-			}				
+			}
 		}
 
 		while (!middlePolys.back().ChildCount())
 		{
-			double a = 0;
 			middlePolys.pop_back();
 		}
 
 		float delta1 = 0.0f;
 		float delta2 = 0.0f;
-		double bottomHeight = m_adParam.total_height -(middlePolys.size() - 1) * offsetH;
+		double bottomHeight = m_adParam.total_height - (middlePolys.size() - 1) * offsetH;
+		if (bottomHeight < 0)
+			bottomHeight = 0;
+
 		for (size_t i = 0; i < middlePolys.size() - 1; i++)
 		{
-			delta1 = bottomHeight + offsetH*i;
-			delta2 = bottomHeight + offsetH * (i+1);
-			if(i%2)
+			delta1 = bottomHeight + offsetH * i;
+			delta2 = bottomHeight + offsetH * (i + 1);
+			if (i % 2)
 				setPolyTreeZ(middlePolys.at(i), delta1);
-			setPolyTreeZ(middlePolys.at(i+1), delta2);
+			setPolyTreeZ(middlePolys.at(i + 1), delta2);
 			_buildFromDiffPolyTree_diff(&middlePolys.at(i), &middlePolys.at(i + 1));
 		}
 
@@ -59,6 +65,7 @@ namespace fmesh
 		skeletonPolyTree(middlePolys.back(), delta2, patches);
 		addPatches(patches);
 
+		m_adParam.bottom_height = bottomHeight;
 		_buildTopBottom(&middlePolys.front(),nullptr);
 	}
 }
