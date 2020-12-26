@@ -1,12 +1,13 @@
+__find_librevenge()
+__find_tinyxml()
+__find_freetype()
+__find_dxflib()
+
 __files_group(${CMAKE_CURRENT_SOURCE_DIR}/fmesh/ SRCS)
 
-__cgal_include_common_packages()
-__cgal_include_package(Straight_skeleton_2)
-__cgal_include_package(Polygon)
-
-set(LIBS trimesh2 clipper mmesh freetype librevenge)
-set(DEFS CGAL_NO_GMP=1 CGAL_NO_MPFR=1)
-__add_real_target(fmesh lib SOURCE ${SRCS} INC ${INCS} LIB ${LIBS} DEF ${DEFS})
+set(LIBS trimesh2 clipper mmesh freetype dxflib librevenge tinyxml)
+set(DEFS FMESH_DLL)
+__add_real_target(fmesh dll SOURCE ${SRCS} INC ${INCS} LIB ${LIBS} DEF ${DEFS})
 
 set_property(TARGET fmesh PROPERTY INTERFACE_INCLUDE_DIRECTORIES ${CMAKE_CURRENT_SOURCE_DIR})
 

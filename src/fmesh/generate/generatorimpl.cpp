@@ -1,8 +1,9 @@
 #include "generatorimpl.h"
 #include "fmesh/contour/polytree.h"
 #include "fmesh/generate/trimeshbuilder.h"
-#include "fmesh/roof/roof.h"
 #include "fmesh/contour/path.h"
+
+#include "mmesh/cgal/roof.h"
 
 namespace fmesh
 {
@@ -182,7 +183,7 @@ namespace fmesh
 	void GeneratorImpl::_buildRoof(ClipperLib::PolyTree* polyTree, double roofHeight, double thickness)
 	{
 		std::vector<Patch*> patches;
-		buildRoofs(polyTree, patches, roofHeight, thickness);
+		mmesh::buildRoofs(polyTree, patches, roofHeight, thickness);
 		addPatches(patches);
 	}
 

@@ -1,10 +1,10 @@
 #include "polytree.h"
 #include "mmesh/clipper/circurlar.h"
 #include "fmesh/skeleton/tridegline.h"
-#include "fmesh/roof/roof.h"
 
 #include "fmesh/generate/polyfiller.h"
 #include "fmesh/generate/triangularization.h"
+#include "mmesh/cgal/roof.h"
 #include <algorithm>
 
 namespace fmesh
@@ -310,7 +310,7 @@ namespace fmesh
 		ClipperLib::PolyTree roofLine;
 		ClipperLib::PolyTree roofPoint;
 		ClipperLib::Paths* paths = new ClipperLib::Paths;
-		fmesh::roofLine(&source, &roofLine, &roofPoint, paths);
+		mmesh::roofLine(&source, &roofLine, &roofPoint, paths);
 
 		for (size_t i=0;i< paths->size();i++)
 		{
@@ -346,7 +346,7 @@ namespace fmesh
 		ClipperLib::PolyTree roofLine;
 		ClipperLib::PolyTree roofPoint;
 		ClipperLib::Paths* paths = new ClipperLib::Paths;
-		fmesh::roofLine(&source, &roofLine, &roofPoint, paths);
+		mmesh::roofLine(&source, &roofLine, &roofPoint, paths);
 
 		for (size_t i = 0; i < paths->size(); i++)
 		{
@@ -481,34 +481,5 @@ namespace fmesh
 
 		func(poly);
 		return num;
-	}
-
-	void seperate1423(ClipperLib::PolyTree* polyTree, std::vector<PolyPair*>& polyPairs)
-	{
-		for (ClipperLib::PolyNode* node1 : polyTree->Childs)
-		{
-			std::vector<ClipperLib::PolyNode*>& node2 = node1->Childs;
-			std::vector<ClipperLib::PolyNode*> node3;
-			for (ClipperLib::PolyNode* n : node2)
-				node3.insert(node3.end(), n->Childs.begin(), n->Childs.end());
-			std::vector<ClipperLib::PolyNode*> node4;
-			for (ClipperLib::PolyNode* n : node3)
-				node4.insert(node4.end(), n->Childs.begin(), n->Childs.end());
-
-			PolyPair* pair1 = new PolyPair();
-			pair1->clockwise = false;
-			pair1->outer = node1;
-			pair1->inner.swap(node4);
-			polyPairs.push_back(pair1);
-
-			for (ClipperLib::PolyNode* n : node2)
-			{
-				PolyPair* pair = new PolyPair();
-				pair->clockwise = true;
-				pair->outer = n;
-				pair->inner = n->Childs;
-				polyPairs.push_back(pair);
-			}
-		}
 	}
 }

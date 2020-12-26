@@ -1,14 +1,14 @@
 #ifndef _FONTOUTLINECENTER_1603209926789_H
 #define _FONTOUTLINECENTER_1603209926789_H
 #include <clipper/clipper.hpp>
+#include "fmesh/common/export.h"
 
 namespace fmesh
 {
 	class FontLibrary;
 	class Font;
-	class Outline;
 
-	class FontOutlineCenter
+	class FMESH_API FontOutlineCenter
 	{
 	public:
 		FontOutlineCenter();

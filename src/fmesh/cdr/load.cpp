@@ -1,6 +1,7 @@
 #include "load.h"
 #include "libcdr/CDRDocument.h"
 #include "libcdr/CMXDocument.h"
+#include "CDR2externalInterface.h"
 
 #include <iostream>
 

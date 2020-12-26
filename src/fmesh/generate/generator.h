@@ -2,6 +2,7 @@
 #define FMESH_GENERATOR_1604462758368_H
 #include <clipper/clipper.hpp>
 #include "trimesh2/TriMesh.h"
+#include "fmesh/common/export.h"
 #include "fmesh/common/param.h"
 
 #include <map>
@@ -42,7 +43,7 @@ namespace fmesh
 	};
 
 	GeneratorImpl* createGenerator(const ADParam& param);
-	class GeneratorProxy
+	class FMESH_API GeneratorProxy
 	{
 	public:
 		GeneratorProxy();

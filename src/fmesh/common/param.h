@@ -2,7 +2,7 @@
 #define FMESH_PARAM_1604458181746_H
 #include <string>
 #include <vector>
-
+#include "fmesh/common/export.h"
 #include "trimesh2/Vec.h"
 
 namespace fmesh
@@ -97,7 +97,7 @@ namespace fmesh
 		adst_dingmianjieti
 	};
 
-	class ADParam
+	class FMESH_API ADParam
 	{
 	public:
 		ADParam();
