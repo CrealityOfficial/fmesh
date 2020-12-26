@@ -1,7 +1,7 @@
 #include "load.h"
 #include "dxf/dl_dxf.h"
-#include "cdrdxf/dxf/test_creationclass.h"
-#include "cdrdxf/dxf/builder.h"
+#include "fmesh/dxf/test_creationclass.h"
+#include "fmesh/dxf/builder.h"
 
 #include <memory>
 

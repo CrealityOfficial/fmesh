@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>//包含头文件  
 #include "clipper/clipper.hpp"
-#include "cdrdxf/dxf/spline.h"
+#include "fmesh/dxf/spline.h"
 
 using namespace std;  
 //块对象类，存放DXF的块对线，包括世界坐标、缩放比例、线、圆等对象

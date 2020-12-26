@@ -1,6 +1,6 @@
 #ifndef CDRDXF_SPLINE_1605513472182_H
 #define CDRDXF_SPLINE_1605513472182_H
-#include "cdrdxf/common/point.h"
+#include "fmesh/common/point.h"
 #include <vector>
 
 namespace cdrdxf
