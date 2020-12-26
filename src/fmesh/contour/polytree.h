@@ -21,6 +21,7 @@ namespace fmesh
 	void offsetAndExtendPolyTree(ClipperLib::PolyTree& source, double offset, double delta, double z, ClipperLib::PolyTree& dest);
 	void offsetExterior(ClipperLib::PolyTree& source, double offset);
 	void offsetExteriorInner(ClipperLib::PolyTree& source, double offset);
+	void offsetAndExtendPolyTree(ClipperLib::PolyTree& source, double offset, double delta, ClipperLib::PolyTree& dest);
 
 	//set z
 	void setPolyTreeZ(ClipperLib::PolyTree& tree, double z);
@@ -43,6 +44,9 @@ namespace fmesh
 	void xor2PolyTrees(ClipperLib::PolyTree* outer, ClipperLib::PolyTree* inner, ClipperLib::PolyTree& out, int flag);
 	void xor2PolyNodes(const std::vector<ClipperLib::PolyNode*>& outer, 
 		const std::vector<ClipperLib::PolyNode*>& inner, ClipperLib::PolyTree& out);
+
+	//checkInnerOffset
+	int GetPolyCount(ClipperLib::PolyTree* poly);
 
 	//seperate
 	struct PolyPair

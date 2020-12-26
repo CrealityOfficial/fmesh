@@ -17,7 +17,7 @@ namespace fmesh
 
 	FontOutlineCenter::~FontOutlineCenter()
 	{
-
+		delete library;
 	}
 
 	void FontOutlineCenter::load(const std::string& name)
