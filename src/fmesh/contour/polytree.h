@@ -29,7 +29,7 @@ namespace fmesh
 	void adjustPolyTreeZ(ClipperLib::PolyTree& tree);
 
 	//Polygon skeleton
-	void skeletonPolyTree(ClipperLib::PolyTree& source, double z, std::vector<Patch*>& patches);
+	void skeletonPolyTree(ClipperLib::PolyTree& source, double z, std::vector<Patch*>& patches,double height);
 	//Polygon sharp 
 	void skeletonPolyTreeSharp(ClipperLib::PolyTree& source, double z,double height, std::vector<Patch*>& patches);
 

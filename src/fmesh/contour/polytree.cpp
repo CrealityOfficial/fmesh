@@ -305,7 +305,7 @@ namespace fmesh
 		clipper.Execute(ClipperLib::ctUnion, source, ClipperLib::pftNonZero, ClipperLib::pftNonZero);
 	}
 
-	void skeletonPolyTree(ClipperLib::PolyTree& source, double z, std::vector<Patch*>& patches)
+	void skeletonPolyTree(ClipperLib::PolyTree& source, double z, std::vector<Patch*>& patches, double height)
 	{
 		ClipperLib::PolyTree roofLine;
 		ClipperLib::PolyTree roofPoint;
@@ -325,7 +325,7 @@ namespace fmesh
 				}
 				else if (pn.Contour.at(i).Z == 500)
 				{
-					pn.Contour.at(i).Z+=2000;
+					pn.Contour.at(i).Z+= height*1000;
 				}
 
 				pn.Contour.at(i).Z += z * 1000;
