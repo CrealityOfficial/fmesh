@@ -124,6 +124,9 @@ namespace fmesh
 		float shape_top_height;
 		float shape_middle_width;
 		float shape_angle;
+
+		float topoffset;
+		float bottomoffset;
 	};
 }
 

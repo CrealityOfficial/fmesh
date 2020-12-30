@@ -51,6 +51,9 @@ namespace fmesh
 		shape_top_height = 5.0f;
 		shape_middle_width = 2.0f;
 		shape_angle = 15.0f;
+
+		topoffset=0.08;
+		bottomoffset=0.08;
 	}
 
 	ADParam::~ADParam()
