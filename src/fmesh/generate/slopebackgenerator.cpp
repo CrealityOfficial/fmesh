@@ -1,5 +1,4 @@
 #include "slopebackgenerator.h"
-#include "fmesh/build/layer.h"
 
 namespace fmesh
 {

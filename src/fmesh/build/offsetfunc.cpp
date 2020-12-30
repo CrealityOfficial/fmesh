@@ -1,6 +1,0 @@
-#include "offsetfunc.h"
-
-namespace 
-{
-
-}

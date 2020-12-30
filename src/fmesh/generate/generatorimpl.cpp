@@ -10,6 +10,8 @@ namespace fmesh
 {
 	GeneratorImpl::GeneratorImpl()
 		:m_paths(nullptr)
+		, m_topTree(nullptr)
+		, m_bottomTree(nullptr)
 	{
 
 	}
@@ -18,28 +20,16 @@ namespace fmesh
 	{
 	}
 
-	trimesh::TriMesh* GeneratorImpl::build(ClipperLib::Paths* paths, const GenParam& param, const F2MParam& modelparam, const Args& args)
-	{
-		m_paths = paths;
-		m_param = param;
-		m_modelparam = modelparam;
-		m_args = args;
-
-		fmesh::convertPaths2PolyTree(m_paths, m_poly);
-		if (!paths || paths->size() == 0)
-			return nullptr;
-
-		build();
-
-		trimesh::TriMesh* mesh = generateFromPatches();
-		releaseResources();
-		return mesh;
-	}
-
-	trimesh::TriMesh* GeneratorImpl::generate(ClipperLib::Paths* paths, const ADParam& param)
+	trimesh::TriMesh* GeneratorImpl::generate(ClipperLib::Paths* paths, const ADParam& param,
+		ExportParam* exportParam, ClipperLib::PolyTree* topTree, ClipperLib::PolyTree* bottomTree)
 	{
 		m_paths = paths;
 		m_adParam = param;
+
+		if (exportParam)
+			m_exportParam = *exportParam;
+		m_topTree = topTree;
+		m_bottomTree = bottomTree;
 
 		ClipperLib::IntPoint bmin;
 		ClipperLib::IntPoint bmax;
@@ -310,9 +300,10 @@ namespace fmesh
 			_buildFromDiffPolyTree_firstLayer(&out);
 		}
 
-		std::string strfile = "f:/bottom.dxf";
-		//saveTopBottom(treeBottom, strfile);
-		cdrdxf::writedxf(&treeBottom, strfile);
+		if (m_bottomTree)
+		{
+
+		}
 	}
 
 	void GeneratorImpl::_buildTopBottom(ClipperLib::PolyTree* treeBottom, ClipperLib::PolyTree* treeTop,double offsetB,double offsetT)

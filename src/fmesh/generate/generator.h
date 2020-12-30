@@ -26,7 +26,6 @@ namespace fmesh
 		virtual ~Generator();
 
 		void setPaths(ClipperLib::Paths* paths);
-		void setParam(const GenParam& param);
 		ClipperLib::Paths* paths();
 
 		ClipperLib::PolyTree* polyTree();
@@ -38,8 +37,6 @@ namespace fmesh
 		std::unique_ptr<ClipperLib::PolyTree> m_polyTree;
 		
 		std::map<std::string, GeneratorImpl*> m_generateImpls;
-		GenParam m_param;
-		F2MParam m_modelparam;
 	};
 
 	GeneratorImpl* createGenerator(const ADParam& param);
@@ -49,7 +46,8 @@ namespace fmesh
 		GeneratorProxy();
 		virtual ~GeneratorProxy();
 
-		trimesh::TriMesh* build(const ADParam& param, ClipperLib::Paths* paths);
+		trimesh::TriMesh* build(const ADParam& param, ClipperLib::Paths* paths, 
+			ExportParam* exportParam = nullptr, ClipperLib::PolyTree* topTree = nullptr, ClipperLib::PolyTree* bottomTree = nullptr);
 	};
 }
 

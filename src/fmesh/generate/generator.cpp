@@ -4,13 +4,8 @@
 #include "fmesh/contour/path.h"
 
 #include "fmesh/generate/simplegenerator.h"
-#include "fmesh/generate/fillgenerator.h"
 #include "fmesh/generate/bottomgenerator.h"
-#include "fmesh/generate/frustumgenerator.h"
 #include "fmesh/generate/stepsgenerator.h"
-#include "fmesh/generate/exteriorgenerator.h"
-#include "fmesh/generate/stepgenerator.h"
-#include "fmesh/generate/roofgenerator.h"
 #include "fmesh/generate/drumgenerator.h"
 #include "fmesh/generate/italicsgenerator.h"
 #include "fmesh/generate/slopegenerator.h"
@@ -35,13 +30,8 @@ namespace fmesh
 	void createBuildImpls(GeneratorImplMap& impls)
 	{
 		REGISTER("simple", SimpleGenerator)
-		REGISTER("fill", FillGenerator)
 		REGISTER("bottom", BottomGenerator)
-		REGISTER("frustum", FrustumGenerator)
 		REGISTER("steps", StepsGenerator)
-		REGISTER("exterior", ExteriorGenerator)
-		REGISTER("step", StepGenerator)
-		REGISTER("roof", RoofGenerator)
 		REGISTER("drum", DrumGenerator)
 		REGISTER("italics", ItalicsGenerator)
 		REGISTER("slope", SlopeGenerator)
@@ -76,11 +66,6 @@ namespace fmesh
 		return m_paths.get();
 	}
 
-	void Generator::setParam(const GenParam& param)
-	{
-		m_param = param;
-	}
-
 	void Generator::setPaths(ClipperLib::Paths* paths)
 	{
 		m_paths.reset(paths);
@@ -91,9 +76,6 @@ namespace fmesh
 		//scale
 		trimesh::vec3 bMin = trimesh::vec3(INT2MM(bmin.X), INT2MM(bmin.Y), INT2MM(bmin.Z));
 		trimesh::vec3 bMax = trimesh::vec3(INT2MM(bmax.X), INT2MM(bmax.Y), INT2MM(bmax.Z));
-
-		m_modelparam.dmin = trimesh::vec2(bMin);
-		m_modelparam.dmax = trimesh::vec2(bMax);
 
 		m_polyTree.reset();
 	} 
@@ -123,8 +105,8 @@ namespace fmesh
 		if (!paths)
 			return nullptr;
 		
-		GeneratorImpl* impl = findImpl(method);
-		trimesh::TriMesh* mesh = impl ? impl->build(paths, m_param, m_modelparam,args) : nullptr;
+		//GeneratorImpl* impl = findImpl(method);
+		trimesh::TriMesh* mesh = nullptr;
 		return mesh;
 	}
 
@@ -180,7 +162,8 @@ namespace fmesh
 
 	}
 
-	trimesh::TriMesh* GeneratorProxy::build(const ADParam& param, ClipperLib::Paths* paths)
+	trimesh::TriMesh* GeneratorProxy::build(const ADParam& param, ClipperLib::Paths* paths,
+		ExportParam* exportParam, ClipperLib::PolyTree* topTree, ClipperLib::PolyTree* bottomTree)
 	{
 		if (!paths)
 			return nullptr;

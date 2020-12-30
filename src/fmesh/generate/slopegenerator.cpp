@@ -1,5 +1,4 @@
 #include "slopegenerator.h"
-#include "fmesh/build/layer.h"
 
 namespace fmesh
 {

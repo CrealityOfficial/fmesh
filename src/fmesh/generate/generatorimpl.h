@@ -17,9 +17,8 @@ namespace fmesh
 	public:
 		GeneratorImpl();
 		virtual ~GeneratorImpl();
-
-		trimesh::TriMesh* build(ClipperLib::Paths* paths, const GenParam& param, const F2MParam& modelparam, const Args& args);
-		trimesh::TriMesh* generate(ClipperLib::Paths* paths, const ADParam& param);
+		trimesh::TriMesh* generate(ClipperLib::Paths* paths, const ADParam& param, 
+			ExportParam* exportParam = nullptr, ClipperLib::PolyTree* topTree = nullptr, ClipperLib::PolyTree* bottomTree = nullptr);
 
 		virtual void build() = 0;
 	protected:
@@ -53,12 +52,13 @@ namespace fmesh
 		ClipperLib::Paths* m_paths;
 		ClipperLib::PolyTree m_poly;
 
-		GenParam m_param;
-		F2MParam m_modelparam;
-
 		ADParam m_adParam;
 		trimesh::vec2 dmin;
 		trimesh::vec2 dmax;
+
+		ExportParam m_exportParam;
+		ClipperLib::PolyTree* m_topTree;
+		ClipperLib::PolyTree* m_bottomTree;
 
 		std::vector<std::string> m_args;
 

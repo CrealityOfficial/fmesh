@@ -1,6 +1,5 @@
 #include "polytree.h"
 #include "mmesh/clipper/circurlar.h"
-#include "fmesh/skeleton/tridegline.h"
 
 #include "fmesh/generate/polyfiller.h"
 #include "fmesh/generate/triangularization.h"

@@ -9,63 +9,6 @@ namespace fmesh
 {
 	typedef std::vector<std::string> Args;
 
-	struct F2MParam
-	{
-		float expectLen;
-		trimesh::vec2 dmin;
-		trimesh::vec2 dmax;
-		std::vector<std::string> args;
-
-		float initH;
-		float totalH;
-		float bottomH;
-		float thickness;
-	};
-
-	enum class EBottomMode
-	{
-		STEP,
-		WIDEN,
-		CLOSED,
-		NONE
-	};
-
-	class GenParam
-	{
-	public:
-		GenParam();
-		~GenParam();
-
-		float expectLen;
-		float initH;
-		float totalH;
-		float bottomH;
-		float thickness;
-		float topH;
-
-		//steps
-		float connectDepth;
-
-		//bottom surface
-		EBottomMode bottomMode;
-		float bottomStepH;
-		float bottomStepW;
-		float bottomWidenW;
-
-		//exterior
-		float exteriorH;
-
-		//drum
-		float drumH;
-
-		//italics
-		float italicsAngle;
-		float italicsBottomH;
-
-		//slope
-		float slopeRightH;
-	};
-
 	enum class ADTopType
 	{
 		adtt_none,
@@ -124,9 +67,16 @@ namespace fmesh
 		float shape_top_height;
 		float shape_middle_width;
 		float shape_angle;
+	};
 
-		float topoffset;
-		float bottomoffset;
+	class FMESH_API ExportParam
+	{
+	public:
+		ExportParam();
+		~ExportParam();
+
+		float top_offset;
+		float bottom_offset;
 	};
 }
 
