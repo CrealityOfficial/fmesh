@@ -4,6 +4,7 @@
 #include "fmesh/contour/path.h"
 
 #include "mmesh/cgal/roof.h"
+#include "fmesh/dxf/writedxf.h"
 
 namespace fmesh
 {
@@ -308,6 +309,10 @@ namespace fmesh
 			_buildFromSamePolyTree(&polys.at(0), &polys.at(1));
 			_buildFromDiffPolyTree_firstLayer(&out);
 		}
+
+		std::string strfile = "f:/bottom.dxf";
+		//saveTopBottom(treeBottom, strfile);
+		cdrdxf::writedxf(&treeBottom, strfile);
 	}
 
 	void GeneratorImpl::_buildTopBottom(ClipperLib::PolyTree* treeBottom, ClipperLib::PolyTree* treeTop,double offsetB,double offsetT)
@@ -327,4 +332,22 @@ namespace fmesh
 		}
 	}
 
+	void GeneratorImpl::saveTopBottom(ClipperLib::PolyTree& tree, const std::string& file)
+	{
+		ClipperLib::Paths paths;		
+		for (ClipperLib::PolyNode* node : tree.Childs)
+			if (!node->IsHole())
+			{
+				SimplePoly poly;
+				ClipperLib::Path path;
+				merge2SimplePoly(node, &poly, false);
+				//saveSimplePoly(poly, file);
+				for (ClipperLib::IntPoint* point : poly)
+				{
+					path.push_back(*point);
+				}
+				paths.push_back(path);
+			}		
+		ClipperLib::save(paths, "F:/test.stl");
+	}
 }
