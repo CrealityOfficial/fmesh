@@ -227,6 +227,14 @@ namespace fmesh
 			//
 
 		}
+
+		if (m_topTree)
+		{
+			if (m_exportParam.top_offset != 0)
+			{
+				offsetExteriorInner(*m_bottomTree, m_exportParam.top_offset + offset);
+			}
+		}
 	}
 
 	void GeneratorImpl::_buildBottom(ClipperLib::PolyTree& treeBottom, double& hBottom, double offset)
@@ -302,7 +310,10 @@ namespace fmesh
 
 		if (m_bottomTree)
 		{
-
+			if (m_exportParam.bottom_offset != 0)
+			{
+				offsetExteriorInner(*m_bottomTree, m_adParam.bottom_offset + offset);
+			}
 		}
 	}
 
