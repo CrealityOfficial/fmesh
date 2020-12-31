@@ -1,26 +1,41 @@
 #include "writesvg.h"
 #include "tinyxml/tinyxml.h"
 
+#include <string>
+#include "fmesh/generate/earpolygon.h"
+#include "fmesh/generate/polyfiller.h"
+#include "mmesh/clipper/circurlar.h"
+#include "fmesh/contour/polytree.h"
+
 namespace cdrdxf
 {
 	void writesvg(ClipperLib::PolyTree* tree, const std::string& file)
 	{
+		if (tree == nullptr)
+			return;
+
+		std::vector<ClipperLib::Path*> paths;
+		auto func = [&paths](ClipperLib::PolyNode* node) {
+			int depth = fmesh::testPolyNodeDepth(node);
+			if (depth == 2 || depth == 3)
+				paths.push_back(&node->Contour);
+		};
+		mmesh::loopPolyTree(func, tree);
+
 		std::string temp, tempstring;
 		std::string tempstr;
-		//生成SVG文件框
 		int height = 1;
 		int width = 1;
 
-		char buf[1024];
+		char buf[512];
 		std::sprintf(buf, "<?xml version=\"1.0\"  standalone='no' > "
 			"<!-- IBoard SVG File -->"
 			"<svg height=\"%d\" width=\"%d\">"
 			"<!-- SVG File --> "
 			"</svg>", height, width);
-		tempstr=buf;
+		temp =buf;
 
 		const char* demoStart = temp.data();
-		//若文件名不为空
 		if (file != "")
 			tempstring.append(file);
 		else
@@ -32,32 +47,37 @@ namespace cdrdxf
 
 		if (doc.Error())
 		{
-			//AfxMessageBox("some error ,fix here");
 			return;
 		}
 		else
 			doc.SaveFile();
-		//
 
-
-		/////使用tinyxml操作SVG文件/////
-		TiXmlDocument doc1("iboardfile.svg");
-		bool loadOkay = doc.LoadFile();
+		TiXmlDocument doc1(file.c_str());
+		bool loadOkay = doc1.LoadFile();
 		if (!loadOkay)
 		{
 			return ;
 		}
-		TiXmlNode* node = doc.FirstChild("svg");
+		TiXmlNode* node = doc1.FirstChild("svg");
 		assert(node);
-		//向SVG文件插入一个圆
-		TiXmlElement child("ellipse");
-		child.SetAttribute("cx", "50");
-		child.SetAttribute("cy", "50");
-		child.SetAttribute("rx", "100");
-		child.SetAttribute("ry", "100");
-		child.SetAttribute("style", "fill:Red;stroke:red");
-		node->InsertEndChild(child);
+		// path:
+		for (size_t i = 0; i < paths.size(); i++)
+		{
+			if (!paths.at(i)->size())
+				continue;
+			TiXmlElement child("polygon");
+			std::string str;
+			for (size_t j = 0; j < paths.at(i)->size(); j++)
+			{
+				str+=std::to_string(paths.at(i)->at(j).X);
+				str += ",";
+				str += std::to_string(paths.at(i)->at(j).Y);
+				str += " ";
+			}
+			child.SetAttribute("points", str.c_str());
+			child.SetAttribute("style", "fill-opacity:0;stroke:red");
+			node->InsertEndChild(child);
+		}
 		doc1.SaveFile();
-		/////插入圆成功，保存文件
 	}
 }

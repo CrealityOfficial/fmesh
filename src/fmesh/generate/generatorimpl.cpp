@@ -5,6 +5,7 @@
 
 #include "mmesh/cgal/roof.h"
 #include "fmesh/dxf/writedxf.h"
+#include "fmesh/svg/writesvg.h"
 
 namespace fmesh
 {
@@ -232,7 +233,7 @@ namespace fmesh
 		{
 			if (m_exportParam.top_offset != 0)
 			{
-				offsetExteriorInner(*m_bottomTree, m_exportParam.top_offset + offset);
+				offsetAndExtendPolyTree(m_poly, offset+ m_exportParam.top_offset, thickness, hTop, *m_topTree);
 			}
 		}
 	}
@@ -312,7 +313,7 @@ namespace fmesh
 		{
 			if (m_exportParam.bottom_offset != 0)
 			{
-				offsetExteriorInner(*m_bottomTree, m_adParam.bottom_offset + offset);
+				offsetAndExtendPolyTree(m_poly, m_adParam.bottom_offset+offset, thickness, hBottom, *m_bottomTree);
 			}
 		}
 	}
