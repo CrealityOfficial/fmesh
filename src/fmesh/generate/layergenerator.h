@@ -13,7 +13,7 @@ namespace fmesh
 		virtual void impl(ClipperLib::PolyTree& poly1, ClipperLib::PolyTree& poly2) = 0;
 	};
 
-	class LayerGenerator : public GeneratorImpl
+	class FMESH_API LayerGenerator : public GeneratorImpl
 	{
 	public:
 		LayerGenerator();

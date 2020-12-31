@@ -19,7 +19,7 @@ namespace fmesh
 	void createBuildImpls(GeneratorImplMap& impls);
 	void destroyBuildImpls(GeneratorImplMap& impls);
 
-	class Generator
+	class FMESH_API Generator
 	{
 	public:
 		Generator();

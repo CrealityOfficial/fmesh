@@ -4,6 +4,7 @@
 #include "trimesh2/TriMesh.h"
 #include <map>
 
+#include "fmesh/common/export.h"
 #include "fmesh/common/param.h"
 #include "fmesh/generate/patch.h"
 #include "fmesh/contour/polytree.h"
@@ -12,7 +13,7 @@
 
 namespace fmesh
 {
-	class GeneratorImpl
+	class FMESH_API GeneratorImpl
 	{
 	public:
 		GeneratorImpl();

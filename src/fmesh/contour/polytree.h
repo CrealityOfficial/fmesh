@@ -1,6 +1,7 @@
 #ifndef FMESH_POLYTREE_1604475054469_H
 #define FMESH_POLYTREE_1604475054469_H
 #include <clipper/clipper.hpp>
+#include "fmesh/common/export.h"
 #include "trimesh2/Vec.h"
 #include "fmesh/generate/patch.h"
 
@@ -12,8 +13,8 @@ namespace fmesh
 	void seperatePolyTree1234(ClipperLib::PolyTree* tree, std::vector<std::vector<ClipperLib::PolyNode*>>& depthNodes);
 
 	//all parameters are in mm
-	void convertPaths2PolyTree(ClipperLib::Paths* paths, ClipperLib::PolyTree& polyTree);
-	void copy2PolyTree(ClipperLib::PolyTree& source, ClipperLib::PolyTree& dest);
+	FMESH_API void convertPaths2PolyTree(ClipperLib::Paths* paths, ClipperLib::PolyTree& polyTree);
+	FMESH_API void copy2PolyTree(ClipperLib::PolyTree& source, ClipperLib::PolyTree& dest);
 
 	//extend
 	void extendPolyTree(ClipperLib::PolyTree& source, double delta, ClipperLib::PolyTree& dest);
