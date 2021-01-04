@@ -467,9 +467,10 @@ namespace fmesh
 	int GetPolyCount(ClipperLib::PolyTree* poly)
 	{
 		int num = 0;
-		int index = 0;
+		int index = 1;
+
 		polyNodeFunc func = [&func, &num,&index](ClipperLib::PolyNode* node) {
-				num+= node->ChildCount()* index;
+				num+= fmesh::testPolyNodeDepth(node) * index;
 
 			for (ClipperLib::PolyNode* n : node->Childs)
 			{
