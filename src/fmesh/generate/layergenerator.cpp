@@ -126,7 +126,7 @@ namespace fmesh
 
 			std::string strTime = szTime;
 #else
-			strTime = "xxxlinux";
+			std::string strTime = "xxxlinux";
 #endif
 			return strTime;
 		};
