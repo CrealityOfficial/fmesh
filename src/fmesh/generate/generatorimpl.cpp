@@ -160,9 +160,9 @@ namespace fmesh
 		addPatches(patches, invert);
 	}
 
-	void GeneratorImpl::_dealPolyTreeAxisZ(ClipperLib::PolyTree* tree, double slope, double height)
+	void GeneratorImpl::_dealPolyTreeAxisZ(ClipperLib::PolyTree* tree, double slope, double min, double height)
 	{	
-		dealPolyTreeAxisZ(tree, slope, height);
+		dealPolyTreeAxisZ(tree, slope, min, height);
 	}
 
 	void GeneratorImpl::_buildFromDiffPolyTree_firstLayer(ClipperLib::PolyTree* treeLower, int flag /*= 0*/)

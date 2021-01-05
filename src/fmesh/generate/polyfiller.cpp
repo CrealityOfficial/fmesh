@@ -188,14 +188,14 @@ namespace fmesh
 
 	}
 
-	void dealPolyTreeAxisZ(ClipperLib::PolyTree* polyTree, double slope, double height)
+	void dealPolyTreeAxisZ(ClipperLib::PolyTree* polyTree, double slope,double min, double height)
 	{
 		if (!polyTree)
 			return;
-		polyNodeFunc func = [&slope,&height](ClipperLib::PolyNode* node) {
+		polyNodeFunc func = [&slope,&height,&min](ClipperLib::PolyNode* node) {
 			for (size_t i = 0; i < node->Contour.size(); i++)
 			{
-				node->Contour.at(i).Z += slope * (node->Contour.at(i).Y)+ height*1000;
+  				node->Contour.at(i).Z += slope * (node->Contour.at(i).Y- min*1000)+ height*1000;
 			}
 		};
 

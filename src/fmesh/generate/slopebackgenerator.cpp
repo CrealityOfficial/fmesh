@@ -31,7 +31,7 @@ namespace fmesh
 		}
 
 		double slope = (m_adParam.total_height - m_adParam.shape_bottom_height - 1) / (dmax.y - dmin.y);
-		_dealPolyTreeAxisZ(&polys.at(2), -slope, m_adParam.total_height - m_adParam.shape_bottom_height - 1);
+		_dealPolyTreeAxisZ(&polys.at(2), -slope, dmin.y,m_adParam.total_height - m_adParam.shape_bottom_height - 1);
 
 		_buildFromSamePolyTree(&polys.at(0), &polys.at(1));
 		_buildFromSamePolyTree(&polys.at(1), &polys.at(2));
