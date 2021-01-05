@@ -27,7 +27,7 @@ namespace fmesh
 		//double bottomHeight = m_adParam.total_height - 	drumHCount* offsetH;
 
 		//
-		size_t drumHCount = 300;
+		size_t drumHCount = 150;
 		float offsetr =1.0*m_adParam.shape_top_height/ drumHCount;
 
 		std::vector<ClipperLib::PolyTree> middlePolys(1 + drumHCount);
@@ -68,6 +68,7 @@ namespace fmesh
 		//delta = bottomHeight + (middlePolys.size() - 1) * offsetH;f
 		skeletonPolyTree(middlePolys.back(), delta2, patches, middlePolys.size()/100.0);
 		addPatches(patches);
+		//_fillPolyTree(&middlePolys.back(),true);
 
 		m_adParam.bottom_height = bottomHeight;
 		_buildTopBottom(&middlePolys.front(),nullptr);
