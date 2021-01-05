@@ -180,6 +180,7 @@ namespace CDRUSERINTERFACE
 	}
 	int CDR_USER_OBJ::jsonParseBaseCdr(char *Jsonbuff)
 	{
+#if WIN32
 		 //char json[] = " { \"hello\" : \"world\", \n \"t\" : true , \"f\" : false, \"n\": null, \"i\":123, \"pi\": 3.1416, \"a\":[1, 2, 3, 4] } ";
 
 		//const char* file_name = "out_ok.json";
@@ -386,6 +387,9 @@ namespace CDRUSERINTERFACE
 		else
 			m_Paths = m_Pathstemp;
 		return retvalue;
+#else
+		return 0;
+#endif
 	}
 
 	CDR_USER_OBJ::CDR_USER_OBJ()
