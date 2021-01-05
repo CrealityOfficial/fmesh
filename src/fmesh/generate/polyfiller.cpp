@@ -283,7 +283,7 @@ namespace fmesh
 			int vertexIndex = -1;
 			for (int i = 0; i < innerSize; ++i)
 			{
-				trimesh::dvec3& v = CInt2VD(*insertPoly.at(i));
+				trimesh::dvec3 v = CInt2VD(*insertPoly.at(i));
 				if (v.x > mx)
 				{
 					mx = v.x;
@@ -294,7 +294,7 @@ namespace fmesh
 
 			if (maxVertex)
 			{
-				trimesh::dvec3& tVertex = CInt2VD(*maxVertex);
+				trimesh::dvec3 tVertex = CInt2VD(*maxVertex);
 				int nvert = (int)newPoly->size();
 				int i, j = 0;
 				double cmx = 1000000.0;
@@ -302,8 +302,8 @@ namespace fmesh
 				int cOuterIndex0 = -1;
 				for (i = 0, j = nvert - 1; i < nvert; j = i++)
 				{
-					trimesh::dvec3& verti = CInt2VD(*newPoly->at(i));
-					trimesh::dvec3& vertj = CInt2VD(*newPoly->at(j));
+					trimesh::dvec3 verti = CInt2VD(*newPoly->at(i));
+					trimesh::dvec3 vertj = CInt2VD(*newPoly->at(j));
 					if (verti.y == tVertex.y && vertj.y == tVertex.y)
 					{
 						double mmx = verti.x > vertj.x ? vertj.x : verti.x;
@@ -370,7 +370,7 @@ namespace fmesh
 						std::vector<int> reflexVertex;
 						for (i = 0; i < nvert; ++i)
 						{
-							trimesh::dvec3& tv = CInt2VD(*newPoly->at(i));
+							trimesh::dvec3 tv = CInt2VD(*newPoly->at(i));
 							if ((i != cOuterIndex) && (newPoly->at(i) != newPoly->at(cOuterIndex)) && insideTriangle(M, P, I, tv))
 							{
 								reflexVertex.push_back(i);

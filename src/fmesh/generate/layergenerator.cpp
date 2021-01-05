@@ -108,6 +108,7 @@ namespace fmesh
 			++index;
 			char szTime[100] = { '\0' };
 
+#ifdef WIN32
 			time_t time2 = time(nullptr);
 			tm pTm;
 			localtime_s(&pTm, &time2);
@@ -124,7 +125,9 @@ namespace fmesh
 				index);
 
 			std::string strTime = szTime;
-
+#else
+			std::string strTime = "xxxlinux";
+#endif
 			return strTime;
 		};
 
