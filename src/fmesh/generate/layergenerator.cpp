@@ -108,7 +108,7 @@ namespace fmesh
 			++index;
 			char szTime[100] = { '\0' };
 
-#if WIN32
+#ifdef WIN32
 			time_t time2 = time(nullptr);
 			tm pTm;
 			localtime_s(&pTm, &time2);
