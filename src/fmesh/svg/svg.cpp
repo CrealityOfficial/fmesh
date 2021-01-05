@@ -348,12 +348,16 @@ void svg::pausePathMm(string stringPoint, vector<ClipperLib::DoublePoint>& vctDo
 	if (stringPoint.substr(0, 1) == "M")
 	{
 		m_isBigchars = true;
+#if WIN32
 		stringPoint.erase(std::remove(stringPoint.begin(), stringPoint.end(), 'M'), stringPoint.end());
+#endif
 	}
 	else
 	{
 		m_isBigchars = false;
+#if WIN32
 		stringPoint.erase(std::remove(stringPoint.begin(), stringPoint.end(), 'm'), stringPoint.end());
+#endif
 	}
 
 	vector<std::string> VctPoint;
