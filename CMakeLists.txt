@@ -4,4 +4,5 @@ project(fmesh)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/")
 include(ConfigureAllModules) 
 
+add_subdirectory(mmesh/external mmesh)
 add_subdirectory(src)
