@@ -128,6 +128,13 @@ namespace fmesh
 		buildFromDiffPolyTree(treeLower, treeUp, patches, flag);
 		addPatches(patches);
 	}
+
+	void GeneratorImpl::_buildFromDiffPolyTreeSafe(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp, double delta, int flag)
+	{
+		std::vector<Patch*> patches;
+		buildFromDiffPolyTreeSafty(treeLower, treeUp, patches, delta, flag);
+		addPatches(patches);
+	}
 	
 	void GeneratorImpl::_buildFromDiffPolyTree_drum(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp, int flag, ClipperLib::PolyTree& out)
 	{

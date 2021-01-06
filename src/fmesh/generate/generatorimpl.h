@@ -35,6 +35,7 @@ namespace fmesh
 		void _fillPolyTreeDepth14(ClipperLib::PolyTree* tree, bool invert = false);
 		void _buildFromSamePolyTree(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp, int flag = 0);  //0 all, 1 outer, 2 inner
 		void _buildFromDiffPolyTree(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp, int flag = 0);
+		void _buildFromDiffPolyTreeSafe(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp, double delta, int flag = 0);
 
 		void _buildFromDiffPolyTree_drum(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp, int flag, ClipperLib::PolyTree& out);
 		void _fillPolyTreeReverseInner(ClipperLib::PolyTree* tree, bool invert = false);
@@ -44,7 +45,7 @@ namespace fmesh
 		void _buildFromDiffPolyTree_firstLayer(ClipperLib::PolyTree* treeLower, int flag = 0);
 		void _buildRoof(ClipperLib::PolyTree* polyTree, double roofHeight, double thickness);
 
-		void _buildTop(ClipperLib::PolyTree& treeTop, double& hTop,double offset=0);
+		void _buildTop(ClipperLib::PolyTree& treeTop, double& hTop,double offset = 0);
 		void _buildBottom(ClipperLib::PolyTree& treeBottom, double& hBottom, double offset = 0);
 		void _buildTopBottom(ClipperLib::PolyTree* treeBottom, ClipperLib::PolyTree* treeTop, double offsetB = 0, double offsetT = 0);
 

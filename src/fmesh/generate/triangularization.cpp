@@ -95,6 +95,52 @@ namespace fmesh
 				patches.push_back(patch);
 	}
 
+	void buildFromDiffPolyTreeSafty(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp,
+		std::vector<Patch*>& patches, double delta, int flag)
+	{
+		std::vector<PolyTreeOppoPair> sources;
+		PolyTreeOppoPair startPair;
+		startPair.lower = treeLower;
+		startPair.upper = treeUp;
+		sources.push_back(startPair);
+		std::vector<PolyTreeOppoPair> tmp;
+		std::vector<PolyTreeOppoPair> pairs;
+
+		while (sources.size() > 0)
+		{
+			for(PolyTreeOppoPair& pair : sources)
+				findPolyTreePairFromNode(pair.lower, pair.upper, tmp);
+
+			for (PolyTreeOppoPair& pair : tmp)
+			{
+				if(checkFlag(pair.upper, flag)
+					&& checkFlag(pair.lower, flag))
+					pairs.push_back(pair);
+			}
+
+			tmp.swap(sources);
+			tmp.clear();
+		}
+
+		size_t size = pairs.size();
+		if (size > 0)
+		{
+			std::vector<Patch*> tmp(size);
+			for (size_t i = 0; i < size; ++i)
+				tmp.at(i) = buildFromDiffPath(&pairs.at(i).lower->Contour, &pairs.at(i).upper->Contour);
+
+			for (Patch* patch : tmp)
+				if (patch)
+					patches.push_back(patch);
+		}
+	}
+
+	void findPolyTreePairFromNode(ClipperLib::PolyNode* nodeLower, ClipperLib::PolyNode* nodeUp,
+		std::vector<PolyTreeOppoPair>& pairs)
+	{
+
+	}
+
 	Patch* buildFromDiffPath(ClipperLib::Path* pathLower, ClipperLib::Path* pathUp)
 	{
 		Wovener wovener;
