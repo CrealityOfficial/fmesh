@@ -186,6 +186,7 @@ namespace CDRUSERINTERFACE
 		//const char* file_name = "out_ok.json";
 		RAPIDJSON_NAMESPACE::Document dom;
 		int retvalue = 0;
+		int errorindex = 0;
 		ClipperLib::Paths* m_Pathstemp = new ClipperLib::Paths();
 
 		if (Jsonbuff == NULL)
@@ -195,7 +196,7 @@ namespace CDRUSERINTERFACE
 		}
 		dom.ParseInsitu(Jsonbuff);
 		//dom.Parse(Jsonbuff);
-		int errorindex = dom.HasParseError();
+		errorindex = dom.HasParseError();
 		if (!dom.HasParseError()) 
 		{
 			int pathTotal = 0;
