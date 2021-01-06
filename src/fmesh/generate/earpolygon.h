@@ -1,6 +1,7 @@
 #ifndef FMESH_EARPOLYGON_1604488905381_H
 #define FMESH_EARPOLYGON_1604488905381_H
 #include <clipper/clipper.hpp>
+#include "fmesh/common/export.h"
 #include "fmesh/generate/patch.h"
 
 namespace fmesh
@@ -16,7 +17,7 @@ namespace fmesh
 		double dot;
 	};
 
-	class SimplePolyWrapper
+	class FMESH_API SimplePolyWrapper
 	{
 	public:
 		SimplePolyWrapper();
@@ -30,7 +31,7 @@ namespace fmesh
 
 	void saveSimplePoly(const SimplePoly& poly, const std::string& file);
 
-	class EarPolygon
+	class FMESH_API EarPolygon
 	{
 	public:
 		EarPolygon();
