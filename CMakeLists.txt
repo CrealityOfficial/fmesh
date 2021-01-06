@@ -12,6 +12,7 @@ endif()
 
 __find_trimesh2()
 __find_clipper()
+__include_boost()
 
 add_subdirectory(mmesh/external mmesh)
 add_subdirectory(src)

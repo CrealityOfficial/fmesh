@@ -348,16 +348,18 @@ void svg::pausePathMm(string stringPoint, vector<ClipperLib::DoublePoint>& vctDo
 	if (stringPoint.substr(0, 1) == "M")
 	{
 		m_isBigchars = true;
-#if WIN32
-		stringPoint.erase(std::remove(stringPoint.begin(), stringPoint.end(), 'M'), stringPoint.end());
-#endif
+		stringPoint = stringPoint.substr(1, stringPoint.size() - 1);
+//#if WIN32
+//		stringPoint.erase(std::remove(stringPoint.begin(), stringPoint.end(), 'M'), stringPoint.end());
+//#endif
 	}
 	else
 	{
 		m_isBigchars = false;
-#if WIN32
-		stringPoint.erase(std::remove(stringPoint.begin(), stringPoint.end(), 'm'), stringPoint.end());
-#endif
+		stringPoint = stringPoint.substr(1, stringPoint.size() - 1);
+//#if WIN32
+//		stringPoint.erase(std::remove(stringPoint.begin(), stringPoint.end(), 'm'), stringPoint.end());
+//#endif
 	}
 
 	vector<std::string> VctPoint;
@@ -387,16 +389,18 @@ void svg::pausePathLl(string stringPoint, vector<ClipperLib::DoublePoint>& vctDo
 	if (stringPoint.substr(0, 1) == "L")
 	{
 		m_isBigchars = true;
-#if WIN32
-		stringPoint.erase(std::remove(stringPoint.begin(), stringPoint.end(), 'L'), stringPoint.end());
-#endif
+		stringPoint = stringPoint.substr(1, stringPoint.size() - 1);
+//#if WIN32
+//		stringPoint.erase(std::remove(stringPoint.begin(), stringPoint.end(), 'L'), stringPoint.end());
+//#endif
 	}
 	else
 	{
 		m_isBigchars = false;
-#if WIN32
-		stringPoint.erase(std::remove(stringPoint.begin(), stringPoint.end(), 'l'), stringPoint.end());
-#endif
+		stringPoint = stringPoint.substr(1, stringPoint.size() - 1);
+//#if WIN32
+//		stringPoint.erase(std::remove(stringPoint.begin(), stringPoint.end(), 'l'), stringPoint.end());
+//#endif
 	}
 
 	vector<std::string> VctPoint;
@@ -426,16 +430,18 @@ void svg::pausePathHh(string stringPoint, vector<ClipperLib::DoublePoint>& vctDo
 	if (stringPoint.substr(0, 1) == "H")
 	{
 		m_isBigchars = true;
-#if WIN32
-		stringPoint.erase(std::remove(stringPoint.begin(), stringPoint.end(), 'H'), stringPoint.end());
-#endif
+		stringPoint = stringPoint.substr(1, stringPoint.size() - 1);
+//#if WIN32
+//		stringPoint.erase(std::remove(stringPoint.begin(), stringPoint.end(), 'H'), stringPoint.end());
+//#endif
 	}
 	else
 	{
 		m_isBigchars = false;
-#if WIN32
-		stringPoint.erase(std::remove(stringPoint.begin(), stringPoint.end(), 'h'), stringPoint.end());
-#endif
+		stringPoint = stringPoint.substr(1, stringPoint.size() - 1);
+//#if WIN32
+//		stringPoint.erase(std::remove(stringPoint.begin(), stringPoint.end(), 'h'), stringPoint.end());
+//#endif
 	}
 
 	vector<std::string> VctPoint;
@@ -464,16 +470,18 @@ void svg::pausePathVv(string stringPoint, vector<ClipperLib::DoublePoint>& vctDo
 	if (stringPoint.substr(0, 1) == "V")
 	{
 		m_isBigchars = true;
-#if WIN32
-		stringPoint.erase(std::remove(stringPoint.begin(), stringPoint.end(), 'V'), stringPoint.end());
-#endif
+		stringPoint = stringPoint.substr(1, stringPoint.size() - 1);
+//#if WIN32
+//		stringPoint.erase(std::remove(stringPoint.begin(), stringPoint.end(), 'V'), stringPoint.end());
+//#endif
 	}
 	else
 	{
 		m_isBigchars = false;
-#if WIN32
-		stringPoint.erase(std::remove(stringPoint.begin(), stringPoint.end(), 'v'), stringPoint.end());
-#endif
+		stringPoint = stringPoint.substr(1, stringPoint.size() - 1);
+//#if WIN32
+//		stringPoint.erase(std::remove(stringPoint.begin(), stringPoint.end(), 'v'), stringPoint.end());
+//#endif
 	}
 
 	vector<std::string> VctPoint;
@@ -502,16 +510,18 @@ void svg::pausePathCc(string stringPoint, vector<ClipperLib::DoublePoint>& vctDo
 	if (stringPoint.substr(0, 1) == "C")
 	{
 		m_isBigchars = true;
-#if WIN32
-		stringPoint.erase(std::remove(stringPoint.begin(), stringPoint.end(), 'C'), stringPoint.end());
-#endif
+		stringPoint = stringPoint.substr(1, stringPoint.size() - 1);
+//#if WIN32
+//		stringPoint.erase(std::remove(stringPoint.begin(), stringPoint.end(), 'C'), stringPoint.end());
+//#endif
 	}
 	else
 	{
 		m_isBigchars = false;
-#if WIN32
-		stringPoint.erase(std::remove(stringPoint.begin(), stringPoint.end(), 'c'), stringPoint.end());
-#endif
+		stringPoint = stringPoint.substr(1, stringPoint.size() - 1);
+//#if WIN32
+//		stringPoint.erase(std::remove(stringPoint.begin(), stringPoint.end(), 'c'), stringPoint.end());
+//#endif
 	}
 
 	vector<std::string> VctPoint;
@@ -577,16 +587,18 @@ void svg::pausePathQq(string stringPoint, vector<ClipperLib::DoublePoint>& vctDo
 	if (stringPoint.substr(0, 1) == "Q")
 	{
 		m_isBigchars = true;
-#if WIN32
-		stringPoint.erase(std::remove(stringPoint.begin(), stringPoint.end(), 'Q'), stringPoint.end());
-#endif
+		stringPoint = stringPoint.substr(1, stringPoint.size() - 1);
+//#if WIN32
+//		stringPoint.erase(std::remove(stringPoint.begin(), stringPoint.end(), 'Q'), stringPoint.end());
+//#endif
 	}
 	else
 	{
 		m_isBigchars = false;
-#if WIN32
-		stringPoint.erase(std::remove(stringPoint.begin(), stringPoint.end(), 'q'), stringPoint.end());
-#endif
+		stringPoint = stringPoint.substr(1, stringPoint.size() - 1);
+//#if WIN32
+//		stringPoint.erase(std::remove(stringPoint.begin(), stringPoint.end(), 'q'), stringPoint.end());
+//#endif
 	}
 
 	vector<std::string> VctPoint;
@@ -647,16 +659,18 @@ void svg::pausePathTt(string stringPoint, vector<ClipperLib::DoublePoint>& vctDo
 	if (stringPoint.substr(0, 1) == "T")
 	{
 		m_isBigchars = true;
-#if WIN32
-		stringPoint.erase(std::remove(stringPoint.begin(), stringPoint.end(), 'T'), stringPoint.end());
-#endif
+		stringPoint = stringPoint.substr(1, stringPoint.size() - 1);
+//#if WIN32
+//		stringPoint.erase(std::remove(stringPoint.begin(), stringPoint.end(), 'T'), stringPoint.end());
+//#endif
 	}
 	else
 	{
 		m_isBigchars = false;
-#if WIN32
-		stringPoint.erase(std::remove(stringPoint.begin(), stringPoint.end(), 't'), stringPoint.end());
-#endif
+		stringPoint = stringPoint.substr(1, stringPoint.size() - 1);
+//#if WIN32
+//		stringPoint.erase(std::remove(stringPoint.begin(), stringPoint.end(), 't'), stringPoint.end());
+//#endif
 	}
 
 	vector<std::string> VctPoint;
@@ -735,16 +749,18 @@ void svg::pausePathSs(string stringPoint, vector<ClipperLib::DoublePoint>& vctDo
 	if (stringPoint.substr(0, 1) == "S")
 	{
 		m_isBigchars = true;
-#if WIN32
-		stringPoint.erase(std::remove(stringPoint.begin(), stringPoint.end(), 'S'), stringPoint.end());
-#endif
+		stringPoint = stringPoint.substr(1, stringPoint.size() - 1);
+//#if WIN32
+//		stringPoint.erase(std::remove(stringPoint.begin(), stringPoint.end(), 'S'), stringPoint.end());
+//#endif
 	}
 	else
 	{
 		m_isBigchars = false;
-#if WIN32
-		stringPoint.erase(std::remove(stringPoint.begin(), stringPoint.end(), 's'), stringPoint.end());
-#endif
+		stringPoint = stringPoint.substr(1, stringPoint.size() - 1);
+//#if WIN32
+//		stringPoint.erase(std::remove(stringPoint.begin(), stringPoint.end(), 's'), stringPoint.end());
+//#endif
 	}
 
 	vector<std::string> VctPoint;
