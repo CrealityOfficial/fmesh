@@ -15,6 +15,7 @@ namespace CDRUSERINTERFACE
 {
 	#define  PI 3.141592 
 	#define		SCALE_FACTOR 1000.0
+	//#define  ENBALE_JSON_DEBUG
 	typedef struct __ARC_PARAM__
 	{
             double cx;
@@ -185,7 +186,6 @@ namespace CDRUSERINTERFACE
 		//const char* file_name = "out_ok.json";
 		RAPIDJSON_NAMESPACE::Document dom;
 		int retvalue = 0;
-		int errorindex = 0;
 		ClipperLib::Paths* m_Pathstemp = new ClipperLib::Paths();
 
 		if (Jsonbuff == NULL)
@@ -195,14 +195,15 @@ namespace CDRUSERINTERFACE
 		}
 		dom.ParseInsitu(Jsonbuff);
 		//dom.Parse(Jsonbuff);
-		errorindex = dom.HasParseError();
 		if (!dom.HasParseError()) 
 		{
 			int pathTotal = 0;
 			if (dom.HasMember("pathTotal") && dom["pathTotal"].IsInt()) 
 			{
 				pathTotal = dom["pathTotal"].GetInt();
+				#ifdef ENBALE_JSON_DEBUG
 				std::cout<<"pathTotal==="<<dom["pathTotal"].GetInt() << std::endl;
+				#endif
 			}
 			else
 			{
@@ -215,7 +216,9 @@ namespace CDRUSERINTERFACE
 				char pathIndexStr[64];
 				memset(pathIndexStr, sizeof(pathIndexStr), 0x00);
 				sprintf(pathIndexStr, "pathIndex%d", pathIndex);
+				#ifdef ENBALE_JSON_DEBUG
 				std::cout <<"********************"<< pathIndexStr << std::endl;
+				#endif
 				if (dom.HasMember(pathIndexStr) && dom[pathIndexStr].IsObject())
 				{
 
@@ -224,7 +227,9 @@ namespace CDRUSERINTERFACE
 
 					if (objfirst.HasMember("LevelTotal") && objfirst["LevelTotal"].IsInt()) {
 						LevelTotal = objfirst["LevelTotal"].GetInt();
+						#ifdef ENBALE_JSON_DEBUG
 						std::cout <<"******************LevelTotal==="<< objfirst["LevelTotal"].GetInt() << std::endl;
+						#endif
 					}
 					else
 						return -1;
@@ -236,18 +241,20 @@ namespace CDRUSERINTERFACE
 						ClipperLib::IntPoint pointValue = { 0,0 };
 						memset(LevelIndexStr, sizeof(LevelIndexStr), 0x00);
 						sprintf(LevelIndexStr, "LevelIndex%d", levelindex);
+						#ifdef ENBALE_JSON_DEBUG
 						std::cout << LevelIndexStr << std::endl;
+						#endif
 						if (objfirst.HasMember(LevelIndexStr) && objfirst[LevelIndexStr].IsObject())
 						{
 							const rapidjson::Value& objsecond = objfirst[LevelIndexStr];
-
+#							ifdef ENBALE_JSON_DEBUG
 							if (objsecond.HasMember("H") && objsecond["H"].IsDouble()) {
-								std::cout << objsecond["H"].GetDouble() << std::endl;
+								std::cout <<"no deal type(H)="<< objsecond["H"].GetDouble() << std::endl;
 							}
 							if (objsecond.HasMember("V") && objsecond["V"].IsDouble()) {
-								std::cout << objsecond["V"].GetDouble() << std::endl;
+								std::cout << "no deal type(V)=" << objsecond["V"].GetDouble() << std::endl;
 							}
-
+							#endif
 							if (objsecond.HasMember("M") && objsecond["M"].IsArray()) {
 								const rapidjson::Value& arr = objsecond["M"];
 								pointAvalible = true;
@@ -261,9 +268,11 @@ namespace CDRUSERINTERFACE
 								pointValue.X = (int)(67.5064 * 1000);
 								pointValue.Y = (int)(133.5973 * 1000);
 								#endif
+								#ifdef ENBALE_JSON_DEBUG
 								for (int i = 0; i < arr.Size(); ++i) {
-									std::cout << arr[i].GetDouble() << std::endl;
+									std::cout << "type(M)=" << arr[i].GetDouble() << std::endl;
 								}
+								#endif
 							}
 							if (objsecond.HasMember("L") && objsecond["L"].IsArray()) {
 								const rapidjson::Value& arr = objsecond["L"];
@@ -273,20 +282,22 @@ namespace CDRUSERINTERFACE
 								movePointValue.Y =(arr[1].GetDouble());
 								pointValue.X =(int)(movePointValue.X*SCALE_FACTOR);
 								pointValue.Y =(int)(movePointValue.Y*SCALE_FACTOR);
+								#ifdef ENBALE_JSON_DEBUG
 								for (int i = 0; i < arr.Size(); ++i) {
-									std::cout << arr[i].GetDouble() << std::endl;
+									std::cout << "type(L)=" << arr[i].GetDouble() << std::endl;
 								}
+								#endif
 							}
 							if (objsecond.HasMember("T") && objsecond["T"].IsArray()) {
 								const rapidjson::Value& arr = objsecond["T"];
 								for (int i = 0; i < arr.Size(); ++i) {
-									std::cout << arr[i].GetDouble() << std::endl;
+									std::cout << "no deal type(T)=" << arr[i].GetDouble() << std::endl;
 								}
 							}
 							if (objsecond.HasMember("Q") && objsecond["Q"].IsArray()) {
 								const rapidjson::Value& arr = objsecond["Q"];
 								for (int i = 0; i < arr.Size(); ++i) {
-									std::cout << arr[i].GetDouble() << std::endl;
+									std::cout << "no deal type(Q)=" << arr[i].GetDouble() << std::endl;
 								}
 								
 								ClipperLib::DoublePoint pointValueTmp[3];
@@ -303,14 +314,16 @@ namespace CDRUSERINTERFACE
 							if (objsecond.HasMember("S") && objsecond["S"].IsArray()) {
 								const rapidjson::Value& arr = objsecond["S"];
 								for (int i = 0; i < arr.Size(); ++i) {
-									std::cout << arr[i].GetDouble() << std::endl;
+									std::cout << "no deal type(S)=" << arr[i].GetDouble() << std::endl;
 								}
 							}
 							if (objsecond.HasMember("C") && objsecond["C"].IsArray()) {
 								const rapidjson::Value& arr = objsecond["C"];
+								#ifdef ENBALE_JSON_DEBUG
 								for (int i = 0; i < arr.Size(); ++i) {
-									std::cout << arr[i].GetDouble() << std::endl;
+									std::cout << "type(C)=" << arr[i].GetDouble() << std::endl;
 								}
+								#endif
 								ClipperLib::DoublePoint pointValueTmp[4];
 								pointValueTmp[0].X =  movePointValue.X;
 								pointValueTmp[0].Y =  movePointValue.Y;
@@ -328,9 +341,11 @@ namespace CDRUSERINTERFACE
 							}
 							if (objsecond.HasMember("A") && objsecond["A"].IsArray()) {
 								const rapidjson::Value& arr = objsecond["A"];
+								#ifdef ENBALE_JSON_DEBUG
 								for (int i = 0; i < arr.Size(); ++i) {
-									std::cout << arr[i].GetDouble() << std::endl;
+									std::cout << "type(A)=" << arr[i].GetDouble() << std::endl;
 								}
+								#endif
 								double	x1	= movePointValue.X;
 								double	y1	= movePointValue.Y;
 								double	rx	= arr[0].GetDouble();
@@ -348,7 +363,7 @@ namespace CDRUSERINTERFACE
 
 							}
 							if (objsecond.HasMember("Z") && objsecond["Z"].IsInt()) {
-								std::cout << objsecond["Z"].GetInt() << std::endl;
+								std::cout << "type(Z)=" << objsecond["Z"].GetInt() << std::endl;
 								if (dPath.size() > 1)
 								{
 									ClipperLib::IntPoint startvalue = dPath.at(0);
