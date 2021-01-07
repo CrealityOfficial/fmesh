@@ -4,15 +4,6 @@
 
 #define SCALE1000(n) (int64_t((n) * 1000))
 
-#define  SVG_SVG "svg"//svg视图大小
-#define  SVG_LINE "line"//线段
-#define  SVG_POLYLINE "polyline"//线段
-#define  SVG_RECT "rect"//矩形
-#define  SVG_CIRCLE "circle"//圆
-#define  SVG_ELLIPSE "ellipse"//椭圆
-#define  SVG_POLYGON "polygon"//多边形
-#define  SVG_PATH "path"//路径
-
 double const PI = 3.141592653589793238;
 svg::svg()
 {
@@ -124,9 +115,9 @@ void svg::pauseSVG(TiXmlElement* root)
 			{
 				if (root == NULL)
 					break;
-				if (root->Value() == "defs")
+				if (std::string(root->Value()) == "defs")
 					continue;
-				if (root->Value() == "missing-glyph")
+				if (std::string(root->Value()) == "missing-glyph")
 					continue;
 				if (root->FirstChildElement() != NULL)
 				{
