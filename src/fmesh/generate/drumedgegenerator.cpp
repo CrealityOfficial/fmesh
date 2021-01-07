@@ -75,6 +75,6 @@ namespace fmesh
 // 		_buildFromDiffPolyTree(&middlePolys.back(), &treeTop);
 // 		_buildFromDiffPolyTree(&treeBottom, &middlePolys.front());
 
-		//_buildTopBottom(&middlePolys.front(), &middlePolys.back());
+		_buildTopBottom(&middlePolys.front(), &middlePolys.back());
 	}
 }
