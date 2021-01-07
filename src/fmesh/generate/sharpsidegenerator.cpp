@@ -15,13 +15,13 @@ namespace fmesh
 	void SharpsideGenerator::build()
 	{
 		//test data
-		m_adParam.top_type = ADTopType::adtt_step;
-		m_adParam.top_height = 1.0;
-		m_adParam.shape_top_height = 2.0;
-		m_adParam.bottom_type = ADBottomType::adbt_close;
-		m_adParam.bottom_height = 1.0;
-		m_adParam.shape_bottom_height = 3.0;
-		m_adParam.shape_middle_width = 6.0;
+// 		m_adParam.top_type = ADTopType::adtt_step;
+// 		m_adParam.top_height = 1.0;
+// 		m_adParam.shape_top_height = 2.0;
+// 		m_adParam.bottom_type = ADBottomType::adbt_close;
+// 		m_adParam.bottom_height = 1.0;
+// 		m_adParam.shape_bottom_height = 3.0;
+// 		m_adParam.shape_middle_width = 6.0;
 		//
 
 		float shape_bottom_height= m_adParam.shape_bottom_height;
