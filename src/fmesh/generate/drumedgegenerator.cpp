@@ -57,7 +57,7 @@ namespace fmesh
 			offs.at(i) = _offset;
 		}
 
-		for (size_t i = 0; i < middlePolys.size() - 1; i++)
+		for (size_t i = 0; i < drumHCount; i++)
 		{
 // 			ClipperLib::PolyTree out;
 // 			_buildFromDiffPolyTree_drum(&middlePolys.at(i), &middlePolys.at(i + 1),0,out);

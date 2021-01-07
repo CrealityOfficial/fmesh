@@ -115,16 +115,11 @@ namespace fmesh
 		mmesh::loopPolyTree(f, treeUp);
 		mmesh::loopPolyTree(f1, treeLower);
 
-		size_t size = pathsUp.size();
-		if (size != pathsLower.size() && size > 0)
-		{
-			//diff
-			fmesh::xor2PolyTrees(treeUp, treeLower, out, flag);
-			return;
-		}
-
-		//same
-		buildFromDiffPolyTreeSafty(treeLower, treeUp, patches, delta, flag);
+		
+		if (GetPolyCount(treeLower) == GetPolyCount(treeUp))
+			buildFromDiffPolyTreeSafty(treeLower, treeUp, patches, delta, flag);
+		else
+			fmesh::xor2PolyTrees(treeUp, treeLower, out, flag);		
 	}
 
 	void buildFromDiffPolyTreeSafty(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp,
