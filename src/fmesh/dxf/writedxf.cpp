@@ -34,6 +34,7 @@ namespace cdrdxf
 		dw->sectionTables();
 		// VPORT:
 		dxf.writeVPort(*dw);
+
 		// LTYPE:
 		dw->tableLinetypes(1);
 		dxf.writeLinetype(*dw, DL_LinetypeData("CONTINUOUS", "Continuous", 0, 0, 0.0));

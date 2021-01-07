@@ -158,6 +158,20 @@ namespace fmesh
 		}
 	}
 
+	void GeneratorImpl::_buildFromDiffPolyTree_diffSafty(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp, double delta, int flag)
+	{
+		ClipperLib::PolyTree out;
+		//fmesh::xor2PolyTrees(treeUp, treeLower, out, flag);
+		std::vector<Patch*> patches;
+		buildFromDiffPolyTree_SameAndDiffSafty(treeLower, treeUp, patches, flag, out, delta);
+		if (patches.size())
+			addPatches(patches);
+		if (out.ChildCount() > 0)
+		{
+			_fillPolyTreeReverseInner(&out, flag);
+		}
+	}
+
 	void GeneratorImpl::_fillPolyTreeReverseInner(ClipperLib::PolyTree* tree, bool invert /*= false*/)
 	{
 		std::vector<Patch*> patches;
@@ -340,5 +354,24 @@ namespace fmesh
 			_buildTop(_treeTop, hTop, offsetT);
 			_buildFromDiffPolyTree(treeTop, &_treeTop);
 		}
+	}
+
+	void GeneratorImpl::saveTopBottom(ClipperLib::PolyTree& tree, const std::string& file)
+	{
+		ClipperLib::Paths paths;		
+		for (ClipperLib::PolyNode* node : tree.Childs)
+			if (!node->IsHole())
+			{
+				SimplePoly poly;
+				ClipperLib::Path path;
+				merge2SimplePoly(node, &poly, false);
+				//saveSimplePoly(poly, file);
+				for (ClipperLib::IntPoint* point : poly)
+				{
+					path.push_back(*point);
+				}
+				paths.push_back(path);
+			}		
+		ClipperLib::save(paths, "F:/test.stl");
 	}
 }

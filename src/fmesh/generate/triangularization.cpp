@@ -2,7 +2,7 @@
 #include "mmesh/clipper/circurlar.h"
 #include "fmesh/generate/wovener.h"
 #include "fmesh/contour/polytree.h"
-
+#include "fmesh/contour/path.h"
 namespace fmesh
 {
 	bool checkFlag(ClipperLib::PolyNode* node, int flag)
@@ -95,6 +95,38 @@ namespace fmesh
 				patches.push_back(patch);
 	}
 
+	void buildFromDiffPolyTree_SameAndDiffSafty(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp,
+		std::vector<Patch*>& patches, int flag, ClipperLib::PolyTree& out, double delta)
+	{
+		std::vector<ClipperLib::Path*> pathsUp;
+		std::vector<ClipperLib::Path*> pathsLower;
+		size_t count = 0;
+		auto f = [&count, &pathsUp, &flag](ClipperLib::PolyNode* node) {
+			if (!checkFlag(node, flag))
+				return;
+			pathsUp.push_back(&node->Contour);
+		};
+		auto f1 = [&pathsLower, &flag](ClipperLib::PolyNode* node) {
+			if (!checkFlag(node, flag))
+				return;
+			pathsLower.push_back(&node->Contour);
+		};
+
+		mmesh::loopPolyTree(f, treeUp);
+		mmesh::loopPolyTree(f1, treeLower);
+
+		size_t size = pathsUp.size();
+		if (size != pathsLower.size() && size > 0)
+		{
+			//diff
+			fmesh::xor2PolyTrees(treeUp, treeLower, out, flag);
+			return;
+		}
+
+		//same
+		buildFromDiffPolyTreeSafty(treeLower, treeUp, patches, delta, flag);
+	}
+
 	void buildFromDiffPolyTreeSafty(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp,
 		std::vector<Patch*>& patches, double delta, int flag)
 	{
@@ -109,7 +141,7 @@ namespace fmesh
 		while (sources.size() > 0)
 		{
 			for(PolyTreeOppoPair& pair : sources)
-				findPolyTreePairFromNode(pair.lower, pair.upper, tmp);
+				findPolyTreePairFromNode(pair.lower, pair.upper, tmp, delta);
 
 			for (PolyTreeOppoPair& pair : tmp)
 			{
@@ -136,9 +168,110 @@ namespace fmesh
 	}
 
 	void findPolyTreePairFromNode(ClipperLib::PolyNode* nodeLower, ClipperLib::PolyNode* nodeUp,
-		std::vector<PolyTreeOppoPair>& pairs)
+		std::vector<PolyTreeOppoPair>& pairs, double delta)
 	{
+		struct CompInfo
+		{
+			ClipperLib::IntPoint bmin;
+			ClipperLib::IntPoint bmax;
+		};
 
+		ClipperLib::PolyNodes inner = nodeLower->Childs;
+		ClipperLib::PolyNodes outer = nodeUp->Childs;
+		if (inner.size() > 0 && inner.size() == outer.size())
+		{
+			size_t size = inner.size();
+			std::vector<CompInfo> iInfos(size);
+			std::vector<CompInfo> oInfos(size);
+			for (size_t i = 0; i < size; ++i)
+			{
+				pathBox(inner.at(i)->Contour, iInfos.at(i).bmin, iInfos.at(i).bmax);
+				pathBox(outer.at(i)->Contour, oInfos.at(i).bmin, oInfos.at(i).bmax);
+			}
+			std::vector<int> imapIndex;
+			for (size_t i = 0; i < size; ++i)
+				imapIndex.push_back((int)i);
+			std::vector<int> omapIndex = imapIndex;
+
+			auto test = [](CompInfo& info1, CompInfo& info2)->bool {
+				if (info1.bmin.X < info2.bmin.X)
+					return true;
+				if (info1.bmin.X > info2.bmin.X)
+					return false;
+
+				if (info1.bmin.Y < info2.bmin.Y)
+					return true;
+				if (info1.bmin.Y > info2.bmin.Y)
+					return false;
+
+				if (info1.bmax.X < info2.bmax.X)
+					return true;
+				if (info1.bmax.X > info2.bmax.X)
+					return false;
+
+				if (info1.bmax.Y < info2.bmax.Y)
+					return true;
+				if (info1.bmax.Y > info2.bmax.Y)
+					return false;
+
+				return false;
+			};
+			std::sort(imapIndex.begin(), imapIndex.end(), [&iInfos, &test](int i1, int i2)->bool {
+				CompInfo& info1 = iInfos.at(i1);
+				CompInfo& info2 = iInfos.at(i2);
+				return test(info1, info2);
+				});
+			std::sort(omapIndex.begin(), omapIndex.end(), [&oInfos, &test](int i1, int i2)->bool {
+				CompInfo& info1 = oInfos.at(i1);
+				CompInfo& info2 = oInfos.at(i2);
+				return test(info1, info2);
+				});
+
+			for (size_t i = 0; i < size; ++i)
+			{
+				int index1 = imapIndex.at(i);
+				int index2 = omapIndex.at(i);
+
+				ClipperLib::PolyNode* inode = inner.at(index1);
+				ClipperLib::PolyNode* onode = outer.at(index2);
+				if (onode && onode->ChildCount() == inode->ChildCount())
+				{
+					PolyTreeOppoPair pair;
+					pair.lower = inode;
+					pair.upper = onode;
+					pairs.push_back(pair);
+				}
+			}
+			//std::vector<bool> visited(size, false);
+			//for (size_t i = 0; i < size; ++i)
+			//{
+			//	ClipperLib::PolyNode* inode = inner.at(i);
+			//	if (inode->Contour.size() == 0)
+			//		continue;
+			//
+			//	ClipperLib::PolyNode* onode = nullptr;
+			//	for (size_t j = 0; j < size; ++j)
+			//	{
+			//		if (!visited.at(j))
+			//		{
+			//			if (ClipperLib::PointInPolygon(inode->Contour.at(0), outer.at(j)->Contour) != 0)
+			//			{
+			//				onode = outer.at(j);
+			//				visited.at(j) = true;
+			//				break;
+			//			}
+			//		}
+			//	}
+			//
+			//	if (onode && onode->ChildCount() == inode->ChildCount())
+			//	{
+			//		PolyTreeOppoPair pair;
+			//		pair.lower = inode;
+			//		pair.upper = onode;
+			//		pairs.push_back(pair);
+			//	}
+			//}
+		}
 	}
 
 	Patch* buildFromDiffPath(ClipperLib::Path* pathLower, ClipperLib::Path* pathUp)

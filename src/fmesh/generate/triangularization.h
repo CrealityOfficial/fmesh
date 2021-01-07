@@ -1,5 +1,6 @@
 #ifndef FMESH_TRIANGULARIZATION_1604485277802_H
 #define FMESH_TRIANGULARIZATION_1604485277802_H
+#include "fmesh/common/export.h"
 #include "fmesh/generate/patch.h"
 #include <clipper/clipper.hpp>
 
@@ -10,6 +11,9 @@ namespace fmesh
 	
 	void buildFromDiffPolyTree(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp,
 		std::vector<Patch*>& patches, int flag = 0);
+
+	void buildFromDiffPolyTree_SameAndDiffSafty(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp,
+		std::vector<Patch*>& patches, int flag, ClipperLib::PolyTree& out, double delta);
 	void buildFromDiffPolyTreeSafty(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp,
 		std::vector<Patch*>& patches, double delta, int flag = 0);
 
@@ -19,8 +23,8 @@ namespace fmesh
 		ClipperLib::PolyNode* upper;
 	};
 
-	void findPolyTreePairFromNode(ClipperLib::PolyNode* nodeLower, ClipperLib::PolyNode* nodeUp,
-		std::vector<PolyTreeOppoPair>& pairs);
+	FMESH_API void findPolyTreePairFromNode(ClipperLib::PolyNode* nodeLower, ClipperLib::PolyNode* nodeUp,
+		std::vector<PolyTreeOppoPair>& pairs, double delta);
 
 	Patch* buildFromDiffPath(ClipperLib::Path* pathLower, ClipperLib::Path* pathUp);
 	void buildFromPathes(std::vector<ClipperLib::Path*>& pathsLower, std::vector<ClipperLib::Path*>& pathsUp, Patch& patch);

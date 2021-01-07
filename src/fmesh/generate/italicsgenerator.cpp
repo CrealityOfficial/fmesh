@@ -55,6 +55,8 @@ namespace fmesh
 		}
 		for (int i = 0; i < count; ++i)
 		{
+			//if (i != 12)
+			//	continue;
 // 			ClipperLib::PolyTree out;
 // 			_buildFromDiffPolyTree_drum(&middlePolys.at(i), &middlePolys.at(i + 1), 0, out);
 // 
@@ -62,7 +64,8 @@ namespace fmesh
 // 			{
 // 				_fillPolyTreeReverseInner(&out);
 // 			}
-			_buildFromDiffPolyTree_diff(&middlePolys.at(i), &middlePolys.at(i + 1));
+			//_buildFromDiffPolyTree_diff(&middlePolys.at(i), &middlePolys.at(i + 1));
+			_buildFromDiffPolyTree_diffSafty(&middlePolys.at(i), &middlePolys.at(i + 1));
 		}
 
 		_fillPolyTree(&middlePolys.back());

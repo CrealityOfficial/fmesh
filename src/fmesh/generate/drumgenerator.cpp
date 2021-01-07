@@ -28,6 +28,7 @@ namespace fmesh
 
 		//
 		size_t drumHCount = 150;
+
 		float offsetr =1.0*m_adParam.shape_top_height/ drumHCount;
 
 		std::vector<ClipperLib::PolyTree> middlePolys(1 + drumHCount);

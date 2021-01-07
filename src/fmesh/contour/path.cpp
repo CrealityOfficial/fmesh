@@ -2,6 +2,25 @@
 
 namespace fmesh
 {
+	void pathBox(const ClipperLib::Path& path, ClipperLib::IntPoint& bmin, ClipperLib::IntPoint& bmax)
+	{
+		bmin.X = 99999999999;
+		bmin.Y = 99999999999;
+		bmax.X = -99999999999;
+		bmax.Y = -99999999999;
+		for (const ClipperLib::IntPoint& point : path)
+		{
+			if (point.X < bmin.X)
+				bmin.X = point.X;
+			if (point.Y < bmin.Y)
+				bmin.Y = point.Y;
+			if (point.X > bmax.X)
+				bmax.X = point.X;
+			if (point.Y > bmax.Y)
+				bmax.Y = point.Y;
+		}
+	}
+
 	void scalePath2ExpectLen(ClipperLib::Paths* paths, double expectLen) //mm
 	{
 		if (expectLen <= 0.0)
