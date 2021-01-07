@@ -15,12 +15,13 @@ namespace fmesh
 	void DrumedgeGenerator::build()
 	{
 		//test data
-// 		m_adParam.top_type = ADTopType::adtt_step;
-// 		m_adParam.top_height = 1.0;
-// 		m_adParam.shape_top_height = 2.0;
-// 		m_adParam.bottom_type = ADBottomType::adbt_step;
-// 		m_adParam.bottom_height = 1.0;
-// 		m_adParam.shape_bottom_height = 3.0;
+		m_adParam.top_type = ADTopType::adtt_step;
+		m_adParam.top_height = 1.0;
+		m_adParam.shape_top_height = 2.0;
+		m_adParam.bottom_type = ADBottomType::adbt_step;
+		m_adParam.bottom_height = 1.0;
+		m_adParam.shape_bottom_height = 3.0;
+		m_adParam.shape_middle_width = 6.0;
 		//
 
  		float shape_bottom_height= m_adParam.shape_bottom_height;
@@ -56,7 +57,7 @@ namespace fmesh
 			offs.at(i) = _offset;
 		}
 
-		for (size_t i = 0; i < middlePolys.size()-1; i++)
+		for (size_t i = 0; i < middlePolys.size() - 1; i++)
 		{
 // 			ClipperLib::PolyTree out;
 // 			_buildFromDiffPolyTree_drum(&middlePolys.at(i), &middlePolys.at(i + 1),0,out);
@@ -64,7 +65,7 @@ namespace fmesh
 // 			{
 // 				_fillPolyTreeReverseInner(&out, false);
 // 			}
-			_buildFromDiffPolyTree_diff(&middlePolys.at(i), &middlePolys.at(i + 1));
+			_buildFromDiffPolyTree_diffSafty(&middlePolys.at(i), &middlePolys.at(i + 1));
 		}
 
 // 		ClipperLib::PolyTree treeTop, treeBottom;
@@ -74,6 +75,6 @@ namespace fmesh
 // 		_buildFromDiffPolyTree(&middlePolys.back(), &treeTop);
 // 		_buildFromDiffPolyTree(&treeBottom, &middlePolys.front());
 
-		_buildTopBottom(&middlePolys.front(), &middlePolys.back());
+		//_buildTopBottom(&middlePolys.front(), &middlePolys.back());
 	}
 }

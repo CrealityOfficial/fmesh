@@ -42,7 +42,7 @@ namespace fmesh
 	FMESH_API void offsetPolyNodes(const std::vector<ClipperLib::PolyNode*>& polyNodes, double delta, ClipperLib::PolyTree& dest);
 	//xor
 	void xor2PolyTrees(ClipperLib::PolyTree* outer, ClipperLib::PolyTree* inner, ClipperLib::PolyTree& out);
-	void xor2PolyTrees(ClipperLib::PolyTree* outer, ClipperLib::PolyTree* inner, ClipperLib::PolyTree& out, int flag);
+	FMESH_API void xor2PolyTrees(ClipperLib::PolyTree* outer, ClipperLib::PolyTree* inner, ClipperLib::PolyTree& out, int flag);
 	void xor2PolyNodes(const std::vector<ClipperLib::PolyNode*>& outer, 
 		const std::vector<ClipperLib::PolyNode*>& inner, ClipperLib::PolyTree& out);
 

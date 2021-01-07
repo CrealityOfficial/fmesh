@@ -62,7 +62,8 @@ namespace fmesh
 			if (i % 2)
 				setPolyTreeZ(middlePolys.at(i), delta1);
 			setPolyTreeZ(middlePolys.at(i + 1), delta2);
-			_buildFromDiffPolyTree_diff(&middlePolys.at(i), &middlePolys.at(i + 1));
+			//_buildFromDiffPolyTree_diff(&middlePolys.at(i), &middlePolys.at(i + 1));
+			_buildFromDiffPolyTree_diffSafty(&middlePolys.at(i), &middlePolys.at(i + 1));
 		}
 
 		std::vector<Patch*> patches;
