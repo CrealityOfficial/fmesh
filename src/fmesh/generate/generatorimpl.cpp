@@ -6,6 +6,7 @@
 #include "mmesh/cgal/roof.h"
 #include "fmesh/dxf/writedxf.h"
 #include "fmesh/svg/writesvg.h"
+#include "mmesh/clipper/circurlar.h"
 
 namespace fmesh
 {
@@ -356,22 +357,35 @@ namespace fmesh
 		}
 	}
 
+	void GeneratorImpl::_simplifyPoly(ClipperLib::PolyTree* poly)
+	{
+		double x = dmax.x - dmin.x;
+		double y = dmax.y - dmin.y;
+		size_t childcount = poly->ChildCount();
+		double distance = x * y / 10000 ? (x * y / 10000)/ childcount : 1.415;
+
+		polyNodeFunc func = [&distance](ClipperLib::PolyNode* node) {
+			ClipperLib::CleanPolygon(node->Contour, distance);
+		};
+		mmesh::loopPolyTree(func, poly);
+	}
+
 	void GeneratorImpl::saveTopBottom(ClipperLib::PolyTree& tree, const std::string& file)
 	{
-		ClipperLib::Paths paths;		
-		for (ClipperLib::PolyNode* node : tree.Childs)
-			if (!node->IsHole())
-			{
-				SimplePoly poly;
-				ClipperLib::Path path;
-				merge2SimplePoly(node, &poly, false);
-				//saveSimplePoly(poly, file);
-				for (ClipperLib::IntPoint* point : poly)
-				{
-					path.push_back(*point);
-				}
-				paths.push_back(path);
-			}		
-		ClipperLib::save(paths, "F:/test.stl");
+// 		ClipperLib::Paths paths;		
+// 		for (ClipperLib::PolyNode* node : tree.Childs)
+// 			if (!node->IsHole())
+// 			{
+// 				SimplePoly poly;
+// 				ClipperLib::Path path;
+// 				merge2SimplePoly(node, &poly, false);
+// 				//saveSimplePoly(poly, file);
+// 				for (ClipperLib::IntPoint* point : poly)
+// 				{
+// 					path.push_back(*point);
+// 				}
+// 				paths.push_back(path);
+// 			}		
+// 		ClipperLib::save(paths, "F:/test.stl");
 	}
 }

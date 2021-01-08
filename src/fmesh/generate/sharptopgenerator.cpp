@@ -25,9 +25,9 @@ namespace fmesh
 // 		m_adParam.shape_bottom_height = 3.0;
 		//
 
-		double x = dmax.x - dmin.x;
-		double y = dmax.y - dmin.y;
-		double distance = x * y/10000 ? x * y / 10000 :1.415;
+// 		double x = dmax.x - dmin.x;
+// 		double y = dmax.y - dmin.y;
+// 		double distance = x * y/10000 ? x * y / 10000 :1.415;
 
 		double thickness = m_adParam.extend_width / 2.0;
 		double bottomHeight = m_adParam.total_height - m_adParam.shape_top_height;
@@ -36,10 +36,12 @@ namespace fmesh
 		std::vector<ClipperLib::PolyTree> bottomPolys(1);
 		offsetAndExtendPolyTree(m_poly, 0.0, thickness, bottomHeight, bottomPolys.at(0));
 
-		polyNodeFunc func = [&distance](ClipperLib::PolyNode* node) {
-			ClipperLib::CleanPolygon(node->Contour, distance);
-		};
-		mmesh::loopPolyTree(func, &bottomPolys.back());
+// 		polyNodeFunc func = [&distance](ClipperLib::PolyNode* node) {
+// 			ClipperLib::CleanPolygon(node->Contour, distance);
+// 		};
+// 		mmesh::loopPolyTree(func, &bottomPolys.back());
+
+		_simplifyPoly(&bottomPolys.back());
 
 		std::vector<Patch*> patches;
 		skeletonPolyTreeSharp(bottomPolys.back(), bottomHeight, m_adParam.shape_top_height, patches);
