@@ -1,5 +1,7 @@
 #include "drumgenerator.h"
 #include "fmesh/contour/contour.h"
+#include <clipper/clipper.hpp>
+#include "mmesh/clipper/circurlar.h"
 
 namespace fmesh
 {
@@ -18,7 +20,7 @@ namespace fmesh
 		double thickness = m_adParam.extend_width / 2.0;
 
 		double x = dmax.x - dmin.x;
-		double y= dmax.y - dmin.y;
+		double y = dmax.y - dmin.y;
 
 		//size_t drumHCount = x > y ? x/4 : y/4;
 		//size_t drumHCount = 60;
@@ -42,6 +44,7 @@ namespace fmesh
 				middlePolys.at(i).Clear();
 				break;
 			}
+			_simplifyPoly(&middlePolys.at(i));
 		}
 
 		while (!middlePolys.back().ChildCount())
@@ -53,9 +56,9 @@ namespace fmesh
 		float delta2 = 0.0f;
 		double bottomHeight = m_adParam.total_height - (middlePolys.size() - 1) * offsetH;
 		if (bottomHeight < 0)
-			bottomHeight = 0;
+			bottomHeight = 0;		
 
-		for (size_t i = 0; i < middlePolys.size() - 1; i++)
+		for (size_t i = 0; i < middlePolys.size()-1; i++)
 		{
 			delta1 = bottomHeight + offsetH * i;
 			delta2 = bottomHeight + offsetH * (i + 1);
@@ -67,10 +70,9 @@ namespace fmesh
 		}
 
 		std::vector<Patch*> patches;
-		//delta = bottomHeight + (middlePolys.size() - 1) * offsetH;f
-		skeletonPolyTree(middlePolys.back(), delta2, patches, middlePolys.size()/100.0);
+		skeletonPolyTree(middlePolys.back(), delta2, patches, middlePolys.size() / 100.0);
 		addPatches(patches);
-		//_fillPolyTree(&middlePolys.back(),true);
+		_fillPolyTree(&middlePolys.back(), true);
 
 		m_adParam.bottom_height = bottomHeight;
 		_buildTopBottom(&middlePolys.front(),nullptr);

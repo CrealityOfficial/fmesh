@@ -30,7 +30,7 @@ namespace fmesh
 	FMESH_API void adjustPolyTreeZ(ClipperLib::PolyTree& tree);
 
 	//Polygon skeleton
-	void skeletonPolyTree(ClipperLib::PolyTree& source, double z, std::vector<Patch*>& patches,double height);
+	FMESH_API void skeletonPolyTree(ClipperLib::PolyTree& source, double z, std::vector<Patch*>& patches,double height);
 	//Polygon sharp 
 	void skeletonPolyTreeSharp(ClipperLib::PolyTree& source, double z,double height, std::vector<Patch*>& patches);
 
@@ -47,7 +47,7 @@ namespace fmesh
 		const std::vector<ClipperLib::PolyNode*>& inner, ClipperLib::PolyTree& out);
 
 	//checkInnerOffset
-	int GetPolyCount(ClipperLib::PolyTree* poly);
+	FMESH_API int GetPolyCount(ClipperLib::PolyTree* poly);
 }
 
 #endif // FMESH_POLYTREE_1604475054469_H
