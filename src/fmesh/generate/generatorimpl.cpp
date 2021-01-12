@@ -159,14 +159,14 @@ namespace fmesh
 		}
 	}
 
-	void GeneratorImpl::_buildFromDiffPolyTree_diffSafty(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp, double delta, int flag)
+	void GeneratorImpl::_buildFromDiffPolyTree_diffSafty(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp, double delta, int flag, bool invert)
 	{
 		ClipperLib::PolyTree out;
 		//fmesh::xor2PolyTrees(treeUp, treeLower, out, flag);
 		std::vector<Patch*> patches;
 		buildFromDiffPolyTree_SameAndDiffSafty(treeLower, treeUp, patches, flag, out, delta);
 		if (patches.size())
-			addPatches(patches);
+			addPatches(patches, invert);
 		if (out.ChildCount() > 0)
 		{
 			_fillPolyTreeReverseInner(&out, flag);
@@ -362,7 +362,7 @@ namespace fmesh
 		double x = dmax.x - dmin.x;
 		double y = dmax.y - dmin.y;
 		size_t childcount = poly->ChildCount();
-		double distance = x * y / 10000 ? (x * y / 10000)/ childcount : 1.415;
+		double distance = ((x * y / 10000) / childcount) >1 ? (x * y / 10000)/ childcount : 1.415;
 
 		polyNodeFunc func = [&distance](ClipperLib::PolyNode* node) {
 			ClipperLib::CleanPolygon(node->Contour, distance);
