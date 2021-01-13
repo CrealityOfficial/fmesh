@@ -48,6 +48,8 @@ namespace fmesh
 
 	//checkInnerOffset
 	int GetPolyCount(ClipperLib::PolyTree* poly);
+
+	FMESH_API void split(ClipperLib::PolyTree& source, std::vector<ClipperLib::Paths>& children);
 }
 
 #endif // FMESH_POLYTREE_1604475054469_H

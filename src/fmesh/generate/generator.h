@@ -48,6 +48,9 @@ namespace fmesh
 
 		trimesh::TriMesh* build(const ADParam& param, ClipperLib::Paths* paths, 
 			ExportParam* exportParam = nullptr, ClipperLib::PolyTree* topTree = nullptr, ClipperLib::PolyTree* bottomTree = nullptr);
+
+		trimesh::TriMesh* buildOmp(const ADParam& param, ClipperLib::Paths* paths,
+			ExportParam* exportParam = nullptr, ClipperLib::PolyTree* topTree = nullptr, ClipperLib::PolyTree* bottomTree = nullptr);
 	};
 }
 

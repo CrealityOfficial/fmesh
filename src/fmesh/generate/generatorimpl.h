@@ -20,6 +20,8 @@ namespace fmesh
 		virtual ~GeneratorImpl();
 		trimesh::TriMesh* generate(ClipperLib::Paths* paths, const ADParam& param, 
 			ExportParam* exportParam = nullptr, ClipperLib::PolyTree* topTree = nullptr, ClipperLib::PolyTree* bottomTree = nullptr);
+		trimesh::TriMesh* generate(ClipperLib::PolyTree* tree, const ADParam& param,
+			ExportParam* exportParam = nullptr, ClipperLib::PolyTree* topTree = nullptr, ClipperLib::PolyTree* bottomTree = nullptr);
 
 		virtual void build() = 0;
 	protected:

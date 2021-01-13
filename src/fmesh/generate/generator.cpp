@@ -16,6 +16,7 @@
 #include "fmesh/generate/sharptopgenerator.h"
 #include "fmesh/generate/reitalicsgenerator.h"
 
+#include "mmesh/trimesh/trimeshutil.h"
 #include <memory>
 namespace fmesh
 {
@@ -170,6 +171,38 @@ namespace fmesh
 
 		std::unique_ptr<GeneratorImpl> impl(createGenerator(param));
 		trimesh::TriMesh* mesh = impl ? impl->generate(paths, param) : nullptr;
+		return mesh;
+	}
+
+	trimesh::TriMesh* GeneratorProxy::buildOmp(const ADParam& param, ClipperLib::Paths* paths,
+		ExportParam* exportParam, ClipperLib::PolyTree* topTree, ClipperLib::PolyTree* bottomTree)
+	{
+		if (!paths)
+			return nullptr;
+
+		ClipperLib::PolyTree tree;
+		fmesh::convertPaths2PolyTree(paths, tree);
+
+		std::vector<ClipperLib::Paths> children;
+		fmesh::split(tree, children);
+
+		size_t size = children.size();
+		if (size == 0)
+			return nullptr;
+
+		trimesh::TriMesh* mesh = new trimesh::TriMesh();
+		std::vector<trimesh::TriMesh*> meshes(size);
+#pragma omp parallel for
+		for (int i = 0; i < size; i++)
+		{
+			std::unique_ptr<GeneratorImpl> impl(createGenerator(param));
+			meshes.at(i) = impl ? impl->generate(&children.at(i), param) : nullptr;
+		}
+
+		mmesh::mergeTriMesh(mesh, meshes);
+		for (trimesh::TriMesh* m : meshes)
+			if(m)
+				delete m;
 		return mesh;
 	}
 }

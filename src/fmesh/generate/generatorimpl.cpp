@@ -52,6 +52,38 @@ namespace fmesh
 		return mesh;
 	}
 
+	trimesh::TriMesh* GeneratorImpl::generate(ClipperLib::PolyTree* tree, const ADParam& param,
+		ExportParam* exportParam , ClipperLib::PolyTree* topTree, ClipperLib::PolyTree* bottomTree)
+	{
+		return nullptr;
+		//m_adParam = param;
+		//
+		//if (exportParam)
+		//	m_exportParam = *exportParam;
+		//m_topTree = topTree;
+		//m_bottomTree = bottomTree;
+		//
+		//m_poly = tree;
+		//ClipperLib::IntPoint bmin;
+		//ClipperLib::IntPoint bmax;
+		//fmesh::calculatePathBox(paths, bmin, bmax);
+		////scale
+		//trimesh::vec3 bMin = trimesh::vec3(INT2MM(bmin.X), INT2MM(bmin.Y), INT2MM(bmin.Z));
+		//trimesh::vec3 bMax = trimesh::vec3(INT2MM(bmax.X), INT2MM(bmax.Y), INT2MM(bmax.Z));
+		//dmin = trimesh::vec2(bMin);
+		//dmax = trimesh::vec2(bMax);
+		//
+		//fmesh::convertPaths2PolyTree(m_paths, m_poly);
+		//if (!paths || paths->size() == 0)
+		//	return nullptr;
+		//
+		//build();
+		//
+		//trimesh::TriMesh* mesh = generateFromPatches();
+		//releaseResources();
+		//return mesh;
+	}
+
 	void GeneratorImpl::addPatch(Patch* patch, bool invert)
 	{
 		if (patch)
