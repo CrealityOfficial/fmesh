@@ -33,11 +33,14 @@ namespace fmesh
 		offsetAndExtendPolyTree(m_poly, -thickness, thickness, bottomHeight, middlePolys.at(2));
 		offsetAndExtendPolyTree(m_poly, -thickness, thickness, m_adParam.total_height, middlePolys.at(3));
 
-		_buildFromDiffPolyTree(&middlePolys.at(1), &middlePolys.at(2));
+		//_buildFromDiffPolyTree(&middlePolys.at(1), &middlePolys.at(2), 1);
+		_buildFromDiffPolyTree_diffSafty(&middlePolys.at(1), &middlePolys.at(2), 1);
 		_buildFromSamePolyTree(&middlePolys.at(2), &middlePolys.at(3));
 		offsetExteriorInner(middlePolys.at(1), thickness);
-		_buildFromDiffPolyTree(&middlePolys.at(0), &middlePolys.at(1));
-
+		//_buildFromDiffPolyTree(&middlePolys.at(0), &middlePolys.at(1));
+		_buildFromDiffPolyTree_diffSafty(&middlePolys.at(0), &middlePolys.at(1));
+		//_buildFromDiffPolyTree(&middlePolys.at(1), &middlePolys.at(2), 0);
+		_buildFromDiffPolyTree_diffSafty(&middlePolys.at(1), &middlePolys.at(2), 0);
 		_fillPolyTree(&middlePolys.back());
 
 // 		ClipperLib::PolyTree treeBottom;

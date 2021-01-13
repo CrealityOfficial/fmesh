@@ -67,7 +67,8 @@ namespace fmesh
 // 			{
 // 				_fillPolyTreeReverseInner(&out);
 // 			}
-			_buildFromDiffPolyTree_diff(&middlePolys.at(i), &middlePolys.at(i + 1));
+			//_buildFromDiffPolyTree_diff(&middlePolys.at(i), &middlePolys.at(i + 1));
+			_buildFromDiffPolyTree_diffSafty(&middlePolys.at(i), &middlePolys.at(i + 1),1.0,0,true);
 		}
 
 		if (m_adParam.top_type != ADTopType::adtt_none)

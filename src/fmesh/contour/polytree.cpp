@@ -124,7 +124,7 @@ namespace fmesh
 			z = source->at(0).Z;
 
 		ClipperLib::ClipperOffset offset;
-		offset.AddPath(*source, ClipperLib::jtRound, ClipperLib::EndType::etClosedPolygon);
+		offset.AddPath(*source, ClipperLib::jtMiter, ClipperLib::EndType::etClosedPolygon);
 
 		offset.Execute(dest, microDelta);
 
@@ -320,6 +320,7 @@ namespace fmesh
 			{				
 				if (pn.Contour.at(i).Z == 300)
 				{
+					pn.Contour.at(i).Z = 0;
 					clockwise = true;
 				}
 				else if (pn.Contour.at(i).Z == 500)

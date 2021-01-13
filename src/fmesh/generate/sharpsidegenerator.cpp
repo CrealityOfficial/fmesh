@@ -21,6 +21,7 @@ namespace fmesh
 // 		m_adParam.bottom_type = ADBottomType::adbt_close;
 // 		m_adParam.bottom_height = 1.0;
 // 		m_adParam.shape_bottom_height = 3.0;
+// 		m_adParam.shape_middle_width = 6.0;
 		//
 
 		float shape_bottom_height= m_adParam.shape_bottom_height;
@@ -76,7 +77,8 @@ namespace fmesh
 // 			{
 // 				_fillPolyTreeReverseInner(&out, false);
 // 			}
-			_buildFromDiffPolyTree_diff(&middlePolys.at(i), &middlePolys.at(i + 1));
+			//_buildFromDiffPolyTree_diff(&middlePolys.at(i), &middlePolys.at(i + 1));
+			_buildFromDiffPolyTree_diffSafty(&middlePolys.at(i), &middlePolys.at(i + 1));
 		}
 
 

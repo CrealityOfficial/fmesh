@@ -21,6 +21,21 @@ namespace fmesh
 		}
 	}
 
+	void offsetPaths(ClipperLib::Paths& paths, ClipperLib::IntPoint offset)
+	{
+		for (ClipperLib::Path& path : paths)
+			offsetPath(path, offset);
+	}
+
+	void offsetPath(ClipperLib::Path& path, ClipperLib::IntPoint offset)
+	{
+		for (ClipperLib::IntPoint& p : path)
+		{
+			p.X += offset.X;
+			p.Y += offset.Y;
+		}
+	}
+
 	void scalePath2ExpectLen(ClipperLib::Paths* paths, double expectLen) //mm
 	{
 		if (expectLen <= 0.0)
@@ -32,7 +47,7 @@ namespace fmesh
 		//scale
 		double xLen = (double)(bmax.X - bmin.X);
 		double yLen = (double)(bmax.Y - bmin.Y);
-		double scale = 1000.0 * expectLen / std::min(xLen, yLen);
+		double scale = 1000.0 * expectLen / std::max(xLen, yLen);
 		for (ClipperLib::Path& path : *paths)
 		{
 			for (ClipperLib::IntPoint& p : path)

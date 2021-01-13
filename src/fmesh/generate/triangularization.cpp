@@ -98,33 +98,27 @@ namespace fmesh
 	void buildFromDiffPolyTree_SameAndDiffSafty(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp,
 		std::vector<Patch*>& patches, int flag, ClipperLib::PolyTree& out, double delta)
 	{
-		std::vector<ClipperLib::Path*> pathsUp;
-		std::vector<ClipperLib::Path*> pathsLower;
-		size_t count = 0;
-		auto f = [&count, &pathsUp, &flag](ClipperLib::PolyNode* node) {
-			if (!checkFlag(node, flag))
-				return;
-			pathsUp.push_back(&node->Contour);
-		};
-		auto f1 = [&pathsLower, &flag](ClipperLib::PolyNode* node) {
-			if (!checkFlag(node, flag))
-				return;
-			pathsLower.push_back(&node->Contour);
-		};
-
-		mmesh::loopPolyTree(f, treeUp);
-		mmesh::loopPolyTree(f1, treeLower);
-
-		size_t size = pathsUp.size();
-		if (size != pathsLower.size() && size > 0)
-		{
-			//diff
-			fmesh::xor2PolyTrees(treeUp, treeLower, out, flag);
-			return;
-		}
-
-		//same
-		buildFromDiffPolyTreeSafty(treeLower, treeUp, patches, delta, flag);
+// 		std::vector<ClipperLib::Path*> pathsUp;
+// 		std::vector<ClipperLib::Path*> pathsLower;
+// 		size_t count = 0;
+// 		auto f = [&count, &pathsUp, &flag](ClipperLib::PolyNode* node) {
+// 			if (!checkFlag(node, flag))
+// 				return;
+// 			pathsUp.push_back(&node->Contour);
+// 		};
+// 		auto f1 = [&pathsLower, &flag](ClipperLib::PolyNode* node) {
+// 			if (!checkFlag(node, flag))
+// 				return;
+// 			pathsLower.push_back(&node->Contour);
+// 		};
+// 
+// 		mmesh::loopPolyTree(f, treeUp);
+// 		mmesh::loopPolyTree(f1, treeLower);
+		
+		if (GetPolyCount(treeLower) == GetPolyCount(treeUp))
+			buildFromDiffPolyTreeSafty(treeLower, treeUp, patches, delta, flag);
+		else
+			fmesh::xor2PolyTrees(treeUp, treeLower, out, flag);		
 	}
 
 	void buildFromDiffPolyTreeSafty(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp,

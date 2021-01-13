@@ -6,6 +6,7 @@
 #include "mmesh/cgal/roof.h"
 #include "fmesh/dxf/writedxf.h"
 #include "fmesh/svg/writesvg.h"
+#include "mmesh/clipper/circurlar.h"
 
 namespace fmesh
 {
@@ -157,7 +158,7 @@ namespace fmesh
 	void GeneratorImpl::_buildFromDiffPolyTree(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp, int flag)
 	{
 		std::vector<Patch*> patches;
-		buildFromDiffPolyTree(treeLower, treeUp, patches, flag);
+		buildFromDiffPolyTreeSafty(treeLower, treeUp, patches,1.0, flag);
 		addPatches(patches);
 	}
 
@@ -190,14 +191,14 @@ namespace fmesh
 		}
 	}
 
-	void GeneratorImpl::_buildFromDiffPolyTree_diffSafty(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp, double delta, int flag)
+	void GeneratorImpl::_buildFromDiffPolyTree_diffSafty(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp, double delta, int flag, bool invert)
 	{
 		ClipperLib::PolyTree out;
 		//fmesh::xor2PolyTrees(treeUp, treeLower, out, flag);
 		std::vector<Patch*> patches;
 		buildFromDiffPolyTree_SameAndDiffSafty(treeLower, treeUp, patches, flag, out, delta);
 		if (patches.size())
-			addPatches(patches);
+			addPatches(patches, invert);
 		if (out.ChildCount() > 0)
 		{
 			_fillPolyTreeReverseInner(&out, flag);
@@ -388,22 +389,35 @@ namespace fmesh
 		}
 	}
 
+	void GeneratorImpl::_simplifyPoly(ClipperLib::PolyTree* poly)
+	{
+		double x = dmax.x - dmin.x;
+		double y = dmax.y - dmin.y;
+		size_t childcount = poly->ChildCount();
+		double distance = ((x * y / 10000) / childcount) >1 ? (x * y / 10000)/ childcount : 1.415;
+
+		polyNodeFunc func = [&distance](ClipperLib::PolyNode* node) {
+			ClipperLib::CleanPolygon(node->Contour, distance);
+		};
+		mmesh::loopPolyTree(func, poly);
+	}
+
 	void GeneratorImpl::saveTopBottom(ClipperLib::PolyTree& tree, const std::string& file)
 	{
-		ClipperLib::Paths paths;		
-		for (ClipperLib::PolyNode* node : tree.Childs)
-			if (!node->IsHole())
-			{
-				SimplePoly poly;
-				ClipperLib::Path path;
-				merge2SimplePoly(node, &poly, false);
-				//saveSimplePoly(poly, file);
-				for (ClipperLib::IntPoint* point : poly)
-				{
-					path.push_back(*point);
-				}
-				paths.push_back(path);
-			}		
-		ClipperLib::save(paths, "F:/test.stl");
+// 		ClipperLib::Paths paths;		
+// 		for (ClipperLib::PolyNode* node : tree.Childs)
+// 			if (!node->IsHole())
+// 			{
+// 				SimplePoly poly;
+// 				ClipperLib::Path path;
+// 				merge2SimplePoly(node, &poly, false);
+// 				//saveSimplePoly(poly, file);
+// 				for (ClipperLib::IntPoint* point : poly)
+// 				{
+// 					path.push_back(*point);
+// 				}
+// 				paths.push_back(path);
+// 			}		
+// 		ClipperLib::save(paths, "F:/test.stl");
 	}
 }
