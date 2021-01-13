@@ -273,8 +273,9 @@ namespace fmesh
 			offsetExteriorInner(botomSteppolys.at(0), m_adParam.top_extend_width);
 
 			_buildFromSamePolyTree(&botomSteppolys.at(1), &botomSteppolys.at(2));
-			_buildFromDiffPolyTree(&treeTop, &botomSteppolys.at(0));
-			_buildFromDiffPolyTree(&botomSteppolys.at(0), &botomSteppolys.at(1));
+			_buildFromDiffPolyTree_diff(&treeTop, &botomSteppolys.at(1), 1);//outer
+			_buildFromDiffPolyTree_diff(&treeTop, &botomSteppolys.at(0),2);//inner
+			_buildFromDiffPolyTree_diff(&botomSteppolys.at(0), &botomSteppolys.at(1),2);
 			_fillPolyTree(&botomSteppolys.at(2));
 		}
 		else if (m_adParam.top_type == ADTopType::adtt_round)
@@ -328,8 +329,9 @@ namespace fmesh
 			offsetExteriorInner(botomSteppolys.at(2), m_adParam.bottom_extend_width);
 
 			_buildFromSamePolyTree(&botomSteppolys.at(0), &botomSteppolys.at(1));
-			_buildFromDiffPolyTree(&botomSteppolys.at(1), &botomSteppolys.at(2));
-			_buildFromDiffPolyTree(&botomSteppolys.at(2), &treeBottom);
+			_buildFromDiffPolyTree_diff(&botomSteppolys.at(1), &botomSteppolys.at(2),2);//outer
+			_buildFromDiffPolyTree_diff(&botomSteppolys.at(1), &treeBottom,1);//inner
+			_buildFromDiffPolyTree_diff(&botomSteppolys.at(2), &treeBottom,2);
 			_fillPolyTree(&botomSteppolys.at(0), true);
 		}
 		else if (m_adParam.bottom_type == ADBottomType::adbt_extend_inner)
