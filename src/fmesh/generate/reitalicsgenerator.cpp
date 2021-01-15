@@ -20,7 +20,7 @@ namespace fmesh
 // 		m_adParam.shape_top_height = 2.0;
 // 		m_adParam.top_extend_width = 0.5;
 // 		m_adParam.bottom_type = ADBottomType::adbt_step;
-// 		m_adParam.bottom_height = 1.0;
+// 		m_adParam.bottom_height = 2.0;
 // 		m_adParam.bottom_extend_width = 0.5;
 // 		m_adParam.shape_bottom_height = 3.0;
 		//
@@ -68,13 +68,15 @@ namespace fmesh
 // 				_fillPolyTreeReverseInner(&out);
 // 			}
 			//_buildFromDiffPolyTree_diff(&middlePolys.at(i), &middlePolys.at(i + 1));
-			_buildFromDiffPolyTree_diffSafty(&middlePolys.at(i), &middlePolys.at(i + 1),1.0,0,true);
+			_buildFromDiffPolyTree_diffSafty(&middlePolys.at(i+1), &middlePolys.at(i),1.0,0);
 		}
 
 		if (m_adParam.top_type != ADTopType::adtt_none)
 			_buildTopBottom(&middlePolys.back(), &middlePolys.front(), offset * count / 2);
 		else
+		{
 			_buildTopBottom(nullptr, &middlePolys.front());
-		
+			_fillPolyTree(&middlePolys.back(),true);
+		}	
 	}
 }

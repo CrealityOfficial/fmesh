@@ -38,7 +38,7 @@ namespace fmesh
 		mmesh::loopPolyTree(func, polyTree);
 	}
 
-	void fillComplexPolyTreeReverseInner(ClipperLib::PolyTree* polyTree, std::vector<Patch*>& patches)
+	void fillComplexPolyTreeReverseInner(ClipperLib::PolyTree* polyTree, std::vector<Patch*>& patches, bool invert)
 	{
 		if (!polyTree)
 			return;
@@ -56,8 +56,8 @@ namespace fmesh
 			for (ClipperLib::PolyNode* node : source)
 			{
 #ifdef _DEBUG
-				double area = ClipperLib::Area(node->Contour);
-				std::cout << area << std::endl;
+				//double area = ClipperLib::Area(node->Contour);
+				//std::cout << area << std::endl;
 #endif
 				Patch* patch = fillOneLevelPolyNode(node);
 				if (patch)
@@ -75,12 +75,27 @@ namespace fmesh
 					bool lReverse = false;
 					if (node->Contour.size() > 0 && node->ChildCount() > 0
 						&& node->Childs.at(0)->Contour.size() > 0)
-					{
+					{						
 						if (node->Contour.at(0).Z > node->Childs.at(0)->Contour.at(0).Z)
 							lReverse = true;
+
+						if (invert && outer)
+						{
+							if (node->Contour.at(0).Z <= node->Childs.at(0)->Contour.at(0).Z)
+							{
+								lReverse = true;
+							}
+						}
+						else if(invert&& !outer)
+						{
+							if (node->Contour.at(0).Z > node->Childs.at(0)->Contour.at(0).Z)
+							{
+								lReverse = false;
+							}
+						}
 					}
 					
-					if ((outer && lReverse) ||(!outer && !lReverse))
+					if ((outer && lReverse) || (!outer && !lReverse))
 						std::reverse(patch->begin(), patch->end());
 					patches.push_back(patch);
 				}

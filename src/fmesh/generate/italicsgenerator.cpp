@@ -15,14 +15,14 @@ namespace fmesh
 	void ItalicsGenerator::build()
 	{
 		//test data
-// 		m_adParam.top_type = ADTopType::adtt_step;
-// 		m_adParam.top_height = 5.0;
-// 		m_adParam.shape_top_height = 2.0;
-// 		m_adParam.top_extend_width = 0.5;
-// 		m_adParam.bottom_type = ADBottomType::adbt_step;
-// 		m_adParam.bottom_height = 1.0;
-// 		m_adParam.bottom_extend_width = 0.5;
-// 		m_adParam.shape_bottom_height = 3.0;
+//  		m_adParam.top_type = ADTopType::adtt_step;
+//  		m_adParam.top_height = 5.0;
+//  		m_adParam.shape_top_height = 2.0;
+//  		m_adParam.top_extend_width = 0.5;
+//  		m_adParam.bottom_type = ADBottomType::adbt_step;
+//  		m_adParam.bottom_height = 1.0;
+//  		m_adParam.bottom_extend_width = 0.5;
+//  		m_adParam.shape_bottom_height = 3.0;
 		//
 
 		//init
@@ -68,7 +68,7 @@ namespace fmesh
 			_buildFromDiffPolyTree_diffSafty(&middlePolys.at(i), &middlePolys.at(i + 1));
 		}
 
-		_fillPolyTree(&middlePolys.back());
+		//_fillPolyTree(&middlePolys.back());
 
 // 		ClipperLib::PolyTree treeBottom;
 // 		double hBottom;
@@ -78,7 +78,10 @@ namespace fmesh
 		if (m_adParam.top_type != ADTopType::adtt_none)
 			_buildTopBottom(&middlePolys.front(), &middlePolys.back(), 0, -(float)count * offset);
 		else
+		{
 			_buildTopBottom(&middlePolys.front(), nullptr);
+			_fillPolyTree(&middlePolys.back());
+		}
 		
 	}
 }

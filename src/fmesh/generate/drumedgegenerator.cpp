@@ -59,21 +59,8 @@ namespace fmesh
 
 		for (size_t i = 0; i < drumHCount; i++)
 		{
-// 			ClipperLib::PolyTree out;
-// 			_buildFromDiffPolyTree_drum(&middlePolys.at(i), &middlePolys.at(i + 1),0,out);
-// 			if (out.ChildCount() > 0)
-// 			{
-// 				_fillPolyTreeReverseInner(&out, false);
-// 			}
 			_buildFromDiffPolyTree_diffSafty(&middlePolys.at(i), &middlePolys.at(i + 1));
 		}
-
-// 		ClipperLib::PolyTree treeTop, treeBottom;
-// 		double hTop, hBottom;
-// 		_buildTop(treeTop, hTop);		
-// 		_buildBottom(treeBottom, hBottom);
-// 		_buildFromDiffPolyTree(&middlePolys.back(), &treeTop);
-// 		_buildFromDiffPolyTree(&treeBottom, &middlePolys.front());
 
 		_buildTopBottom(&middlePolys.front(), &middlePolys.back());
 	}
