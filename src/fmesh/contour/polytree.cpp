@@ -206,7 +206,8 @@ namespace fmesh
 			if (z != 0)
 			{
 				for (ClipperLib::IntPoint& point : node->Contour)
-					point.Z = z;
+					if(!point.Z)
+						point.Z = z;
 			}
 		};
 
