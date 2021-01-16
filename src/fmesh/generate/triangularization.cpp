@@ -7,13 +7,13 @@ namespace fmesh
 {
 	bool checkFlag(ClipperLib::PolyNode* node, int flag)
 	{
+		int depth = testPolyNodeDepth(node);
 		if (flag == 1 && node->IsHole())
 			return false;
 
-		if (flag == 2 && !node->IsHole() && !node->Parent)
+		if (flag == 2 && depth != 2 && depth != 3)
 			return false;
 
-		int depth = testPolyNodeDepth(node);
 		if (flag == 3 && depth != 1 && depth != 4 && depth != 5 && depth != 8)      // 1, 4
 			return false;
 	
@@ -126,6 +126,7 @@ namespace fmesh
 	{
 		std::vector<PolyTreeOppoPair> sources;
 		PolyTreeOppoPair startPair;
+
 		startPair.lower = treeLower;
 		startPair.upper = treeUp;
 		sources.push_back(startPair);
