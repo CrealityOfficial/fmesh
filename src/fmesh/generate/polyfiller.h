@@ -22,6 +22,9 @@ namespace fmesh
 
 	FMESH_API void merge2SimplePoly(ClipperLib::PolyNode* polyNode, SimplePoly* poly, bool invert);
 	FMESH_API ClipperLib::cInt pathMaxX(ClipperLib::Path& path);
+	FMESH_API ClipperLib::cInt pathMaxZ(ClipperLib::Path& path);
+	FMESH_API ClipperLib::cInt pathMaxZ(ClipperLib::PolyNode* node);
+	
 }
 
 #endif // FMESH_POLYFILLER_1604488905380_H

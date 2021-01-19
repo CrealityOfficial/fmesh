@@ -46,8 +46,12 @@ namespace fmesh
 		void _buildFromDiffPolyTree_diff(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp, int flag = 0);
 		void _buildFromDiffPolyTree_diffSafty(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp, double delta = 1.0, int flag = 0, bool invert = false);
 		void _buildFromDiffPolyTree_xor(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp, double delta = 1.0, int flag = 0, bool invert = false);
-		void _buildFromDiffPolyTree_Inner(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp, double delta = 1.0, int flag = 0, bool invert = false);
-
+		void _buildFromDiffPolyTree_Inner(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp, double delta = 1.0, int flag = 0, bool invert = false);		
+		
+		void _buildFromDiffPolyTree_all(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp, double delta = 1.0, int flag = 0, bool invert = false);
+		void _buildFromDiffPolyTree_all_same(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp,double delta, int flag = 0, bool invert = false);
+		void _buildFromDiffPolyTree_all_diff(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp,int flag=0, bool invert = false);
+		
 		void _buildFromDiffPolyTree_firstLayer(ClipperLib::PolyTree* treeLower, int flag = 0);
 		void _buildRoof(ClipperLib::PolyTree* polyTree, double roofHeight, double thickness);
 

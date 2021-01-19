@@ -206,6 +206,28 @@ namespace fmesh
 
 	}
 
+	void GeneratorImpl::_buildFromDiffPolyTree_all(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp, double delta, int flag, bool invert)
+	{
+		if (GetPolyCount(treeLower) == GetPolyCount(treeUp))
+			_buildFromDiffPolyTree_all_same(treeLower,treeUp,delta,flag,false);
+		else
+			_buildFromDiffPolyTree_all_diff(treeUp,treeLower,flag,invert);
+	}
+
+	void GeneratorImpl::_buildFromDiffPolyTree_all_same(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp, double delta, int flag, bool invert)
+	{
+		std::vector<Patch*> patches;
+		buildFromDiffPolyTreeSafty(treeLower, treeUp, patches, delta, flag);
+		addPatches(patches, invert);
+	}
+
+	void GeneratorImpl::_buildFromDiffPolyTree_all_diff(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp, int flag, bool invert)
+	{
+		ClipperLib::PolyTree out;
+		fmesh::xor2PolyTrees(treeLower, treeUp, out, flag);
+		_fillPolyTreeReverseInner(&out, invert);
+	}
+
 	void GeneratorImpl::_buildFromDiffPolyTree_xor(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp, double delta, int flag, bool invert)
 	{
 		ClipperLib::PolyTree out;

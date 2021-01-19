@@ -75,20 +75,20 @@ namespace fmesh
 					bool lReverse = false;
 					if (node->Contour.size() > 0 && node->ChildCount() > 0
 						&& node->Childs.at(0)->Contour.size() > 0)
-					{						
-						if (node->Contour.at(0).Z > node->Childs.at(0)->Contour.at(0).Z)
+					{		
+						if (pathMaxZ(node->Contour)>= pathMaxZ(node))
 							lReverse = true;
 
 						if (invert && outer)
 						{
-							if (node->Contour.at(0).Z <= node->Childs.at(0)->Contour.at(0).Z)
+							if (pathMaxZ(node->Contour) <= pathMaxZ(node->Childs.at(0)->Contour))
 							{
 								lReverse = true;
 							}
 						}
 						else if(invert&& !outer)
 						{
-							if (node->Contour.at(0).Z > node->Childs.at(0)->Contour.at(0).Z)
+							if (pathMaxZ(node->Contour) > pathMaxZ(node->Childs.at(0)->Contour))
 							{
 								lReverse = false;
 							}
@@ -97,6 +97,8 @@ namespace fmesh
 					
 					if ((outer && lReverse) || (!outer && !lReverse))
 						std::reverse(patch->begin(), patch->end());
+					else
+						int i = 0;
 					patches.push_back(patch);
 				}
 
@@ -226,6 +228,27 @@ namespace fmesh
 				x = point.X;
 		}
 		return x;
+	}
+
+	ClipperLib::cInt pathMaxZ(ClipperLib::Path& path)
+	{
+		ClipperLib::cInt z = -999999;
+		for (ClipperLib::IntPoint& point : path)
+		{
+			if (point.Z > z)
+				z = point.Z;
+		}
+		return z;
+	}
+
+	ClipperLib::cInt pathMaxZ(ClipperLib::PolyNode* node)
+	{
+		ClipperLib::cInt z = -999999;
+		ClipperLib::cInt tmp = 0;
+		for (ClipperLib::PolyNode* n : node->Childs)
+			if (z < (tmp = pathMaxZ(n->Contour)))
+				z = tmp;
+		return z;
 	}
 
 	void merge2SimplePoly(ClipperLib::PolyNode* polyNode, SimplePoly* newPoly, bool invert)
