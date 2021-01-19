@@ -391,7 +391,7 @@ namespace fmesh
 			double delta = 1.0;
 			_buildFromSamePolyTree(&botomSteppolys.at(0), &botomSteppolys.at(1));
 			_buildFromDiffPolyTree_diffSafty(&botomSteppolys.at(1), &treeBottom, delta,3);//outer
-			_buildFromDiffPolyTree_Inner(&botomSteppolys.at(1), &botomSteppolys.at(2), delta,0, true);//inner
+			_buildFromDiffPolyTree_Inner(&botomSteppolys.at(1), &botomSteppolys.at(2), delta,2, true);//inner
 			_buildFromDiffPolyTree_xor(&botomSteppolys.at(2), &treeBottom, delta,2);
 			_fillPolyTree(&botomSteppolys.at(0), true);
 		}
