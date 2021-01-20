@@ -56,7 +56,7 @@ namespace fmesh
 		for (int i = 0; i < count; ++i)
 		{
 			//_buildFromDiffPolyTree_diffSafty(&middlePolys.at(i), &middlePolys.at(i + 1));
-			_buildFromDiffPolyTree_all(&middlePolys.at(i), &middlePolys.at(i + 1));
+			_buildFromDiffPolyTree_all(&middlePolys.at(i), &middlePolys.at(i+1));
 		}
 
 		if (m_adParam.top_type != ADTopType::adtt_none)

@@ -76,7 +76,7 @@ namespace fmesh
 					if (node->Contour.size() > 0 && node->ChildCount() > 0
 						&& node->Childs.at(0)->Contour.size() > 0)
 					{		
-						if (pathMaxZ(node->Contour)>= pathMaxZ(node))
+						if (pathMaxZ(node->Contour)>=pathMaxZ(node))
 							lReverse = true;
 
 						if (invert && outer)
