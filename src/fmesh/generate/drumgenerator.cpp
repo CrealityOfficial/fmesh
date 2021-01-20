@@ -17,7 +17,7 @@ namespace fmesh
 
 	void DrumGenerator::build()
 	{
-		double thickness = m_adParam.extend_width / 2.0;
+		double thickness = m_adParam.extend_width / 4.0;
 
 		double x = dmax.x - dmin.x;
 		double y = dmax.y - dmin.y;

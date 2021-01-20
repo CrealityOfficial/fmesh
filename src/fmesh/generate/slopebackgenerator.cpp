@@ -14,7 +14,7 @@ namespace fmesh
 
 	void SlopebackGenerator::build()
 	{
-		double thickness = m_adParam.extend_width / 2.0;;
+		double thickness = m_adParam.extend_width / 4.0;;
 
 		std::vector<ClipperLib::PolyTree> polys(3);
 		offsetAndExtendPolyTree(m_poly, 0.0, thickness, 0, polys.at(0));

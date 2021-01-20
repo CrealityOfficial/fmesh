@@ -23,7 +23,7 @@ namespace fmesh
 // 		m_adParam.shape_bottom_height = 3.0;
 		//
 
-		double thickness = m_adParam.extend_width / 2.0f;
+		double thickness = m_adParam.extend_width / 4.0f;
 		double topHeight = m_adParam.shape_top_height;
 		double bottomHeight = m_adParam.total_height - topHeight;
 
