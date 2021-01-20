@@ -51,7 +51,9 @@ namespace fmesh
 		std::vector<ClipperLib::PolyTree> middlePolys(count + 1);
 		for (int i = 0; i <= count; ++i)
 		{
+			_simplifyPoly(&middlePolys.at(i));
 			fmesh::offsetAndExtendPolyTree(m_poly, (float)i * offset, thickness, bottomHeight + (float)i * h, middlePolys.at(i));
+			
 		}
 
 		for (int i = 0; i < count; ++i)

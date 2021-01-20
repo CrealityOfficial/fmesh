@@ -54,6 +54,7 @@ namespace fmesh
 			float delta = shape_bottom_height + i * drumDelta;
 			float _offset = shape_middle_width*sin((offset*i)>0? offset * i:0);
 			offsetAndExtendPolyTree(m_poly, _offset / 2, thickness, delta, middlePolys.at(i));
+			_simplifyPoly(&middlePolys.at(i));
 			offs.at(i) = _offset;
 		}
 
