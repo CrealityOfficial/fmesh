@@ -162,17 +162,20 @@ namespace fmesh
 		}
 	}
 
+	struct CompInfo
+	{
+		ClipperLib::IntPoint bmin;
+		ClipperLib::IntPoint bmax;
+		float area;
+	};
+	typedef std::function<bool(CompInfo& info1, CompInfo& info2)> sortFunc;
 	void findPolyTreePairFromNode(ClipperLib::PolyNode* nodeLower, ClipperLib::PolyNode* nodeUp,
 		std::vector<PolyTreeOppoPair>& pairs, double delta)
 	{
-		struct CompInfo
-		{
-			ClipperLib::IntPoint bmin;
-			ClipperLib::IntPoint bmax;
-		};
-
 		ClipperLib::PolyNodes inner = nodeLower->Childs;
 		ClipperLib::PolyNodes outer = nodeUp->Childs;
+
+		ClipperLib::cInt iDelta = (int)(1000.0 * delta);
 		if (inner.size() > 0 && inner.size() == outer.size())
 		{
 			size_t size = inner.size();
@@ -182,6 +185,8 @@ namespace fmesh
 			{
 				pathBox(inner.at(i)->Contour, iInfos.at(i).bmin, iInfos.at(i).bmax);
 				pathBox(outer.at(i)->Contour, oInfos.at(i).bmin, oInfos.at(i).bmax);
+				//iInfos.at(i).area = ClipperLib::Area(inner.at(i)->Contour);
+				//oInfos.at(i).area = ClipperLib::Area(outer.at(i)->Contour);
 			}
 			std::vector<int> imapIndex;
 			for (size_t i = 0; i < size; ++i)
@@ -222,6 +227,8 @@ namespace fmesh
 				return test(info1, info2);
 				});
 
+			std::vector<int> secondI;
+			std::vector<int> secondO;
 			for (size_t i = 0; i < size; ++i)
 			{
 				int index1 = imapIndex.at(i);
@@ -229,43 +236,80 @@ namespace fmesh
 
 				ClipperLib::PolyNode* inode = inner.at(index1);
 				ClipperLib::PolyNode* onode = outer.at(index2);
+				CompInfo& iinfo = iInfos.at(index1);
+				CompInfo& oinfo = oInfos.at(index2);
+
 				if (onode && onode->ChildCount() == inode->ChildCount())
 				{
+					if (std::abs(iinfo.bmin.X - oinfo.bmin.X) > iDelta ||
+						std::abs(iinfo.bmin.Y - oinfo.bmin.Y) > iDelta ||
+						std::abs(iinfo.bmax.X - oinfo.bmax.X) > iDelta ||
+						std::abs(iinfo.bmax.Y - oinfo.bmax.Y) > iDelta)
+					{
+						secondI.push_back(index1);
+						secondO.push_back(index2);
+						continue;
+					}
 					PolyTreeOppoPair pair;
 					pair.lower = inode;
 					pair.upper = onode;
 					pairs.push_back(pair);
 				}
 			}
-			//std::vector<bool> visited(size, false);
-			//for (size_t i = 0; i < size; ++i)
-			//{
-			//	ClipperLib::PolyNode* inode = inner.at(i);
-			//	if (inode->Contour.size() == 0)
-			//		continue;
-			//
-			//	ClipperLib::PolyNode* onode = nullptr;
-			//	for (size_t j = 0; j < size; ++j)
-			//	{
-			//		if (!visited.at(j))
-			//		{
-			//			if (ClipperLib::PointInPolygon(inode->Contour.at(0), outer.at(j)->Contour) != 0)
-			//			{
-			//				onode = outer.at(j);
-			//				visited.at(j) = true;
-			//				break;
-			//			}
-			//		}
-			//	}
-			//
-			//	if (onode && onode->ChildCount() == inode->ChildCount())
-			//	{
-			//		PolyTreeOppoPair pair;
-			//		pair.lower = inode;
-			//		pair.upper = onode;
-			//		pairs.push_back(pair);
-			//	}
-			//}
+
+			if (secondI.size() > 0)
+			{
+				auto secondTest = [](CompInfo& info1, CompInfo& info2)->bool {
+					if (info1.bmin.Y < info2.bmin.Y)
+						return true;
+					if (info1.bmin.Y > info2.bmin.Y)
+						return false;
+
+					if (info1.bmin.X < info2.bmin.X)
+						return true;
+					if (info1.bmin.X > info2.bmin.X)
+						return false;
+
+					if (info1.bmax.Y < info2.bmax.Y)
+						return true;
+					if (info1.bmax.Y > info2.bmax.Y)
+						return false;
+
+					if (info1.bmax.X < info2.bmax.X)
+						return true;
+					if (info1.bmax.X > info2.bmax.X)
+						return false;
+
+					return false;
+				};
+				std::sort(secondI.begin(), secondI.end(), [&iInfos, &secondTest](int i1, int i2)->bool {
+					CompInfo& info1 = iInfos.at(i1);
+					CompInfo& info2 = iInfos.at(i2);
+					return secondTest(info1, info2);
+					});
+				std::sort(secondO.begin(), secondO.end(), [&oInfos, &secondTest](int i1, int i2)->bool {
+					CompInfo& info1 = oInfos.at(i1);
+					CompInfo& info2 = oInfos.at(i2);
+					return secondTest(info1, info2);
+					});
+
+				for (size_t i = 0; i < secondI.size(); ++i)
+				{
+					int index1 = secondI.at(i);
+					int index2 = secondO.at(i);
+
+					ClipperLib::PolyNode* inode = inner.at(index1);
+					ClipperLib::PolyNode* onode = outer.at(index2);
+
+					if (onode && onode->ChildCount() == inode->ChildCount())
+					{
+						PolyTreeOppoPair pair;
+						pair.lower = inode;
+						pair.upper = onode;
+						pairs.push_back(pair);
+					}
+				}
+			}
 		}
 	}
 

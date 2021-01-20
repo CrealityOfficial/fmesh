@@ -55,8 +55,10 @@ namespace fmesh
 		}
 		for (int i = 0; i < count; ++i)
 		{
+			//if (i != 40)
+			//	continue;
 			//_buildFromDiffPolyTree_diffSafty(&middlePolys.at(i), &middlePolys.at(i + 1));
-			_buildFromDiffPolyTree_all(&middlePolys.at(i), &middlePolys.at(i + 1));
+			_buildFromDiffPolyTree_all(&middlePolys.at(i), &middlePolys.at(i + 1), thickness / 2.0f);
 		}
 
 		if (m_adParam.top_type != ADTopType::adtt_none)
@@ -66,6 +68,5 @@ namespace fmesh
 			_buildTopBottom(&middlePolys.front(), nullptr);
 			_fillPolyTree(&middlePolys.back());
 		}
-		
 	}
 }
