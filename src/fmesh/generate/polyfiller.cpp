@@ -43,6 +43,7 @@ namespace fmesh
 		if (!polyTree)
 			return;
 
+		savePolyTree(polyTree, "xxxxx");
 		std::vector<ClipperLib::PolyNode*> source;
 		std::vector<ClipperLib::PolyNode*> tmp;
 
