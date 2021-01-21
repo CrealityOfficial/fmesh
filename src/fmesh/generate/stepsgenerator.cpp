@@ -23,7 +23,7 @@ namespace fmesh
 // 		m_adParam.shape_bottom_height = 3.0;
 		//
 
-		double thickness = m_adParam.extend_width / 4.0f;
+		double thickness = m_adParam.extend_width / 2.0f;
 		double topHeight = m_adParam.shape_top_height;
 		double bottomHeight = m_adParam.total_height - topHeight;
 
@@ -36,7 +36,7 @@ namespace fmesh
 		double dealt = 1.0;
 		_buildFromDiffPolyTree_xor(&middlePolys.at(1), &middlePolys.at(2), dealt,1);
 		_buildFromSamePolyTree(&middlePolys.at(2), &middlePolys.at(3));
-		offsetExteriorInner(middlePolys.at(1), thickness);
+		offsetExteriorInner(middlePolys.at(1), thickness*2);
 		_buildFromDiffPolyTree_diffSafty(&middlePolys.at(0), &middlePolys.at(1));
 		_buildFromDiffPolyTree_xor(&middlePolys.at(1), &middlePolys.at(2), dealt,2);
 		_fillPolyTree(&middlePolys.back());

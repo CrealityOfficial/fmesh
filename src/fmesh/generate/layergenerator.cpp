@@ -47,7 +47,7 @@ namespace fmesh
 		//	offs.at(i) = _offset;
 		//}
 #else
-		double thickness = m_adParam.extend_width / 4.0;
+		double thickness = m_adParam.extend_width / 2.0;
 		double bottomHeight = m_adParam.total_height - m_adParam.shape_top_height;
 		drumHCount = (m_adParam.shape_top_height - 0.5) / 0.8;
 		middlePolys.resize(1 + drumHCount);

@@ -29,7 +29,7 @@ namespace fmesh
 // 		double y = dmax.y - dmin.y;
 // 		double distance = x * y/10000 ? x * y / 10000 :1.415;
 
-		double thickness = m_adParam.extend_width / 4.0;
+		double thickness = m_adParam.extend_width / 2.0;
 		double bottomHeight = m_adParam.total_height - m_adParam.shape_top_height;
 
 		//bottom

@@ -27,7 +27,7 @@ namespace fmesh
 		float shape_bottom_height= m_adParam.shape_bottom_height;
 		float shape_top_height= m_adParam.shape_top_height;
 		float shape_middle_width= m_adParam.shape_middle_width;
-		float thickness = m_adParam.extend_width / 4.0;
+		float thickness = m_adParam.extend_width / 2.0;
 
 		//modify
 		if (m_adParam.top_type == ADTopType::adtt_step)
