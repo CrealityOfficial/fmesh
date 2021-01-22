@@ -2,6 +2,7 @@
 #include "fmesh/contour/polytree.h"
 #include "fmesh/generate/trimeshbuilder.h"
 #include "fmesh/contour/path.h"
+#include "fmesh/contour/contour.h"
 
 #include "mmesh/cgal/roof.h"
 #include "fmesh/dxf/writedxf.h"
@@ -236,6 +237,7 @@ namespace fmesh
 		xor2PolyTrees(treeUp, treeLower, out, flag);
 		if (out.ChildCount() > 0)
 		{
+			//savePolyTree(&out, "buildFromXOR");
 			_fillPolyTreeSameZ(&out, invert);
 		}
 	}
