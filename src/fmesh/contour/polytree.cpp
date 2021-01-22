@@ -527,12 +527,12 @@ namespace fmesh
 
 		func(&source);
 
-		size_t size = childrens.size();
+		int size = (int)childrens.size();
 		if (size > 0)
 		{
 			dests.resize(size);
 #pragma omp parallel for
-			for (size_t i = 0; i < size; ++i)
+			for (int i = 0; i < size; ++i)
 			{
 				ClipperLib::PolyNode* node = childrens.at(i);
 				ClipperLib::Clipper clipper;

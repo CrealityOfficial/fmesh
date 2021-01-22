@@ -21,12 +21,15 @@ namespace fmesh
 		return ear.earClippingFromPath(path);
 	}
 
-	void fillComplexPolyTree(ClipperLib::PolyTree* polyTree, std::vector<Patch*>& patches)
+	void fillComplexPolyTree(ClipperLib::PolyTree* polyTree, std::vector<Patch*>& patches, bool muesEven)
 	{
 		if (!polyTree)
 			return;
 
-		polyNodeFunc func = [&patches](ClipperLib::PolyNode* node) {
+		polyNodeFunc func = [&muesEven , &patches](ClipperLib::PolyNode* node) {
+			if (muesEven && node->ChildCount() == 0)
+				return;
+
 			if (!node->IsHole())
 			{
 				Patch* patch = fillOneLevelPolyNode(node);
