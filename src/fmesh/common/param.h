@@ -37,7 +37,8 @@ namespace fmesh
 		adst_jianjiao,
 		adst_xiemian_front,
 		adst_xiemian_back,
-		adst_dingmianjieti
+		adst_dingmianjieti,
+		adst_num
 	};
 
 	class FMESH_API ADParam

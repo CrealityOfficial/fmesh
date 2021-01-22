@@ -331,11 +331,11 @@ namespace fmesh
 			offsetExteriorInner(botomSteppolys.at(0), m_adParam.top_extend_width);
 
 			double delta = 1.0;
- 			//_buildFromSamePolyTree(&botomSteppolys.at(1), &botomSteppolys.at(2));
- 			//_buildFromDiffPolyTree_diffSafty(&treeTop, &botomSteppolys.at(1), delta,3);//outer
+ 			_buildFromSamePolyTree(&botomSteppolys.at(1), &botomSteppolys.at(2));
+ 			_buildFromDiffPolyTree_diffSafty(&treeTop, &botomSteppolys.at(1), delta,3);//outer
  			_buildFromDiffPolyTree_Inner(&treeTop, &botomSteppolys.at(0), delta,2,true);//inner
- 			///_buildFromDiffPolyTree_xor(&botomSteppolys.at(0), &botomSteppolys.at(1), delta,2);
- 			///_fillPolyTree(&botomSteppolys.at(2));
+ 			_buildFromDiffPolyTree_xor(&botomSteppolys.at(0), &botomSteppolys.at(1), delta,2);
+ 			_fillPolyTree(&botomSteppolys.at(2));
 
 // 			std::vector<ClipperLib::PolyTree> botomSteppolys(4);
 //  			fmesh::offsetAndExtendPolyTree(m_poly, offset, thickness, m_adParam.total_height - m_adParam.top_height, treeTop);
@@ -478,7 +478,7 @@ namespace fmesh
 
 		if (treeBottom != nullptr)
 		{
-			//_buildBottom(_treeBottom, hBottom, offsetB);
+			_buildBottom(_treeBottom, hBottom, offsetB);
 			//_buildFromDiffPolyTree(&_treeBottom, treeBottom);
 		}
 		if (treeTop != nullptr)

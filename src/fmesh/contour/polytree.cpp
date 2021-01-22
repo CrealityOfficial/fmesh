@@ -513,4 +513,34 @@ namespace fmesh
 			}
 		}
 	}
+
+	void split_omp(ClipperLib::PolyTree& source, std::vector<ClipperLib::Paths>& dests)
+	{
+		std::vector<ClipperLib::PolyNode*> childrens;
+		polyNodeFunc func = [&func, &childrens](ClipperLib::PolyNode* node) {
+			if (testPolyNodeDepth(node) % 2 == 1)
+				childrens.push_back(node);
+
+			for (ClipperLib::PolyNode* n : node->Childs)
+				func(n);
+		};
+
+		func(&source);
+
+		size_t size = childrens.size();
+		if (size > 0)
+		{
+			dests.resize(size);
+#pragma omp parallel for
+			for (size_t i = 0; i < size; ++i)
+			{
+				ClipperLib::PolyNode* node = childrens.at(i);
+				ClipperLib::Clipper clipper;
+				clipper.AddPath(node->Contour, ClipperLib::ptClip, true);
+				for (ClipperLib::PolyNode* n : node->Childs)
+					clipper.AddPath(n->Contour, ClipperLib::ptClip, true);
+				clipper.Execute(ClipperLib::ctUnion, dests.at(i), ClipperLib::pftNonZero, ClipperLib::pftNonZero);
+			}
+		}
+	}
 }

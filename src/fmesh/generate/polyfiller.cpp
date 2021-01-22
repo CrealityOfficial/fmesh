@@ -43,7 +43,7 @@ namespace fmesh
 		if (!polyTree)
 			return;
 
-		savePolyTree(polyTree, "xxxxx");
+		//savePolyTree(polyTree, "xxxxx");
 		std::vector<ClipperLib::PolyNode*> source;
 		std::vector<ClipperLib::PolyNode*> tmp;
 
@@ -56,6 +56,8 @@ namespace fmesh
 		{
 			for (ClipperLib::PolyNode* node : source)
 			{
+				if (node->ChildCount() == 0)
+					continue;
 #ifdef _DEBUG
 				//double area = ClipperLib::Area(node->Contour);
 				//std::cout << area << std::endl;
