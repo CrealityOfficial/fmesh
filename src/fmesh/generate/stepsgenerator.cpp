@@ -34,7 +34,7 @@ namespace fmesh
 		offsetAndExtendPolyTree(m_poly, -thickness, thickness, m_adParam.total_height, middlePolys.at(3));
 
 		double dealt = 1.0;
-		_buildFromDiffPolyTree_xor(&middlePolys.at(1), &middlePolys.at(2), dealt,1);
+		_buildFromDiffPolyTree_xor(&middlePolys.at(1), &middlePolys.at(2), dealt,3);
 		_buildFromSamePolyTree(&middlePolys.at(2), &middlePolys.at(3));
 		offsetExteriorInner(middlePolys.at(1), thickness*2);
 		_buildFromDiffPolyTree_diffSafty(&middlePolys.at(0), &middlePolys.at(1));

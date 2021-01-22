@@ -481,12 +481,12 @@ namespace fmesh
 		if (treeBottom != nullptr)
 		{
 			_buildBottom(_treeBottom, hBottom, offsetB);
-			//_buildFromDiffPolyTree(&_treeBottom, treeBottom);
+			_buildFromDiffPolyTree(&_treeBottom, treeBottom);
 		}
 		if (treeTop != nullptr)
 		{
 			_buildTop(_treeTop, hTop, offsetT);
-			//_buildFromDiffPolyTree(treeTop, &_treeTop);
+			_buildFromDiffPolyTree(treeTop, &_treeTop);
 		}
 	}
 
