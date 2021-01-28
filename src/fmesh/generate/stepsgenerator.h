@@ -11,6 +11,8 @@ namespace fmesh
 		virtual ~StepsGenerator();
 
 		void build() override;
+
+		void buildShell() override;
 	};
 }
 

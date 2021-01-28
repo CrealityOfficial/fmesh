@@ -11,6 +11,8 @@ namespace fmesh
 		virtual ~SharptopGenerator();
 
 		void build() override;
+
+		void buildShell() override;
 	};
 }
 

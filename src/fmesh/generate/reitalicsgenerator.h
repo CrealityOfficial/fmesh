@@ -11,6 +11,8 @@ namespace fmesh
 		virtual ~ReItalicsGenerator();
 
 		void build() override;
+
+		void buildShell() override;
 	};
 }
 

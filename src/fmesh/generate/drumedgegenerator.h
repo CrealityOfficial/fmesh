@@ -11,6 +11,8 @@ namespace fmesh
 		virtual ~DrumedgeGenerator();
 
 		void build() override;
+
+		void buildShell() override;
 	};
 }
 

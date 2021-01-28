@@ -11,6 +11,8 @@ namespace fmesh
 		virtual ~SharpsideGenerator();
 
 		void build() override;
+
+		void buildShell() override;
 	};
 }
 

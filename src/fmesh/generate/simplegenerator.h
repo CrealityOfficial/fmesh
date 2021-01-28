@@ -11,6 +11,8 @@ namespace fmesh
 		virtual ~SimpleGenerator();
 
 		void build() override;
+
+		void buildShell() override;
 	};
 }
 

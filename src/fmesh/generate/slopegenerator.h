@@ -11,6 +11,8 @@ namespace fmesh
 		virtual ~SlopeGenerator();
 
 		void build() override;
+
+		void buildShell() override;
 	};
 }
 
