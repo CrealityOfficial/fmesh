@@ -85,13 +85,13 @@ namespace fmesh
 //
 
 //init
-// 		float btoomStepHeight = m_adParam.shape_bottom_height;
-// 		float shape_top_height = m_adParam.shape_top_height;
-// 		float thickness = m_adParam.extend_width / 2.0;
-// 		float bottomHeight = m_adParam.bottom_height;
-// 		float topHeight = m_adParam.top_height;
-// 		float topStepWiden = m_adParam.top_extend_width / 2.0;
-// 		float btoomStepWiden = m_adParam.bottom_extend_width / 2.0;
+ 		float btoomStepHeight = m_adParam.shape_bottom_height;
+ 		float shape_top_height = m_adParam.shape_top_height;
+ 		float thickness = m_adParam.extend_width / 2.0;
+ 		float bottomHeight = m_adParam.bottom_height;
+ 		float topHeight = m_adParam.top_height;
+ 		float topStepWiden = m_adParam.top_extend_width / 2.0;
+ 		float btoomStepWiden = m_adParam.bottom_extend_width / 2.0;
 
 		//modify
 		if (m_adParam.top_type == ADTopType::adtt_step)
