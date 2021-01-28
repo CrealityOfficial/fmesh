@@ -164,14 +164,45 @@ namespace fmesh
 	}
 
 	trimesh::TriMesh* GeneratorProxy::build(const ADParam& param, ClipperLib::Paths* paths,
-		ExportParam* exportParam, ClipperLib::PolyTree* topTree, ClipperLib::PolyTree* bottomTree)
+		ExportParam* exportParam, ClipperLib::PolyTree* topTree, ClipperLib::PolyTree* bottomTree, bool buildShell)
 	{
 		if (!paths)
 			return nullptr;
 
 		std::unique_ptr<GeneratorImpl> impl(createGenerator(param));
-		trimesh::TriMesh* mesh = impl ? impl->generate(paths, param) : nullptr;
+		trimesh::TriMesh* mesh = nullptr;
+		if (impl)
+		{
+			mesh = buildShell ? impl->generateShell(paths, param, exportParam, topTree, bottomTree)
+				: impl->generate(paths, param);
+		}
 		return mesh;
+	}
+
+	void GeneratorProxy::setup(const ADParam& param, ClipperLib::Paths* paths)
+	{
+		if (!paths)
+			return;
+
+		m_impl.reset(createGenerator(param));
+		if (m_impl)
+			m_impl->setup(param, paths);
+	}
+
+	trimesh::TriMesh* GeneratorProxy::build()
+	{
+		return m_impl ? m_impl->generate() : nullptr;
+	}
+
+	trimesh::TriMesh* GeneratorProxy::buildShell()
+	{
+		return m_impl ? m_impl->generateShell() : nullptr;
+	}
+
+	void GeneratorProxy::buildBoard(const ExportParam& param, ClipperLib::PolyTree& topTree, ClipperLib::PolyTree& bottomTree)
+	{
+		if (m_impl)
+			m_impl->generateBoard(param, topTree, bottomTree);
 	}
 
 	trimesh::TriMesh* GeneratorProxy::buildOmp(const ADParam& param, ClipperLib::Paths* paths,

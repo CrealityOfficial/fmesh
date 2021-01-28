@@ -23,7 +23,32 @@ namespace fmesh
 	{
 	}
 
-	trimesh::TriMesh* GeneratorImpl::generate(ClipperLib::Paths* paths, const ADParam& param,
+	trimesh::TriMesh* GeneratorImpl::generate(ClipperLib::Paths* paths, const ADParam& param)
+	{
+		m_paths = paths;
+		m_adParam = param;
+
+		ClipperLib::IntPoint bmin;
+		ClipperLib::IntPoint bmax;
+		fmesh::calculatePathBox(paths, bmin, bmax);
+		//scale
+		trimesh::vec3 bMin = trimesh::vec3(INT2MM(bmin.X), INT2MM(bmin.Y), INT2MM(bmin.Z));
+		trimesh::vec3 bMax = trimesh::vec3(INT2MM(bmax.X), INT2MM(bmax.Y), INT2MM(bmax.Z));
+		dmin = trimesh::vec2(bMin);
+		dmax = trimesh::vec2(bMax);
+
+		fmesh::convertPaths2PolyTree(m_paths, m_poly);
+		if (!paths || paths->size() == 0)
+			return nullptr;
+
+		build();
+
+		trimesh::TriMesh* mesh = generateFromPatches();
+		releaseResources();
+		return mesh;
+	}
+
+	trimesh::TriMesh* GeneratorImpl::generateShell(ClipperLib::Paths* paths, const ADParam& param,
 		ExportParam* exportParam, ClipperLib::PolyTree* topTree, ClipperLib::PolyTree* bottomTree)
 	{
 		m_paths = paths;
@@ -47,11 +72,53 @@ namespace fmesh
 		if (!paths || paths->size() == 0)
 			return nullptr;
 
+		buildShell();
+
+		trimesh::TriMesh* mesh = generateFromPatches();
+		releaseResources();
+		return mesh;
+	}
+
+	void GeneratorImpl::setup(const ADParam& param, ClipperLib::Paths* paths)
+	{
+		m_paths = paths;
+		m_adParam = param;
+
+		ClipperLib::IntPoint bmin;
+		ClipperLib::IntPoint bmax;
+		fmesh::calculatePathBox(paths, bmin, bmax);
+		//scale
+		trimesh::vec3 bMin = trimesh::vec3(INT2MM(bmin.X), INT2MM(bmin.Y), INT2MM(bmin.Z));
+		trimesh::vec3 bMax = trimesh::vec3(INT2MM(bmax.X), INT2MM(bmax.Y), INT2MM(bmax.Z));
+		dmin = trimesh::vec2(bMin);
+		dmax = trimesh::vec2(bMax);
+
+		if(m_paths)
+			fmesh::convertPaths2PolyTree(m_paths, m_poly);
+	}
+
+	trimesh::TriMesh* GeneratorImpl::generate()
+	{
 		build();
 
 		trimesh::TriMesh* mesh = generateFromPatches();
 		releaseResources();
 		return mesh;
+	}
+
+	trimesh::TriMesh* GeneratorImpl::generateShell()
+	{
+		buildShell();
+
+		trimesh::TriMesh* mesh = generateFromPatches();
+		releaseResources();
+		return mesh;
+	}
+
+	void GeneratorImpl::generateBoard(const ExportParam& param, ClipperLib::PolyTree& topTree, ClipperLib::PolyTree& bottomTree)
+	{
+		m_exportParam = param;
+		buildBoard(topTree, bottomTree);
 	}
 
 	trimesh::TriMesh* GeneratorImpl::generate(ClipperLib::PolyTree* tree, const ADParam& param,

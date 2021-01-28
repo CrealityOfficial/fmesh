@@ -18,12 +18,20 @@ namespace fmesh
 	public:
 		GeneratorImpl();
 		virtual ~GeneratorImpl();
-		trimesh::TriMesh* generate(ClipperLib::Paths* paths, const ADParam& param, 
+		trimesh::TriMesh* generate(ClipperLib::Paths* paths, const ADParam& param);
+		trimesh::TriMesh* generateShell(ClipperLib::Paths* paths, const ADParam& param,
 			ExportParam* exportParam = nullptr, ClipperLib::PolyTree* topTree = nullptr, ClipperLib::PolyTree* bottomTree = nullptr);
 		trimesh::TriMesh* generate(ClipperLib::PolyTree* tree, const ADParam& param,
 			ExportParam* exportParam = nullptr, ClipperLib::PolyTree* topTree = nullptr, ClipperLib::PolyTree* bottomTree = nullptr);
 
 		virtual void build() = 0;
+		virtual void buildShell() {}
+		virtual void buildBoard(ClipperLib::PolyTree& topTree, ClipperLib::PolyTree& bottomTree) {}
+
+		void setup(const ADParam& param, ClipperLib::Paths* paths);
+		trimesh::TriMesh* generate();
+		trimesh::TriMesh* generateShell();
+		void generateBoard(const ExportParam& param, ClipperLib::PolyTree& topTree, ClipperLib::PolyTree& bottomTree);
 	protected:
 		void addPatch(Patch* patch, bool invert = false);
 		void addPatches(std::vector<Patch*>& patches, bool invert = false);

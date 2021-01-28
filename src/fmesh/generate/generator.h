@@ -47,10 +47,18 @@ namespace fmesh
 		virtual ~GeneratorProxy();
 
 		trimesh::TriMesh* build(const ADParam& param, ClipperLib::Paths* paths, 
-			ExportParam* exportParam = nullptr, ClipperLib::PolyTree* topTree = nullptr, ClipperLib::PolyTree* bottomTree = nullptr);
+			ExportParam* exportParam = nullptr, ClipperLib::PolyTree* topTree = nullptr, ClipperLib::PolyTree* bottomTree = nullptr, bool buildShell = false);
 
 		trimesh::TriMesh* buildOmp(const ADParam& param, ClipperLib::Paths* paths,
 			ExportParam* exportParam = nullptr, ClipperLib::PolyTree* topTree = nullptr, ClipperLib::PolyTree* bottomTree = nullptr);
+
+		//seperate
+		void setup(const ADParam& param, ClipperLib::Paths* paths);
+		trimesh::TriMesh* build();
+		trimesh::TriMesh* buildShell();
+		void buildBoard(const ExportParam& param, ClipperLib::PolyTree& topTree, ClipperLib::PolyTree& bottomTree);
+	protected:
+		std::unique_ptr<GeneratorImpl> m_impl;
 	};
 }
 
