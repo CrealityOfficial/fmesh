@@ -305,7 +305,7 @@ namespace fmesh
 		clipper.Execute(ClipperLib::ctUnion, source, ClipperLib::pftNonZero, ClipperLib::pftNonZero);
 	}
 
-	void skeletonPolyTree(ClipperLib::PolyTree& source, double z, std::vector<Patch*>& patches, double height, bool onePoly = false)
+	void skeletonPolyTree(ClipperLib::PolyTree& source, double z, std::vector<Patch*>& patches, double height, bool onePoly)
 	{
 		ClipperLib::PolyTree roofLine;
 		ClipperLib::PolyTree roofPoint;
