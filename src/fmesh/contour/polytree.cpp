@@ -305,12 +305,12 @@ namespace fmesh
 		clipper.Execute(ClipperLib::ctUnion, source, ClipperLib::pftNonZero, ClipperLib::pftNonZero);
 	}
 
-	void skeletonPolyTree(ClipperLib::PolyTree& source, double z, std::vector<Patch*>& patches, double height)
+	void skeletonPolyTree(ClipperLib::PolyTree& source, double z, std::vector<Patch*>& patches, double height, bool onePoly = false)
 	{
 		ClipperLib::PolyTree roofLine;
 		ClipperLib::PolyTree roofPoint;
 		ClipperLib::Paths* paths = new ClipperLib::Paths;
-		mmesh::roofLine(&source, &roofLine, &roofPoint, paths);
+		mmesh::roofLine(&source, &roofLine, &roofPoint, paths, onePoly);
 
 		for (size_t i=0;i< paths->size();i++)
 		{
@@ -342,12 +342,12 @@ namespace fmesh
 		}
 	}
 
-	void skeletonPolyTreeSharp(ClipperLib::PolyTree& source, double z, double height, std::vector<Patch*>& patches)
+	void skeletonPolyTreeSharp(ClipperLib::PolyTree& source, double z, double height, std::vector<Patch*>& patches,bool onePoly)
 	{
 		ClipperLib::PolyTree roofLine;
 		ClipperLib::PolyTree roofPoint;
 		ClipperLib::Paths* paths = new ClipperLib::Paths;
-		mmesh::roofLine(&source, &roofLine, &roofPoint, paths);
+		mmesh::roofLine(&source, &roofLine, &roofPoint, paths, onePoly);
 
 		for (size_t i = 0; i < paths->size(); i++)
 		{
