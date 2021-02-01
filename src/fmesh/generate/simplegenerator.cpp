@@ -34,4 +34,10 @@ namespace fmesh
 		_buildFromSamePolyTree(&polys.at(0), &polys.at(1),3);
 	}
 
+	void SimpleGenerator::buildBoard(ClipperLib::PolyTree& topTree, ClipperLib::PolyTree& bottomTree)
+	{
+		float thickness = m_adParam.extend_width / 2.0;
+		offsetAndExtendPolyTree(m_poly, 0, thickness, 0, bottomTree);
+		offsetAndExtendPolyTree(m_poly, 0, thickness, m_adParam.total_height, topTree);
+	}
 }
