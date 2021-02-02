@@ -133,7 +133,7 @@ namespace fmesh
 		}
 
 		std::vector<Patch*> patches;
-		skeletonPolyTree(middlePolys.back(), delta2, patches, middlePolys.size() / 100.0);
+		skeletonPolyTree(middlePolys.back(), delta2, patches, middlePolys.size() / 100.0,true);
 		addPatches(patches);
 		//s_fillPolyTree(&middlePolys.back(), true);
 

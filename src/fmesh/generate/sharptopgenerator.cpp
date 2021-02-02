@@ -88,7 +88,7 @@ namespace fmesh
 		_simplifyPoly(&bottomPolys.back());
 
 		std::vector<Patch*> patches;
-		skeletonPolyTreeSharp(bottomPolys.back(), bottomHeight, m_adParam.shape_top_height, patches);
+		skeletonPolyTreeSharp(bottomPolys.back(), bottomHeight, m_adParam.shape_top_height, patches,true);
 		addPatches(patches);
 
 		//_fillPolyTree(&bottomPolys.front(), true);
