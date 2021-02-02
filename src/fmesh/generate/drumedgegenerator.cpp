@@ -21,11 +21,9 @@ namespace fmesh
 
 	void DrumedgeGenerator::buildShell()
 	{
-		m_adParam.top_type = ADTopType::adtt_none;
-		m_adParam.bottom_type = ADBottomType::adbt_none;
 		std::vector<ClipperLib::PolyTree> middlePolys;
-		buildMiddle(middlePolys);
-		_buildTopBottom(&middlePolys.front(), &middlePolys.back());
+		buildMiddle(middlePolys,true);
+		_buildTopBottom_onepoly(&middlePolys.front(), &middlePolys.back());
 	}
 
 	void DrumedgeGenerator::buildBoard(ClipperLib::PolyTree& topTree, ClipperLib::PolyTree& bottomTree)
@@ -36,7 +34,7 @@ namespace fmesh
 		bottomTree = middlePolys.front();
 	}
 
-	void DrumedgeGenerator::buildMiddle(std::vector<ClipperLib::PolyTree>& middlePolys)
+	void DrumedgeGenerator::buildMiddle(std::vector<ClipperLib::PolyTree>& middlePolys, bool onePoly)
 	{
 		//initTestData()
 
@@ -76,7 +74,10 @@ namespace fmesh
 
 		for (size_t i = 0; i < drumHCount; i++)
 		{
-			_buildFromDiffPolyTree_diffSafty(&middlePolys.at(i), &middlePolys.at(i + 1));
+			if (onePoly)
+				_buildFromDiffPolyTree_diffSafty(&middlePolys.at(i), &middlePolys.at(i + 1),1.0,3);//outer
+			else
+				_buildFromDiffPolyTree_diffSafty(&middlePolys.at(i), &middlePolys.at(i + 1));
 		}
 	}
 

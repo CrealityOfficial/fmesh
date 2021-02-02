@@ -18,18 +18,14 @@ namespace fmesh
 	{
 		std::vector<ClipperLib::PolyTree> middlePolys;
 		buildMiddle(middlePolys);
-
 		_buildTopBottom(&middlePolys.front(), nullptr);
 	}
 
 	void SharptopGenerator::buildShell()
 	{
 		std::vector<ClipperLib::PolyTree> middlePolys;
-		buildMiddle(middlePolys);
-
-		m_adParam.bottom_type = ADBottomType::adbt_none;
-		m_adParam.top_type = ADTopType::adtt_none;
-		_buildTopBottom(&middlePolys.front(), nullptr);
+		buildMiddle(middlePolys,true);
+		_buildTopBottom_onepoly(&middlePolys.front(), nullptr);
 	}
 
 	void SharptopGenerator::buildBoard(ClipperLib::PolyTree& topTree, ClipperLib::PolyTree& bottomTree)
@@ -41,7 +37,7 @@ namespace fmesh
 		bottomTree = middlePolys.front();
 	}
 
-	void SharptopGenerator::buildMiddle(std::vector<ClipperLib::PolyTree>& middlePolys)
+	void SharptopGenerator::buildMiddle(std::vector<ClipperLib::PolyTree>& middlePolys, bool onePoly)
 	{
 
 		double thickness = m_adParam.extend_width / 2.0;
@@ -54,7 +50,11 @@ namespace fmesh
 		_simplifyPoly(&middlePolys.back());
 
 		std::vector<Patch*> patches;
-		skeletonPolyTreeSharp(middlePolys.back(), bottomHeight, m_adParam.shape_top_height, patches);
+		if (onePoly)
+			skeletonPolyTreeSharp(middlePolys.back(), bottomHeight, m_adParam.shape_top_height, patches,true);//outer
+		else
+			skeletonPolyTreeSharp(middlePolys.back(), bottomHeight, m_adParam.shape_top_height, patches);
+
 		addPatches(patches);
 	}
 

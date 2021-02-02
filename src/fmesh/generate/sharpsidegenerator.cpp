@@ -23,11 +23,8 @@ namespace fmesh
 	void SharpsideGenerator::buildShell()
 	{
 		std::vector<ClipperLib::PolyTree> middlePolys;
-		buildMiddle(middlePolys);
-
-		m_adParam.bottom_type = ADBottomType::adbt_none;
-		m_adParam.top_type = ADTopType::adtt_none;
-		_buildTopBottom(&middlePolys.front(), &middlePolys.back());
+		buildMiddle(middlePolys,true);
+		_buildTopBottom_onepoly(&middlePolys.front(), &middlePolys.back());
 	}
 
 	void SharpsideGenerator::buildBoard(ClipperLib::PolyTree& topTree, ClipperLib::PolyTree& bottomTree)
@@ -39,7 +36,7 @@ namespace fmesh
 		bottomTree = middlePolys.front();
 	}
 
-	void SharpsideGenerator::buildMiddle(std::vector<ClipperLib::PolyTree>& middlePolys)
+	void SharpsideGenerator::buildMiddle(std::vector<ClipperLib::PolyTree>& middlePolys, bool onePoly)
 	{
 		float shape_bottom_height = m_adParam.shape_bottom_height;
 		float shape_top_height = m_adParam.shape_top_height;
@@ -88,7 +85,10 @@ namespace fmesh
 
 		for (size_t i = 0; i < middlePolys.size() - 1; i++)
 		{
-			_buildFromDiffPolyTree_diffSafty(&middlePolys.at(i), &middlePolys.at(i + 1));
+			if (onePoly)
+				_buildFromDiffPolyTree_diffSafty(&middlePolys.at(i), &middlePolys.at(i + 1), 1.0, 3);
+			else
+				_buildFromDiffPolyTree_diffSafty(&middlePolys.at(i), &middlePolys.at(i + 1));
 		}
 	}
 

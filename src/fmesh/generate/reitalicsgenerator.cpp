@@ -32,18 +32,8 @@ namespace fmesh
 	{
 		std::vector<ClipperLib::PolyTree> middlePolys;
 		double middleoffset = 0;
-
-		buildMiddle(middlePolys, middleoffset);
-
-		m_adParam.bottom_type = ADBottomType::adbt_none;
-		m_adParam.top_type = ADTopType::adtt_none;
-		if (m_adParam.top_type != ADTopType::adtt_none)
-			_buildTopBottom(&middlePolys.front(), &middlePolys.back(), 0, middleoffset);
-		else
-		{
-			_buildTopBottom(&middlePolys.front(), nullptr);
-			_fillPolyTree(&middlePolys.back());
-		}
+		buildMiddle(middlePolys, middleoffset,true);
+		_buildTopBottom_onepoly(&middlePolys.front(), &middlePolys.back(), 0, middleoffset);
 	}
 
 	void ReItalicsGenerator::buildBoard(ClipperLib::PolyTree& topTree, ClipperLib::PolyTree& bottomTree)
@@ -56,7 +46,7 @@ namespace fmesh
 		bottomTree = middlePolys.front();
 	}
 
-	void ReItalicsGenerator::buildMiddle(std::vector<ClipperLib::PolyTree>& middlePolys, double& middleoffset)
+	void ReItalicsGenerator::buildMiddle(std::vector<ClipperLib::PolyTree>& middlePolys, double& middleoffset,bool onePoly)
 	{
 		//init
 		float btoomStepHeight = m_adParam.shape_bottom_height;
@@ -91,10 +81,11 @@ namespace fmesh
 
 		for (int i = 0; i < count; ++i)
 		{
-			//_buildFromDiffPolyTree_diffSafty(&middlePolys.at(i), &middlePolys.at(i + 1));
-			_buildFromDiffPolyTree_all(&middlePolys.at(i), &middlePolys.at(i + 1), thickness / 2.0);
+			if (onePoly)
+				_buildFromDiffPolyTree_all(&middlePolys.at(i), &middlePolys.at(i + 1), thickness / 2.0,3);//outer
+			else
+				_buildFromDiffPolyTree_all(&middlePolys.at(i), &middlePolys.at(i + 1), thickness / 2.0);			
 		}
-
 		middleoffset = offset * count;
 	}
 

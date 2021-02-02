@@ -169,12 +169,12 @@ namespace fmesh
 		ClipperLib::PolyTree out;
 		xor2PolyNodes(nodes1, nodes4, out);
 
-		fillComplexPolyTree(&out, patches);
+		fillComplexPolyTree(&out, patches,false);
 
 		ClipperLib::PolyTree out_;
 		xor2PolyNodes(nodes5, nodes8, out_);
 
-		fillComplexPolyTree(&out_, patches);
+		fillComplexPolyTree(&out_, patches, false);
 	}
 
 	void fillPolyNodeInner(ClipperLib::PolyTree* polyTree, std::vector<Patch*>& patches)

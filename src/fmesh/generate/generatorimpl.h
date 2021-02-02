@@ -67,6 +67,10 @@ namespace fmesh
 		void _buildBottom(ClipperLib::PolyTree& treeBottom, double& hBottom, double offset = 0);
 		void _buildTopBottom(ClipperLib::PolyTree* treeBottom, ClipperLib::PolyTree* treeTop, double offsetB = 0, double offsetT = 0);
 
+		void _buildTopBottom_onepoly(ClipperLib::PolyTree* treeBottom, ClipperLib::PolyTree* treeTop, double offsetB = 0, double offsetT = 0);
+		void _buildTop_onepoly(ClipperLib::PolyTree& treeTop, double& hTop, double offset = 0);
+		void _buildBottom_onepoly(ClipperLib::PolyTree& treeBottom, double& hBottom, double offset = 0);
+
 		void _simplifyPoly(ClipperLib::PolyTree* poly);
 
 		void saveTopBottom(ClipperLib::PolyTree& tree, const std::string& file);

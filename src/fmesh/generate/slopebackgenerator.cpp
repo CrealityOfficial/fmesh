@@ -14,65 +14,59 @@ namespace fmesh
 
 	void SlopebackGenerator::build()
 	{
-		double thickness = m_adParam.extend_width / 2.0;;
-
-		std::vector<ClipperLib::PolyTree> polys(3);
-		offsetAndExtendPolyTree(m_poly, 0.0, thickness, 0, polys.at(0));
-		offsetAndExtendPolyTree(m_poly, 0.0, thickness, m_adParam.shape_bottom_height, polys.at(1));
-		offsetAndExtendPolyTree(m_poly, 0.0, thickness, m_adParam.shape_bottom_height + 1, polys.at(2));
-
-		if (m_adParam.total_height < m_adParam.shape_bottom_height)
-		{
-			offsetAndExtendPolyTree(m_poly, 0.0, thickness, m_adParam.total_height, polys.at(1));
-			_buildFromSamePolyTree(&polys.at(0), &polys.at(1));
-			_fillPolyTree(&polys.at(0));
-			_fillPolyTree(&polys.at(1));
-			return;
-		}
-
-		double slope = (m_adParam.total_height - m_adParam.shape_bottom_height - 1) / (dmax.y - dmin.y);
-		_dealPolyTreeAxisZ(&polys.at(2), -slope, dmin.y,m_adParam.total_height - m_adParam.shape_bottom_height - 1);
-
-		_buildFromSamePolyTree(&polys.at(0), &polys.at(1));
-		_buildFromSamePolyTree(&polys.at(1), &polys.at(2));
-		_fillPolyTree(&polys.front());
-		_fillPolyTree(&polys.back());
+		std::vector<ClipperLib::PolyTree> middlePolys;
+		buildMiddle(middlePolys);
 	}
 
 	void SlopebackGenerator::buildShell()
 	{
-		double thickness = m_adParam.extend_width / 2.0;;
-
-		std::vector<ClipperLib::PolyTree> polys(3);
-		offsetAndExtendPolyTree(m_poly, 0.0, thickness, 0, polys.at(0));
-		offsetAndExtendPolyTree(m_poly, 0.0, thickness, m_adParam.shape_bottom_height, polys.at(1));
-		offsetAndExtendPolyTree(m_poly, 0.0, thickness, m_adParam.shape_bottom_height + 1, polys.at(2));
-
-		if (m_adParam.total_height < m_adParam.shape_bottom_height)
-		{
-			offsetAndExtendPolyTree(m_poly, 0.0, thickness, m_adParam.total_height, polys.at(1));
-			_buildFromSamePolyTree(&polys.at(0), &polys.at(1),3);
-			return;
-		}
-
-		double slope = (m_adParam.total_height - m_adParam.shape_bottom_height - 1) / (dmax.y - dmin.y);
-		_dealPolyTreeAxisZ(&polys.at(2), -slope, dmin.y, m_adParam.total_height - m_adParam.shape_bottom_height - 1);
-
-		_buildFromSamePolyTree(&polys.at(0), &polys.at(1),3);
-		_buildFromSamePolyTree(&polys.at(1), &polys.at(2),3);
+		std::vector<ClipperLib::PolyTree> middlePolys;
+		buildMiddle(middlePolys,true);
 	}
 
 	void SlopebackGenerator::buildBoard(ClipperLib::PolyTree& topTree, ClipperLib::PolyTree& bottomTree)
 	{
-		double thickness = m_adParam.extend_width / 2.0;
-		ClipperLib::PolyTree middlePolys;
-		offsetAndExtendPolyTree(m_poly, 0.0, thickness, 0, middlePolys);
-		bottomTree = middlePolys;
+		std::vector<ClipperLib::PolyTree> middlePolys;
+		buildMiddle(middlePolys);
+		bottomTree = middlePolys.front();
 	}
 
-	void SlopebackGenerator::buildMiddle(std::vector<ClipperLib::PolyTree>& middlePolys)
+	void SlopebackGenerator::buildMiddle(std::vector<ClipperLib::PolyTree>& middlePolys, bool onePoly)
 	{
+		double thickness = m_adParam.extend_width / 2.0;;
 
+		middlePolys.resize(3);
+		offsetAndExtendPolyTree(m_poly, 0.0, thickness, 0, middlePolys.at(0));
+		offsetAndExtendPolyTree(m_poly, 0.0, thickness, m_adParam.shape_bottom_height, middlePolys.at(1));
+		offsetAndExtendPolyTree(m_poly, 0.0, thickness, m_adParam.shape_bottom_height + 1, middlePolys.at(2));
+
+		if (m_adParam.total_height < m_adParam.shape_bottom_height)
+		{
+			offsetAndExtendPolyTree(m_poly, 0.0, thickness, m_adParam.total_height, middlePolys.at(1));
+			if (onePoly)
+				_buildFromSamePolyTree(&middlePolys.at(0), &middlePolys.at(1),3);//outer
+			else
+				_buildFromSamePolyTree(&middlePolys.at(0), &middlePolys.at(1));
+			_fillPolyTree(&middlePolys.at(0));
+			_fillPolyTree(&middlePolys.at(1));
+			return;
+		}
+
+		double slope = (m_adParam.total_height - m_adParam.shape_bottom_height - 1) / (dmax.y - dmin.y);
+		_dealPolyTreeAxisZ(&middlePolys.at(2), -slope, dmin.y, m_adParam.total_height - m_adParam.shape_bottom_height - 1);
+
+		if (onePoly)
+		{
+			_buildFromSamePolyTree(&middlePolys.at(0), &middlePolys.at(1),3);
+			_buildFromSamePolyTree(&middlePolys.at(1), &middlePolys.at(2),3);
+		} 
+		else
+		{
+			_buildFromSamePolyTree(&middlePolys.at(0), &middlePolys.at(1));
+			_buildFromSamePolyTree(&middlePolys.at(1), &middlePolys.at(2));
+			_fillPolyTree(&middlePolys.front());
+			_fillPolyTree(&middlePolys.back());
+		}
 	}
 
 	void SlopebackGenerator::initTestData()

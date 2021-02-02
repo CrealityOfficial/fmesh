@@ -16,7 +16,7 @@ namespace fmesh
 		void buildBoard(ClipperLib::PolyTree& topTree, ClipperLib::PolyTree& bottomTree) override;
 
 	private:
-		void buildMiddle(std::vector<ClipperLib::PolyTree>& middlePolys);
+		void buildMiddle(std::vector<ClipperLib::PolyTree>& middlePolys,bool onePoly=false);
 		void initTestData();
 	};
 }
