@@ -16,83 +16,56 @@ namespace fmesh
 
 	void SharptopGenerator::build()
 	{
-		//test data
-// 		m_adParam.top_type = ADTopType::adtt_step;
-// 		m_adParam.top_height = 1.0;
-// 		m_adParam.shape_top_height = 2.0;
-// 		m_adParam.bottom_type = ADBottomType::adbt_step;
-// 		m_adParam.bottom_height = 1.0;
-// 		m_adParam.shape_bottom_height = 3.0;
-		//
+		std::vector<ClipperLib::PolyTree> middlePolys;
+		buildMiddle(middlePolys);
 
-// 		double x = dmax.x - dmin.x;
-// 		double y = dmax.y - dmin.y;
-// 		double distance = x * y/10000 ? x * y / 10000 :1.415;
-
-		double thickness = m_adParam.extend_width / 2.0;
-		double bottomHeight = m_adParam.total_height - m_adParam.shape_top_height;
-
-		//bottom
-		std::vector<ClipperLib::PolyTree> bottomPolys(1);
-		offsetAndExtendPolyTree(m_poly, 0.0, thickness, bottomHeight, bottomPolys.at(0));
-
-// 		polyNodeFunc func = [&distance](ClipperLib::PolyNode* node) {
-// 			ClipperLib::CleanPolygon(node->Contour, distance);
-// 		};
-// 		mmesh::loopPolyTree(func, &bottomPolys.back());
-
-		_simplifyPoly(&bottomPolys.back());
-
-		std::vector<Patch*> patches;
-		skeletonPolyTreeSharp(bottomPolys.back(), bottomHeight, m_adParam.shape_top_height, patches);
-		addPatches(patches);
-
-		_fillPolyTree(&bottomPolys.front(), true);
-		_buildFromSamePolyTree(&bottomPolys.front(), &bottomPolys.back());
-
-// 		ClipperLib::PolyTree treeBottom;
-// 		double hBottom;
-// 		_buildBottom(treeBottom, hBottom);
-// 		_buildFromSamePolyTree(&treeBottom, &bottomPolys.front());
-
-		_buildTopBottom(&bottomPolys.front(), nullptr);
+		_buildTopBottom(&middlePolys.front(), nullptr);
 	}
 
 	void SharptopGenerator::buildShell()
 	{
-		//test data
-// 		m_adParam.top_type = ADTopType::adtt_step;
-// 		m_adParam.top_height = 1.0;
-// 		m_adParam.shape_top_height = 2.0;
-// 		m_adParam.bottom_type = ADBottomType::adbt_step;
-// 		m_adParam.bottom_height = 1.0;
-// 		m_adParam.shape_bottom_height = 3.0;
-		//
+		std::vector<ClipperLib::PolyTree> middlePolys;
+		buildMiddle(middlePolys);
 
-// 		double x = dmax.x - dmin.x;
-// 		double y = dmax.y - dmin.y;
-// 		double distance = x * y/10000 ? x * y / 10000 :1.415;
+		m_adParam.bottom_type = ADBottomType::adbt_none;
+		m_adParam.top_type = ADTopType::adtt_none;
+		_buildTopBottom(&middlePolys.front(), nullptr);
+	}
+
+	void SharptopGenerator::buildBoard(ClipperLib::PolyTree& topTree, ClipperLib::PolyTree& bottomTree)
+	{
+		std::vector<ClipperLib::PolyTree> middlePolys;
+		buildMiddle(middlePolys);
+
+		//topTree = middlePolys.back();
+		bottomTree = middlePolys.front();
+	}
+
+	void SharptopGenerator::buildMiddle(std::vector<ClipperLib::PolyTree>& middlePolys)
+	{
 
 		double thickness = m_adParam.extend_width / 2.0;
 		double bottomHeight = m_adParam.total_height - m_adParam.shape_top_height;
 
 		//bottom
-		std::vector<ClipperLib::PolyTree> bottomPolys(1);
-		offsetAndExtendPolyTree(m_poly, 0.0, thickness, bottomHeight, bottomPolys.at(0));
+		middlePolys.resize(1);
+		offsetAndExtendPolyTree(m_poly, 0.0, thickness, bottomHeight, middlePolys.at(0));
 
-		// 		polyNodeFunc func = [&distance](ClipperLib::PolyNode* node) {
-		// 			ClipperLib::CleanPolygon(node->Contour, distance);
-		// 		};
-		// 		mmesh::loopPolyTree(func, &bottomPolys.back());
-
-		_simplifyPoly(&bottomPolys.back());
+		_simplifyPoly(&middlePolys.back());
 
 		std::vector<Patch*> patches;
-		skeletonPolyTreeSharp(bottomPolys.back(), bottomHeight, m_adParam.shape_top_height, patches,true);
+		skeletonPolyTreeSharp(middlePolys.back(), bottomHeight, m_adParam.shape_top_height, patches);
 		addPatches(patches);
+	}
 
-		//_fillPolyTree(&bottomPolys.front(), true);
-		_buildFromSamePolyTree(&bottomPolys.front(), &bottomPolys.back(),3);
+	void SharptopGenerator::initTestData()
+	{
+		m_adParam.top_type = ADTopType::adtt_step;
+		m_adParam.top_height = 1.0;
+		m_adParam.shape_top_height = 2.0;
+		m_adParam.bottom_type = ADBottomType::adbt_step;
+		m_adParam.bottom_height = 1.0;
+		m_adParam.shape_bottom_height = 3.0;
 	}
 
 }
