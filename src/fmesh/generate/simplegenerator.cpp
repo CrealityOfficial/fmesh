@@ -38,7 +38,10 @@ namespace fmesh
 	void SimpleGenerator::buildBoard(ClipperLib::PolyTree& topTree, ClipperLib::PolyTree& bottomTree)
 	{
 		double hTop, hBottom;
+
 		_buildTop(topTree, hTop);
 		_buildBottom(bottomTree, hBottom);
+		_buildBoardPoly(&topTree);
+		_buildBoardPoly(&bottomTree);
 	}
 }

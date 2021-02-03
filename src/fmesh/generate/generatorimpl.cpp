@@ -687,6 +687,17 @@ namespace fmesh
 		}
 	}
 
+	void GeneratorImpl::_buildBoardPoly(ClipperLib::PolyTree* tree)
+	{
+		auto f = [](ClipperLib::PolyNode* node) {
+			int depth = testPolyNodeDepth(node);
+			if (depth != 1 && depth != 4 && depth != 5 && depth != 8)
+				node->Contour.clear();
+		};
+
+		mmesh::loopPolyTree(f, tree);
+	}
+
 	void GeneratorImpl::_simplifyPoly(ClipperLib::PolyTree* poly)
 	{
 		double x = dmax.x - dmin.x;

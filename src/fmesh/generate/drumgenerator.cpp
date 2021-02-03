@@ -34,6 +34,7 @@ namespace fmesh
 		std::vector<ClipperLib::PolyTree> middlePolys;
 		buildMiddle(middlePolys);
 		bottomTree = middlePolys.front();
+		_buildBoardPoly(&bottomTree);
 	}
 
 	void DrumGenerator::buildMiddle(std::vector<ClipperLib::PolyTree>& middlePolys,bool onePloy)
