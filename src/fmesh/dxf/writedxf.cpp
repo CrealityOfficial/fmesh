@@ -46,14 +46,12 @@ namespace cdrdxf
 		dw->sectionTables();
 		// VPORT:
 		dxf.writeVPort(*dw);
-
 		// LTYPE:
 		dw->tableLinetypes(1);
 		dxf.writeLinetype(*dw, DL_LinetypeData("CONTINUOUS", "Continuous", 0, 0, 0.0));
 		dxf.writeLinetype(*dw, DL_LinetypeData("BYLAYER", "", 0, 0, 0.0));
 		dxf.writeLinetype(*dw, DL_LinetypeData("BYBLOCK", "", 0, 0, 0.0));
 		dw->tableEnd();
-
 		// LAYER:
 		dw->tableLayers(paths.size());
 		for (size_t i = 0; i < paths.size(); i++)
@@ -65,40 +63,46 @@ namespace cdrdxf
 				DL_Attributes("", 1, 0x00ff0000, 15, "CONTINUOUS")
 			);
 		}
-
 		dw->tableEnd();
 		dxf.writeBlockRecord(*dw);
 		dw->tableEnd();
 		dw->sectionEnd();
 		// BLOCK:
 		dw->sectionBlocks();
-
 		// LINE:
 		for (size_t i = 0; i < paths.size(); i++)
 		{
-			if (!paths.at(i)->size())
+			ClipperLib::Path* &path = paths.at(i);
+			if (!path->size())
 				continue;
-
 			std::string str = std::to_string(i);
 			dxf.writeBlock(*dw, DL_BlockData(str, 0, 0.0, 0.0, 0.0));
 			DL_Attributes attributes(str, 256, -1, -1, "BYLAYER");
 			dw->sectionEnd();
-
 			// ENTITIES:
 			dw->sectionEntities();
-			for (size_t j = 0; j < paths.at(i)->size() - 1; j++)
+			for (size_t j = 0; j < path->size() - 1; j++)
 			{
-				DL_LineData lineData(paths.at(i)->at(j).X /1000.f, paths.at(i)->at(j).Y /1000.f, 0, paths.at(i)->at(j + 1).X /1000.f, paths.at(i)->at(j + 1).Y / 1000.f, 0);
+				DL_LineData lineData(INT2MM(path->at(j).X), 
+					INT2MM(path->at(j).Y ), 
+					0, 
+					INT2MM(path->at(j + 1).X), 
+					INT2MM(path->at(j + 1).Y), 
+					0);
 				dxf.writeLine(*dw, lineData, attributes);
 			}
-			if (paths.at(i)->size() > 0)
+			if (path->size() > 0)
 			{
-				DL_LineData lineData(paths.at(i)->at(paths.at(i)->size() - 1).X / 1000.f, paths.at(i)->at(paths.at(i)->size() - 1).Y / 1000.f, 0, paths.at(i)->at(0).X / 1000.f, paths.at(i)->at(0).Y / 1000.f, 0);
+				DL_LineData lineData(INT2MM(path->at(path->size() - 1).X ), 
+					INT2MM(path->at(path->size() - 1).Y), 
+					0, 
+					INT2MM(path->at(0).X), 
+					INT2MM(path->at(0).Y), 
+					0);
 				dxf.writeLine(*dw, lineData, attributes);
 			}
 			dxf.writeEndBlock(*dw, str);
 		}
-
 		dw->sectionEnd();
 		dw->dxfEOF();
 		dw->close();
