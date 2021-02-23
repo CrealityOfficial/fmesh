@@ -27,9 +27,9 @@ namespace fmesh
 	void SlopebackGenerator::buildBoard(ClipperLib::PolyTree& topTree, ClipperLib::PolyTree& bottomTree)
 	{
 		std::vector<ClipperLib::PolyTree> middlePolys;
-		buildMiddle(middlePolys);
+		buildMiddle(middlePolys, true);
 		bottomTree = middlePolys.front();
-		_buildBoardPoly(&bottomTree);
+		//_buildBoardPoly(&bottomTree);
 	}
 
 	void SlopebackGenerator::buildMiddle(std::vector<ClipperLib::PolyTree>& middlePolys, bool onePoly)

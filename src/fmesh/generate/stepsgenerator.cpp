@@ -30,12 +30,12 @@ namespace fmesh
 	void StepsGenerator::buildBoard(ClipperLib::PolyTree& topTree, ClipperLib::PolyTree& bottomTree)
 	{
 		std::vector<ClipperLib::PolyTree> middlePolys;
-		buildMiddle(middlePolys);
+		buildMiddle(middlePolys, true);
 
 		topTree = middlePolys.back();
 		bottomTree = middlePolys.front();
-		_buildBoardPoly(&topTree);
-		_buildBoardPoly(&bottomTree);
+		//_buildBoardPoly(&topTree);
+		//_buildBoardPoly(&bottomTree);
 	}
 
 	void StepsGenerator::buildMiddle(std::vector<ClipperLib::PolyTree>& middlePolys, bool onePoly)

@@ -40,12 +40,12 @@ namespace fmesh
 	{
 		double middleoffset = 0;
 		std::vector<ClipperLib::PolyTree> middlePolys;
-		buildMiddle(middlePolys, middleoffset);
+		buildMiddle(middlePolys, middleoffset, true);
 
 		topTree = middlePolys.back();
 		bottomTree = middlePolys.front();
-		_buildBoardPoly(&topTree);
-		_buildBoardPoly(&bottomTree);
+		//_buildBoardPoly(&topTree);
+		//_buildBoardPoly(&bottomTree);
 	}
 
 	void ReItalicsGenerator::buildMiddle(std::vector<ClipperLib::PolyTree>& middlePolys, double& middleoffset,bool onePoly)

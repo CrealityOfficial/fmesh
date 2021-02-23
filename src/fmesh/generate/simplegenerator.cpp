@@ -39,9 +39,9 @@ namespace fmesh
 	{
 		double hTop, hBottom;
 
-		_buildTop(topTree, hTop);
-		_buildBottom(bottomTree, hBottom);
-		_buildBoardPoly(&topTree);
-		_buildBoardPoly(&bottomTree);
+		_buildTop_onepoly(topTree, hTop);
+		_buildBottom_onepoly(bottomTree, hBottom);
+// 		_buildBoardPoly(&topTree);
+// 		_buildBoardPoly(&bottomTree);
 	}
 }
