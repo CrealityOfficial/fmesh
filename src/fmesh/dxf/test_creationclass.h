@@ -65,6 +65,15 @@ public:
 	//Block תpaths
     void myblock2Paths(ClipperLib::Paths* paths);
 
+    void myblock2MultiPaths(std::vector<ClipperLib::Paths*>& vctPaths);
+
+private:
+    void dealLine(vector<DXFLine>& lines, ClipperLib::Paths* paths);
+    void dealCircle(vector<DXFCircle>& circles, ClipperLib::Paths* paths);
+    void dealEllipse(vector<DXFEllipse>& ellipses, ClipperLib::Paths* paths);
+    void dealPolylineentities(vector<DXFPolyLineEntities>& polylineentitiess, ClipperLib::Paths* paths);
+    void dealArc(vector<DXFArc>& arcs, ClipperLib::Paths* paths);
+    void dealSplines(vector<cdrdxf::DXFSpline>& spliness, ClipperLib::Paths* paths);
 protected:
     cdrdxf::DXFSpline* m_currentSpline;
 };

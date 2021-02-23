@@ -36,22 +36,38 @@ namespace cdrdxf
 		return paths;
 	}
 
-	ClipperLib::Paths* loadSplineFromDXFFile(const char* fileName)
+	//ClipperLib::Paths* loadSplineFromDXFFile(const char* fileName)
+	//{
+	//	std::unique_ptr<Test_CreationClass> creation(_loadDXF(fileName));
+	//	ClipperLib::Paths* paths = nullptr;
+	//	if (creation.get())
+	//	{
+	//		std::vector<DXFSpline*> splines = creation->splines();
+	//		size_t size = splines.size();
+	//		if (size > 0)
+	//		{
+	//			paths = new ClipperLib::Paths(size);
+	//			for (size_t i = 0; i < size; ++i)
+	//				convert(splines.at(i), &paths->at(i));
+	//		}
+	//	}
+
+	//	return paths;
+	//}
+
+	std::vector<ClipperLib::Paths*> loadMultiDXFFile(const char* fileName)
 	{
-		std::unique_ptr<Test_CreationClass> creation(_loadDXF(fileName));
-		ClipperLib::Paths* paths = nullptr;
-		if (creation.get())
+		std::vector<ClipperLib::Paths*> tmp;
+
+		Test_CreationClass* creationClass = new Test_CreationClass();
+		std::unique_ptr<DL_Dxf> dxf(new DL_Dxf());
+		if (!dxf->in(fileName, creationClass))// if file open failed
 		{
-			std::vector<DXFSpline*> splines = creation->splines();
-			size_t size = splines.size();
-			if (size > 0)
-			{
-				paths = new ClipperLib::Paths(size);
-				for (size_t i = 0; i < size; ++i)
-					convert(splines.at(i), &paths->at(i));
-			}
+			std::cerr << fileName << "DXF could not be opened.\n";
+			return tmp;
 		}
 
-		return paths;
+		creationClass->myblock2MultiPaths(tmp);
+		return tmp;
 	}
 }

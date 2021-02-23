@@ -29,6 +29,7 @@ namespace fmesh
 		std::vector<ClipperLib::PolyTree> middlePolys;
 		buildMiddle(middlePolys);
 		bottomTree = middlePolys.front();
+		_buildBoardPoly(&bottomTree);
 	}
 
 	void SlopeGenerator::buildMiddle(std::vector<ClipperLib::PolyTree>& middlePolys, bool onePoly)
