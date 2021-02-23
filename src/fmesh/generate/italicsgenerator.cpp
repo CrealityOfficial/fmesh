@@ -49,7 +49,7 @@ namespace fmesh
 
 	void ItalicsGenerator::buildMiddle(std::vector<ClipperLib::PolyTree>& middlePolys, double& middleoffset, bool onePoly)
 	{
-		//initTestData()
+		//initTestData();
 
 		//init
 		float btoomStepHeight = m_adParam.shape_bottom_height;
@@ -77,12 +77,20 @@ namespace fmesh
 		middlePolys.resize(count + 1);
 		for (int i = 0; i <= count; ++i)
 		{
-			fmesh::offsetAndExtendPolyTree(m_poly, -(float)i * offset, thickness, bottomHeight + (float)i * h, middlePolys.at(i));
+			if (onePoly)
+			{
+				offsetPolyTree(m_poly, -(float)i * offset, middlePolys.at(i));
+				setPolyTreeZ(middlePolys.at(i), bottomHeight + (float)i * h);	
+			} 
+			else
+			{
+				fmesh::offsetAndExtendPolyTree(m_poly, -(float)i * offset, thickness, bottomHeight + (float)i * h, middlePolys.at(i));
+			}
 		}
 		for (int i = 0; i < count; ++i)
 		{
 			if (onePoly)
-				_buildFromDiffPolyTree_all(&middlePolys.at(i), &middlePolys.at(i + 1), thickness / 2.0f,3);//outer
+				_buildFromDiffPolyTree_onePoly(&middlePolys.at(i), &middlePolys.at(i + 1));//outer
 			else
 				_buildFromDiffPolyTree_all(&middlePolys.at(i), &middlePolys.at(i + 1), thickness / 2.0f);		
 		}
@@ -99,6 +107,7 @@ namespace fmesh
 		m_adParam.bottom_height = 1.0;
 		m_adParam.bottom_extend_width = 0.5;
 		m_adParam.shape_bottom_height = 3.0;
+		m_adParam.total_height = 15;
 	}
 
 }

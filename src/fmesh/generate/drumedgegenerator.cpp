@@ -34,7 +34,7 @@ namespace fmesh
 		bottomTree = middlePolys.front();
 	}
 
-	void DrumedgeGenerator::buildMiddle(std::vector<ClipperLib::PolyTree>& middlePolys, bool onePoly)
+	void DrumedgeGenerator::buildMiddle(std::vector<ClipperLib::PolyTree>& middlePolys, bool onePloy)
 	{
 		//initTestData()
 
@@ -67,17 +67,29 @@ namespace fmesh
 		{
 			float delta = shape_bottom_height + i * drumDelta;
 			float _offset = shape_middle_width * sin((offset * i) > 0 ? offset * i : 0);
-			offsetAndExtendPolyTree(m_poly, _offset / 2, thickness, delta, middlePolys.at(i));
-			_simplifyPoly(&middlePolys.at(i));
+			if (onePloy)
+			{
+				offsetPolyTree(m_poly, _offset / 2, middlePolys.at(i));
+				setPolyTreeZ(middlePolys.at(i), delta);
+			} 
+			else
+			{
+				offsetAndExtendPolyTree(m_poly, _offset / 2, thickness, delta, middlePolys.at(i));
+				_simplifyPoly(&middlePolys.at(i));
+			}
 			offs.at(i) = _offset;
 		}
 
 		for (size_t i = 0; i < drumHCount; i++)
 		{
-			if (onePoly)
-				_buildFromDiffPolyTree_diffSafty(&middlePolys.at(i), &middlePolys.at(i + 1),1.0,3);//outer
+			if (onePloy)
+			{
+				_buildFromDiffPolyTree_onePoly(&middlePolys.at(i), &middlePolys.at(i + 1));
+			}
 			else
+			{
 				_buildFromDiffPolyTree_diffSafty(&middlePolys.at(i), &middlePolys.at(i + 1));
+			}
 		}
 	}
 

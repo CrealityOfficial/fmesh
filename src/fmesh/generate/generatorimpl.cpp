@@ -324,6 +324,22 @@ namespace fmesh
 		}
 	}
 
+	void GeneratorImpl::_buildFromDiffPolyTree_onePoly(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp, double delta /*= 1.0*/, int flag /*= 0*/, bool invert /*= false*/)
+	{
+		ClipperLib::PolyTree out;
+		//fmesh::xor2PolyTrees(treeUp, treeLower, out, flag);
+		std::vector<Patch*> patches;
+		buildFromDiffPolyTree_SameAndDiffSafty(treeLower, treeUp, patches, flag, out, delta);
+		if (patches.size())
+			addPatches(patches);
+		if (out.ChildCount() > 0)
+		{
+			std::vector<Patch*> patches;
+			fillComplexPolyTree_onePloy(&out, patches, invert);
+			addPatches(patches);
+		}
+	}
+
 	void GeneratorImpl::_fillPolyTreeReverseInner(ClipperLib::PolyTree* tree, bool invert /*= false*/)
 	{
 		std::vector<Patch*> patches;
@@ -530,12 +546,12 @@ namespace fmesh
 		if (treeBottom != nullptr)
 		{
 			_buildBottom_onepoly(_treeBottom, hBottom, offsetB);
-			_buildFromDiffPolyTree(&_treeBottom, treeBottom,3);
+			_buildFromDiffPolyTree(&_treeBottom, treeBottom);
 		}
 		if (treeTop != nullptr)
 		{
 			_buildTop_onepoly(_treeTop, hTop, offsetT);
-			_buildFromDiffPolyTree(treeTop, &_treeTop,3);
+			_buildFromDiffPolyTree(treeTop, &_treeTop);
 		}
 	}
 
@@ -543,7 +559,7 @@ namespace fmesh
 	{
 		hTop = m_adParam.total_height;
 		double thickness = m_adParam.extend_width / 2.0f;
-
+		thickness = 0.0;
 // 		if (m_adParam.top_type == ADTopType::adtt_close
 // 			|| m_adParam.top_type == ADTopType::adtt_round)
 // 			hTop -= m_adParam.top_height;
@@ -552,7 +568,9 @@ namespace fmesh
 		if (m_adParam.top_type == ADTopType::adtt_close)
 			hTop -= m_adParam.top_height;
 
-		offsetAndExtendPolyTree(m_poly, offset, thickness, hTop, treeTop);
+		//offsetAndExtendPolyTree(m_poly, offset, thickness, hTop, treeTop);
+		copy2PolyTree(m_poly, treeTop);
+		setPolyTreeZ(treeTop, hTop);
 
 		if (m_adParam.top_type == ADTopType::adtt_none)
 			;//_fillPolyTree(&treeTop);
@@ -616,7 +634,9 @@ namespace fmesh
 		if (m_adParam.bottom_type == ADBottomType::adbt_close)
 			hBottom += m_adParam.bottom_height;
 
-		offsetAndExtendPolyTree(m_poly, offset, thickness, hBottom, treeBottom);
+		//offsetAndExtendPolyTree(m_poly, offset, thickness, hBottom, treeBottom);
+		copy2PolyTree(m_poly, treeBottom);
+		setPolyTreeZ(treeBottom, hBottom);
 
 		if (m_adParam.bottom_type == ADBottomType::adbt_none)
 			;//_fillPolyTree(&treeBottom, true);
