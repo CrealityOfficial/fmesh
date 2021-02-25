@@ -33,7 +33,7 @@ namespace fmesh
 	{
 		std::vector<ClipperLib::PolyTree> middlePolys;
 		buildMiddle(middlePolys, true);
-		bottomTree = middlePolys.front();
+		copy2PolyTree(middlePolys.front(), bottomTree);
 		//_buildBoardPoly(&bottomTree);
 	}
 

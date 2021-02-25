@@ -42,11 +42,8 @@ namespace fmesh
 		double middleoffset = 0;
 		std::vector<ClipperLib::PolyTree> middlePolys;
 		buildMiddle(middlePolys, middleoffset, true);
-
-		topTree = middlePolys.back();
-		bottomTree = middlePolys.front();
-		//_buildBoardPoly(&topTree);
-		//_buildBoardPoly(&bottomTree);
+		copy2PolyTree(middlePolys.back(), topTree);
+		copy2PolyTree(middlePolys.front(), bottomTree);
 	}
 
 	void ItalicsGenerator::buildMiddle(std::vector<ClipperLib::PolyTree>& middlePolys, double& middleoffset, bool onePoly)

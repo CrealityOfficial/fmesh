@@ -31,11 +31,8 @@ namespace fmesh
 	{
 		std::vector<ClipperLib::PolyTree> middlePolys;
 		buildMiddle(middlePolys, true);
-
-		topTree = middlePolys.back();
-		bottomTree = middlePolys.front();
-		//_buildBoardPoly(&topTree);
-		//_buildBoardPoly(&bottomTree);
+		copy2PolyTree(middlePolys.back(), topTree);
+		copy2PolyTree(middlePolys.front(), bottomTree);
 	}
 
 	void StepsGenerator::buildMiddle(std::vector<ClipperLib::PolyTree>& middlePolys, bool onePoly)

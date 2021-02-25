@@ -32,10 +32,7 @@ namespace fmesh
 	{
 		std::vector<ClipperLib::PolyTree> middlePolys;
 		buildMiddle(middlePolys, true);
-
-		//topTree = middlePolys.back();
-		bottomTree = middlePolys.front();
-		//_buildBoardPoly(&bottomTree);
+		copy2PolyTree(middlePolys.front(), bottomTree);
 	}
 
 	void SharptopGenerator::buildMiddle(std::vector<ClipperLib::PolyTree>& middlePolys, bool onePoly)
