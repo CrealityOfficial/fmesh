@@ -78,7 +78,7 @@ namespace fmesh
 
 		void saveTopBottom(ClipperLib::PolyTree& tree, const std::string& file);
 
-
+		void areaPoly(ClipperLib::PolyTree& poly, std::vector<double>& area);
 	protected:
 		ClipperLib::Paths* m_paths;
 		ClipperLib::PolyTree m_poly;
