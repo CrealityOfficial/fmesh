@@ -732,4 +732,22 @@ namespace fmesh
 // 			}		
 // 		ClipperLib::save(paths, "F:/test.stl");
 	}
+
+	void GeneratorImpl::areaPoly(ClipperLib::PolyTree& poly, std::vector<double>& area)
+	{
+		double _area = 0.0;
+		polyNodeFunc func1 = [&func1, &_area](ClipperLib::PolyNode* node) {
+			_area += ClipperLib::Area(node->Contour);
+
+			for (ClipperLib::PolyNode* n : node->Childs)
+				func1(n);
+		};
+
+		for (ClipperLib::PolyNode* n : poly.Childs)
+		{
+			_area = 0.0;
+			func1(n);
+			area.push_back(_area/1000000.f);
+		}
+	}
 }

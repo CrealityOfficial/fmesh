@@ -41,6 +41,9 @@ namespace fmesh
 
 		_buildTop_onepoly(topTree, hTop);
 		_buildBottom_onepoly(bottomTree, hBottom);
+
+// 		std::vector<double> area;
+// 		areaPoly(topTree, area);
 // 		_buildBoardPoly(&topTree);
 // 		_buildBoardPoly(&bottomTree);
 	}
