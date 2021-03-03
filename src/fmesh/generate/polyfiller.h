@@ -15,6 +15,7 @@ namespace fmesh
 	FMESH_API void fillFirstLevelPolyNode(ClipperLib::PolyTree* polyTree, std::vector<Patch*>& patches);
 	FMESH_API void fillPolyNodeInner(ClipperLib::PolyTree* polyTree, std::vector<Patch*>& patches);
 	FMESH_API void fillPolyTreeDepth14(ClipperLib::PolyTree* polyTree, std::vector<Patch*>& patches);
+	FMESH_API void fillPolyTreeDepthOnePoly(ClipperLib::PolyTree* polyTree, std::vector<Patch*>& patches);
 
 	FMESH_API void fillPolyNodeOutline(ClipperLib::PolyTree* polyTree1, std::vector<Patch*>& patches);
 
