@@ -41,6 +41,8 @@ namespace cdrdxf
 	{
 		DL_Dxf dxf;
 		DL_WriterA* dw = dxf.out(file.c_str(), DL_Codes::AC1015);
+		if (dw->openFailed())
+			return;
 		// section header:
 		dxf.writeHeader(*dw);
 		dw->sectionEnd();
