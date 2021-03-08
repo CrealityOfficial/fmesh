@@ -13,6 +13,7 @@ namespace fmesh
 		, font(nullptr)
 	{
 		library = new FontLibrary();
+		m_searchDirs.push_back("");
 	}
 
 	FontOutlineCenter::~FontOutlineCenter()
@@ -20,7 +21,7 @@ namespace fmesh
 		delete library;
 	}
 
-	void FontOutlineCenter::load(const std::string& name)
+	bool FontOutlineCenter::load(const std::string& name)
 	{
 		Font* f = nullptr;
 		for (const std::string& dir : m_searchDirs)
@@ -43,6 +44,27 @@ namespace fmesh
 			std::cout << "load font " << name << " error . try load without .ttf" << std::endl;
 		}
 
+		if (f) font = f;
+
+		return f != nullptr;
+	}
+
+	bool FontOutlineCenter::loadAbs(const std::string& name)
+	{
+		Font* f = library->font(name.c_str());
+		if (!f)
+		{
+			std::cout << "load font " << name << " error . try load without .ttf" << std::endl;
+		}
+
+		if (f) font = f;
+
+		return f != nullptr;
+	}
+
+	void FontOutlineCenter::setCurrent(const std::string& name)
+	{
+		Font* f = library->font(name.c_str());
 		if (f) font = f;
 	}
 
