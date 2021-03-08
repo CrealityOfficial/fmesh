@@ -721,18 +721,56 @@ namespace fmesh
 		}
 		else if (m_adParam.bottom_type == ADBottomType::adbt_extend_inner)
 		{
-			std::vector<ClipperLib::PolyTree> polys(1);
-			offsetPolyTree(m_poly, -m_adParam.bottom_extend_width / 2, polys.at(0));
-			setPolyTreeZ(polys.at(0), 0.0);
-			_buildFromDiffPolyTree_xor(&treeBottom, &polys.at(0));
+			int count = m_adParam.extend_width > 0 ? (0.5 + 1.0 * m_adParam.bottom_extend_width / m_adParam.extend_width) : 1;
+			std::vector<ClipperLib::PolyTree> polysTop(count);
+			std::vector<ClipperLib::PolyTree> polysBom(count);
+			for (size_t i = 0; i < count; i++)
+			{
+				float offset = m_adParam.extend_width * (i + 1);
+				if (i%2>0)
+				{
+					offset = m_adParam.extend_width * i + m_adParam.extend_width/2.0;
+				}
+				offsetPolyTree(m_poly, -offset, polysTop.at(i));
+				setPolyTreeZ(polysTop.at(i), 0.2);
+
+				offsetPolyTree(m_poly, -offset, polysBom.at(i));
+				setPolyTreeZ(polysBom.at(i), 0.0);
+
+				if (i % 2 == 0)
+					_buildFromSamePolyTree(&polysTop.at(i), &polysBom.at(i));
+				else
+					_buildFromSamePolyTree(&polysBom.at(i), &polysTop.at(i));
+			}
 
 		}
 		else if (m_adParam.bottom_type == ADBottomType::adbt_extend_outter)
 		{
-			std::vector<ClipperLib::PolyTree> polys(1);
-			offsetPolyTree(m_poly, m_adParam.bottom_extend_width / 2, polys.at(0));
-			setPolyTreeZ(polys.at(0), 0.0);
-			_buildFromDiffPolyTree_xor(&polys.at(0), &treeBottom, 1.0, 0, true);
+			int count = m_adParam.extend_width > 0 ? (0.5 + 1.0 * m_adParam.bottom_extend_width / m_adParam.extend_width) : 1;
+			std::vector<ClipperLib::PolyTree> polysTop(count);
+			std::vector<ClipperLib::PolyTree> polysBom(count);
+			for (size_t i = 0; i < count; i++)
+			{
+				float offset = m_adParam.extend_width * (i + 1);
+				if (i%2==0 )
+				{
+					offset= m_adParam.extend_width * (i)+m_adParam.extend_width/2.0;
+				}
+				offsetPolyTree(m_poly, offset, polysTop.at(i));
+				setPolyTreeZ(polysTop.at(i), 0.2);
+
+				offsetPolyTree(m_poly, offset, polysBom.at(i));
+				setPolyTreeZ(polysBom.at(i), 0.0);
+				if (i%2==0)
+				{
+					_buildFromSamePolyTree(&polysTop.at(i), &polysBom.at(i));
+				} 
+				else
+				{
+					_buildFromSamePolyTree(&polysBom.at(i), &polysTop.at(i));
+				}
+
+			}
 		}
 
 		if (m_bottomTree)
