@@ -724,13 +724,16 @@ namespace fmesh
 			int count = m_adParam.extend_width > 0 ? (0.5 + 1.0 * m_adParam.bottom_extend_width / m_adParam.extend_width) : 1;
 			std::vector<ClipperLib::PolyTree> polysTop(count);
 			std::vector<ClipperLib::PolyTree> polysBom(count);
+			float offset = 0.0;
 			for (size_t i = 0; i < count; i++)
-			{
-				float offset = m_adParam.extend_width * (i + 1);
-				if (i%2>0)
+			{		
+				if (i % 2 > 0)
 				{
-					offset = m_adParam.extend_width * i + m_adParam.extend_width/2.0;
+					offset += m_adParam.extend_width / 2.0;
 				}
+				else
+					offset += m_adParam.extend_width;
+
 				offsetPolyTree(m_poly, -offset, polysTop.at(i));
 				setPolyTreeZ(polysTop.at(i), 0.2);
 
@@ -749,13 +752,16 @@ namespace fmesh
 			int count = m_adParam.extend_width > 0 ? (0.5 + 1.0 * m_adParam.bottom_extend_width / m_adParam.extend_width) : 1;
 			std::vector<ClipperLib::PolyTree> polysTop(count);
 			std::vector<ClipperLib::PolyTree> polysBom(count);
+			float offset = 0.0;
 			for (size_t i = 0; i < count; i++)
-			{
-				float offset = m_adParam.extend_width * (i + 1);
-				if (i%2==0 )
+			{		
+				if (i % 2)
 				{
-					offset= m_adParam.extend_width * (i)+m_adParam.extend_width/2.0;
+					offset += m_adParam.extend_width /2.0;
 				}
+				else
+					offset += m_adParam.extend_width;
+
 				offsetPolyTree(m_poly, offset, polysTop.at(i));
 				setPolyTreeZ(polysTop.at(i), 0.2);
 
