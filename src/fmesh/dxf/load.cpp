@@ -54,4 +54,20 @@ namespace cdrdxf
 
 		return paths;
 	}
+
+	std::vector<ClipperLib::Paths*> loadMultiDXFFile(const char* fileName)
+	{
+		std::vector<ClipperLib::Paths*> tmp;
+
+		Test_CreationClass* creationClass = new Test_CreationClass();
+		std::unique_ptr<DL_Dxf> dxf(new DL_Dxf());
+		if (!dxf->in(fileName, creationClass))// if file open failed
+		{
+			std::cerr << fileName << "DXF could not be opened.\n";
+			return tmp;
+		}
+
+		creationClass->myblock2MultiPaths(tmp);
+		return tmp;
+	}
 }

@@ -1,5 +1,6 @@
 #ifndef FMESH_CONTOUR_1603287200866_H
 #define FMESH_CONTOUR_1603287200866_H
+#include "fmesh/common/export.h"
 #include <clipper/clipper.hpp>
 
 namespace fmesh
@@ -16,7 +17,7 @@ namespace fmesh
 	ClipperLib::PolyTree* offsetPolyTree(ClipperLib::PolyTree* poly, float delta);
 
 	void savePolyTree(ClipperLib::PolyTree* poly, const char* fileName);
-	ClipperLib::PolyTree* loadPolyTree(const char* fileName);
+	FMESH_API ClipperLib::PolyTree* loadPolyTree(const char* fileName);
 
 	ClipperLib::PolyTree* offsetAndExtend(ClipperLib::PolyTree* poly, double offset, double extend);
 }

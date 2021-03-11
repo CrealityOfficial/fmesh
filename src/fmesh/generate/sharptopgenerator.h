@@ -11,6 +11,13 @@ namespace fmesh
 		virtual ~SharptopGenerator();
 
 		void build() override;
+
+		void buildShell() override;
+		void buildBoard(ClipperLib::PolyTree& topTree, ClipperLib::PolyTree& bottomTree) override;
+
+	private:
+		void buildMiddle(std::vector<ClipperLib::PolyTree>& middlePolys,bool onePoly=false);
+		void initTestData();
 	};
 }
 

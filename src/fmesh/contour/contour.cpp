@@ -151,15 +151,56 @@ namespace fmesh
 		std::fstream out(fileName, std::ios::binary | std::ios::out);
 		if (out.is_open())
 		{
+			polyNodeFunc func = [&out, &func](ClipperLib::PolyNode* node) {
+				int size = (int)node->Contour.size();
+				out.write((const char*)&size, sizeof(int));
+				for (ClipperLib::IntPoint& point : node->Contour)
+					out.write((const char*)(&point), sizeof(ClipperLib::IntPoint));
 
+				for (ClipperLib::PolyNode* n : node->Childs)
+					func(n);
+			};
+
+			func(poly);
 		}
-
 		out.close();
 	}
 
 	ClipperLib::PolyTree* loadPolyTree(const char* fileName)
 	{
-		return nullptr;
+		ClipperLib::PolyTree* tree = nullptr;
+		std::fstream in(fileName, std::ios::binary | std::ios::in);
+		if (in.is_open())
+		{
+			ClipperLib::Clipper clipper;
+			tree = new ClipperLib::PolyTree();
+			while (!in.eof() && in.good())
+			{
+				int size = 0;
+				in.read((char*)&size, sizeof(int));
+				if (size > 0)
+				{
+					ClipperLib::Path path;
+					for (int i = 0; i < size; ++i)
+					{
+						ClipperLib::IntPoint point;
+						in.read((char*)(&point), sizeof(ClipperLib::IntPoint));
+						path.push_back(point);
+					}
+
+					clipper.AddPath(path, ClipperLib::ptClip, true);
+				}
+			}
+
+			if (!clipper.Execute(ClipperLib::ctUnion, *tree, ClipperLib::pftNonZero, ClipperLib::pftNonZero))
+			{
+				delete tree;
+				tree = nullptr;
+			}
+		}
+
+		in.close();
+		return tree;
 	}
 
 	ClipperLib::PolyTree* offsetAndExtend(ClipperLib::PolyTree* poly, double offset, double extend)

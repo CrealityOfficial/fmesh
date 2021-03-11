@@ -8,13 +8,14 @@ namespace fmesh
 	FMESH_API Patch* fillSimplePolyTree(SimplePoly* poly);
 	FMESH_API Patch* fillSimplePolyTree(ClipperLib::Path* path);
 
-	FMESH_API void fillComplexPolyTree(ClipperLib::PolyTree* polyTree, std::vector<Patch*>& patches);
-	FMESH_API void fillComplexPolyTreeReverseInner(ClipperLib::PolyTree* polyTree, std::vector<Patch*>& patches);
-
+	FMESH_API void fillComplexPolyTree(ClipperLib::PolyTree* polyTree, std::vector<Patch*>& patches, bool muesEven = true);
+	FMESH_API void fillComplexPolyTreeReverseInner(ClipperLib::PolyTree* polyTree, std::vector<Patch*>& patches, bool invert=false);
+	FMESH_API void fillComplexPolyTree_onePloy(ClipperLib::PolyTree* polyTree, std::vector<Patch*>& patches, bool invert = false);
 	FMESH_API Patch* fillOneLevelPolyNode(ClipperLib::PolyNode* polyNode, bool invert = false);
 	FMESH_API void fillFirstLevelPolyNode(ClipperLib::PolyTree* polyTree, std::vector<Patch*>& patches);
 	FMESH_API void fillPolyNodeInner(ClipperLib::PolyTree* polyTree, std::vector<Patch*>& patches);
 	FMESH_API void fillPolyTreeDepth14(ClipperLib::PolyTree* polyTree, std::vector<Patch*>& patches);
+	FMESH_API void fillPolyTreeDepthOnePoly(ClipperLib::PolyTree* polyTree, std::vector<Patch*>& patches);
 
 	FMESH_API void fillPolyNodeOutline(ClipperLib::PolyTree* polyTree1, std::vector<Patch*>& patches);
 
@@ -22,6 +23,9 @@ namespace fmesh
 
 	FMESH_API void merge2SimplePoly(ClipperLib::PolyNode* polyNode, SimplePoly* poly, bool invert);
 	FMESH_API ClipperLib::cInt pathMaxX(ClipperLib::Path& path);
+	FMESH_API ClipperLib::cInt pathMaxZ(ClipperLib::Path& path);
+	FMESH_API ClipperLib::cInt pathMaxZ(ClipperLib::PolyNode* node);
+	
 }
 
 #endif // FMESH_POLYFILLER_1604488905380_H

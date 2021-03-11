@@ -5,6 +5,7 @@
 
 namespace cdrdxf
 {
+	FMESH_API std::vector<ClipperLib::Paths*> loadMultiSVGFile(const char* fileName);
 	FMESH_API ClipperLib::Paths* loadSVGFile(const char* fileName);
 }
 

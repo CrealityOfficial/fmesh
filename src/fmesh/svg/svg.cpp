@@ -4,7 +4,6 @@
 #include <sstream>
 
 #define SCALE1000(n) (int64_t((n) * 1000))
-
 #define  SVG_SVG "svg"//svg视图大小
 #define  SVG_LINE "line"//线段
 #define  SVG_POLYLINE "polyline"//线段
@@ -334,9 +333,9 @@ void svg::pauseSVG(TiXmlElement* root)
 			{
 				if (root == NULL)
 					break;
-				if (root->Value() == "defs")
+				if (std::string(root->Value()) == "defs")
 					continue;
-				if (root->Value() == "missing-glyph")
+				if (std::string(root->Value()) == "missing-glyph")
 					continue;
 				if (root->FirstChildElement() != NULL)
 				{

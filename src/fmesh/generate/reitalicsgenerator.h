@@ -11,6 +11,13 @@ namespace fmesh
 		virtual ~ReItalicsGenerator();
 
 		void build() override;
+
+		void buildShell() override;
+		void buildBoard(ClipperLib::PolyTree& topTree, ClipperLib::PolyTree& bottomTree) override;
+
+	private:
+		void buildMiddle(std::vector<ClipperLib::PolyTree>& middlePolys, double& middleoffset,bool onePoly=false);
+		void initTestData();
 	};
 }
 

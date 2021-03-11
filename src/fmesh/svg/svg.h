@@ -2,6 +2,15 @@
 #include "tinyxml/tinyxml.h"
 #include "clipper/clipper.hpp"
 
+#define  SVG_SVG "svg"//svg视图大小
+#define  SVG_LINE "line"//线段
+#define  SVG_POLYLINE "polyline"//线段
+#define  SVG_RECT "rect"//矩形
+#define  SVG_CIRCLE "circle"//圆
+#define  SVG_ELLIPSE "ellipse"//椭圆
+#define  SVG_POLYGON "polygon"//多边形
+#define  SVG_PATH "path"//路径
+
 using namespace std;
 class svg
 {

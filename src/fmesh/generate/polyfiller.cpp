@@ -21,12 +21,15 @@ namespace fmesh
 		return ear.earClippingFromPath(path);
 	}
 
-	void fillComplexPolyTree(ClipperLib::PolyTree* polyTree, std::vector<Patch*>& patches)
+	void fillComplexPolyTree(ClipperLib::PolyTree* polyTree, std::vector<Patch*>& patches, bool muesEven)
 	{
 		if (!polyTree)
 			return;
 
-		polyNodeFunc func = [&patches](ClipperLib::PolyNode* node) {
+		polyNodeFunc func = [&muesEven , &patches](ClipperLib::PolyNode* node) {
+			if (muesEven && node->ChildCount() == 0)
+				return;
+
 			if (!node->IsHole())
 			{
 				Patch* patch = fillOneLevelPolyNode(node);
@@ -38,11 +41,12 @@ namespace fmesh
 		mmesh::loopPolyTree(func, polyTree);
 	}
 
-	void fillComplexPolyTreeReverseInner(ClipperLib::PolyTree* polyTree, std::vector<Patch*>& patches)
+	void fillComplexPolyTreeReverseInner(ClipperLib::PolyTree* polyTree, std::vector<Patch*>& patches, bool invert)
 	{
 		if (!polyTree)
 			return;
 
+		//savePolyTree(polyTree, "xxxxx");
 		std::vector<ClipperLib::PolyNode*> source;
 		std::vector<ClipperLib::PolyNode*> tmp;
 
@@ -55,9 +59,11 @@ namespace fmesh
 		{
 			for (ClipperLib::PolyNode* node : source)
 			{
+				if (node->ChildCount() == 0)
+					continue;
 #ifdef _DEBUG
-				double area = ClipperLib::Area(node->Contour);
-				std::cout << area << std::endl;
+				//double area = ClipperLib::Area(node->Contour);
+				//std::cout << area << std::endl;
 #endif
 				Patch* patch = fillOneLevelPolyNode(node);
 				if (patch)
@@ -75,13 +81,114 @@ namespace fmesh
 					bool lReverse = false;
 					if (node->Contour.size() > 0 && node->ChildCount() > 0
 						&& node->Childs.at(0)->Contour.size() > 0)
-					{
-						if (node->Contour.at(0).Z > node->Childs.at(0)->Contour.at(0).Z)
+					{		
+						if (pathMaxZ(node->Contour)>=pathMaxZ(node))
 							lReverse = true;
+
+						if (invert && outer)
+						{
+							if (pathMaxZ(node->Contour) <= pathMaxZ(node->Childs.at(0)->Contour))
+							{
+								lReverse = true;
+							}
+						}
+						else if(invert&& !outer)
+						{
+							if (pathMaxZ(node->Contour) > pathMaxZ(node->Childs.at(0)->Contour))
+							{
+								lReverse = false;
+							}
+						}
 					}
 					
-					if ((outer && lReverse) ||(!outer && !lReverse))
+					if ((outer && lReverse) || (!outer && !lReverse))
 						std::reverse(patch->begin(), patch->end());
+					else
+						int i = 0;
+					patches.push_back(patch);
+				}
+
+				for (ClipperLib::PolyNode* n : node->Childs)
+				{
+					for (ClipperLib::PolyNode* cn : n->Childs)
+					{
+						if (!cn->IsHole())
+							tmp.push_back(cn);
+					}
+				}
+			}
+
+			source.swap(tmp);
+			tmp.clear();
+			++parentChilds;
+		}
+	}
+
+	FMESH_API void fillComplexPolyTree_onePloy(ClipperLib::PolyTree* polyTree, std::vector<Patch*>& patches, bool invert /*= false*/)
+	{
+		if (!polyTree)
+			return;
+
+		//savePolyTree(polyTree, "xxxxx");
+		std::vector<ClipperLib::PolyNode*> source;
+		std::vector<ClipperLib::PolyNode*> tmp;
+
+		for (ClipperLib::PolyNode* node : polyTree->Childs)
+			if (!node->IsHole())
+				source.push_back(node);
+
+		int parentChilds = 0;
+		while (source.size() > 0)
+		{
+			for (ClipperLib::PolyNode* node : source)
+			{
+				if (node->ChildCount() == 0)
+					continue;
+#ifdef _DEBUG
+				//double area = ClipperLib::Area(node->Contour);
+				//std::cout << area << std::endl;
+#endif
+				Patch* patch = fillOneLevelPolyNode(node);
+				if (patch)
+				{
+					bool outer = parentChilds % 2 == 0;
+					if (outer)
+					{
+// 						int gson = 0;
+// 						for (ClipperLib::PolyNode* n : node->Childs)
+// 							gson += (int)n->ChildCount();
+// 						if (gson == 0)
+// 							outer = false;
+					}
+					//bool outer = true;
+
+					bool lReverse = false;
+					if (node->Contour.size() > 0 && node->ChildCount() > 0
+						&& node->Childs.at(0)->Contour.size() > 0)
+					{
+						if (pathMaxZ(node->Contour) >= pathMaxZ(node))
+							lReverse = true;
+
+						if (invert && outer)
+						{
+							if (pathMaxZ(node->Contour) <= pathMaxZ(node->Childs.at(0)->Contour))
+							{
+								lReverse = true;
+							}
+						}
+						else if (invert && !outer)
+						{
+							if (pathMaxZ(node->Contour) > pathMaxZ(node->Childs.at(0)->Contour))
+							{
+								lReverse = false;
+							}
+						}
+					}
+
+					if ((outer && lReverse) || (!outer && !lReverse))
+						std::reverse(patch->begin(), patch->end());
+					else
+						int i = 0;
 					patches.push_back(patch);
 				}
 
@@ -146,12 +253,39 @@ namespace fmesh
 		ClipperLib::PolyTree out;
 		xor2PolyNodes(nodes1, nodes4, out);
 
-		fillComplexPolyTree(&out, patches);
+		fillComplexPolyTree(&out, patches,false);
 
 		ClipperLib::PolyTree out_;
 		xor2PolyNodes(nodes5, nodes8, out_);
 
-		fillComplexPolyTree(&out_, patches);
+		fillComplexPolyTree(&out_, patches, false);
+	}
+
+	FMESH_API void fillPolyTreeDepthOnePoly(ClipperLib::PolyTree* polyTree, std::vector<Patch*>& patches)
+	{
+		if (!polyTree)
+			return;
+
+		std::vector<ClipperLib::PolyNode*> nodes1;
+		std::vector<ClipperLib::PolyNode*> nodes4;
+		std::vector<ClipperLib::PolyNode*> nodes5;
+		std::vector<ClipperLib::PolyNode*> nodes8;
+		polyNodeFunc func = [&patches, &nodes1, &nodes4, &nodes5, &nodes8](ClipperLib::PolyNode* node) {
+			int depth = testPolyNodeDepth(node);
+				nodes1.push_back(node);
+		};
+
+		mmesh::loopPolyTree(func, polyTree);
+
+		ClipperLib::PolyTree out;
+		xor2PolyNodes(nodes1, nodes4, out);
+
+		fillComplexPolyTree(&out, patches, false);
+
+		ClipperLib::PolyTree out_;
+		xor2PolyNodes(nodes5, nodes8, out_);
+
+		fillComplexPolyTree(&out_, patches, false);
 	}
 
 	void fillPolyNodeInner(ClipperLib::PolyTree* polyTree, std::vector<Patch*>& patches)
@@ -211,6 +345,27 @@ namespace fmesh
 				x = point.X;
 		}
 		return x;
+	}
+
+	ClipperLib::cInt pathMaxZ(ClipperLib::Path& path)
+	{
+		ClipperLib::cInt z = -999999;
+		for (ClipperLib::IntPoint& point : path)
+		{
+			if (point.Z > z)
+				z = point.Z;
+		}
+		return z;
+	}
+
+	ClipperLib::cInt pathMaxZ(ClipperLib::PolyNode* node)
+	{
+		ClipperLib::cInt z = -999999;
+		ClipperLib::cInt tmp = 0;
+		for (ClipperLib::PolyNode* n : node->Childs)
+			if (z < (tmp = pathMaxZ(n->Contour)))
+				z = tmp;
+		return z;
 	}
 
 	void merge2SimplePoly(ClipperLib::PolyNode* polyNode, SimplePoly* newPoly, bool invert)
