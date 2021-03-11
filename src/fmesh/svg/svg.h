@@ -20,6 +20,7 @@ public:
 
 public:
 	void pauseSVG(TiXmlElement* root);
+	void pauseSVGEX(TiXmlElement* root);
 	ClipperLib::Paths* outputPaths();
 
 	void pauseRect(float width, float height, float leftTopX, float leftTopY);
@@ -43,6 +44,7 @@ public:
 	void SplitString(const std::string& Src, std::vector<std::string>& Vctdest, const std::string& c);
 	void SplitStringS(const std::string& Src, std::vector<std::string>& Vctdest, std::vector<std::string>& VctS);
 	ClipperLib::Path DoublePoint2IntPoint(vector<ClipperLib::DoublePoint>& vctDoublePoint);
+	ClipperLib::Path DoublePoint2IntPointEX(vector<ClipperLib::DoublePoint>& vctDoublePoint);
 	bool isSpechars(char chars);//过滤掉path路径中的不需要的特殊字符
 	void savePenultPoint(ClipperLib::DoublePoint penultPoint, ClipperLib::DoublePoint endPoint, bool isBezier=true);
 	void savePenultPoint(bool isBezier = false);
@@ -51,6 +53,7 @@ public:
 private:
 	float m_scaleX;//X缩放比例
 	float m_scaleY;//Y缩放比例
+	float m_currentMatrix3x3[3][3];
 	ClipperLib::Paths* m_paths;
 	ClipperLib::DoublePoint m_currentPosition;
 	bool m_isBigchars;

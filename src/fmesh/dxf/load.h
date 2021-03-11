@@ -7,7 +7,7 @@ namespace cdrdxf
 {
 	FMESH_API ClipperLib::Paths* loadDXFFile(const char* fileName);
 	FMESH_API std::vector<ClipperLib::Paths*> loadMultiDXFFile(const char* fileName);
-	//FMESH_API ClipperLib::Paths* loadSplineFromDXFFile(const char* fileName);
+	FMESH_API ClipperLib::Paths* loadSplineFromDXFFile(const char* fileName);
 }
 
 #endif // CDRDXF_LOAD_1605251140503_H

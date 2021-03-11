@@ -32,16 +32,19 @@ namespace fmesh
 		_buildTop_onepoly(treeTop, hTop);
 		_buildBottom_onepoly(treeBottom, hBottom);
 
-		_buildFromSamePolyTree(&treeBottom, &treeTop,3);
+		_buildFromSamePolyTree(&treeBottom, &treeTop);
 	}
 
 	void SimpleGenerator::buildBoard(ClipperLib::PolyTree& topTree, ClipperLib::PolyTree& bottomTree)
 	{
 		double hTop, hBottom;
 
-		_buildTop(topTree, hTop);
-		_buildBottom(bottomTree, hBottom);
-		_buildBoardPoly(&topTree);
-		_buildBoardPoly(&bottomTree);
+		_buildTop_onepoly(topTree, hTop);
+		_buildBottom_onepoly(bottomTree, hBottom);
+
+// 		std::vector<double> area;
+// 		areaPoly(topTree, area);
+// 		_buildBoardPoly(&topTree);
+// 		_buildBoardPoly(&bottomTree);
 	}
 }

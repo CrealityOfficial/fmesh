@@ -68,12 +68,12 @@ public:
     void myblock2MultiPaths(std::vector<ClipperLib::Paths*>& vctPaths);
 
 private:
-    void dealLine(vector<DXFLine>& lines, std::vector<ClipperLib::Paths*>& vctPaths);
-    void dealCircle(vector<DXFCircle>& circles, std::vector<ClipperLib::Paths*>& vctPaths);
-    void dealEllipse(vector<DXFEllipse>& ellipses, std::vector<ClipperLib::Paths*>& vctPaths);
-    void dealPolylineentities(vector<DXFPolyLineEntities>& polylineentitiess, std::vector<ClipperLib::Paths*>& vctPaths);
-    void dealArc(vector<DXFArc>& arcs, std::vector<ClipperLib::Paths*>& vctPaths);
-    void dealSplines(vector<cdrdxf::DXFSpline>& spliness, std::vector<ClipperLib::Paths*>& vctPaths);
+    void dealLine(vector<DXFLine>& lines, ClipperLib::Paths* paths);
+    void dealCircle(vector<DXFCircle>& circles, ClipperLib::Paths* paths);
+    void dealEllipse(vector<DXFEllipse>& ellipses, ClipperLib::Paths* paths);
+    void dealPolylineentities(vector<DXFPolyLineEntities>& polylineentitiess, ClipperLib::Paths* paths);
+    void dealArc(vector<DXFArc>& arcs, ClipperLib::Paths* paths);
+    void dealSplines(vector<cdrdxf::DXFSpline>& spliness, ClipperLib::Paths* paths);
 protected:
     cdrdxf::DXFSpline* m_currentSpline;
 };

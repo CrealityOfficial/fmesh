@@ -32,9 +32,9 @@ namespace fmesh
 	void DrumGenerator::buildBoard(ClipperLib::PolyTree& topTree, ClipperLib::PolyTree& bottomTree)
 	{
 		std::vector<ClipperLib::PolyTree> middlePolys;
-		buildMiddle(middlePolys);
-		bottomTree = middlePolys.front();
-		_buildBoardPoly(&bottomTree);
+		buildMiddle(middlePolys, true);
+		copy2PolyTree(middlePolys.front(), bottomTree);
+		//_buildBoardPoly(&bottomTree);
 	}
 
 	void DrumGenerator::buildMiddle(std::vector<ClipperLib::PolyTree>& middlePolys,bool onePloy)
@@ -52,13 +52,22 @@ namespace fmesh
 		for (size_t i = 0; i < drumHCount; i++)
 		{
 			float _offsetr = m_adParam.shape_top_height - sqrt(pow(m_adParam.shape_top_height, 2) - pow(i * offsetr, 2));
-			offsetAndExtendPolyTree(m_poly, -_offsetr * 50, thickness, middlePolys.at(i));
+
+			if (onePloy)
+			{
+				offsetPolyTree(m_poly, -_offsetr * 50, middlePolys.at(i));
+				//setPolyTreeZ(middlePolys.at(i), delta);
+			} 
+			else
+			{
+				offsetAndExtendPolyTree(m_poly, -_offsetr * 50, thickness, middlePolys.at(i));
+				_simplifyPoly(&middlePolys.at(i));
+			}
 			if (i && GetPolyCount(&middlePolys.at(i)) != GetPolyCount(&middlePolys.at(i - 1)))
 			{
 				middlePolys.at(i).Clear();
 				break;
 			}
-			_simplifyPoly(&middlePolys.at(i));
 		}
 
 		while (!middlePolys.back().ChildCount())
@@ -81,7 +90,7 @@ namespace fmesh
 			setPolyTreeZ(middlePolys.at(i + 1), delta2);
 			
 			if (onePloy)
-				_buildFromDiffPolyTree_diffSafty(&middlePolys.at(i), &middlePolys.at(i + 1), 1.0, 3);//outer
+				_buildFromDiffPolyTree_onePoly(&middlePolys.at(i), &middlePolys.at(i + 1));//outer
 			else
 				_buildFromDiffPolyTree_diffSafty(&middlePolys.at(i), &middlePolys.at(i + 1));
 		}

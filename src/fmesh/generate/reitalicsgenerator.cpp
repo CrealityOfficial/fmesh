@@ -33,23 +33,22 @@ namespace fmesh
 		std::vector<ClipperLib::PolyTree> middlePolys;
 		double middleoffset = 0;
 		buildMiddle(middlePolys, middleoffset,true);
-		_buildTopBottom_onepoly(&middlePolys.front(), &middlePolys.back(), 0, middleoffset);
+		//_buildTopBottom_onepoly(&middlePolys.front(), &middlePolys.back(), 0, middleoffset);
 	}
 
 	void ReItalicsGenerator::buildBoard(ClipperLib::PolyTree& topTree, ClipperLib::PolyTree& bottomTree)
 	{
 		double middleoffset = 0;
 		std::vector<ClipperLib::PolyTree> middlePolys;
-		buildMiddle(middlePolys, middleoffset);
-
-		topTree = middlePolys.back();
-		bottomTree = middlePolys.front();
-		_buildBoardPoly(&topTree);
-		_buildBoardPoly(&bottomTree);
+		buildMiddle(middlePolys, middleoffset, true);
+		copy2PolyTree(middlePolys.back(), topTree);
+		copy2PolyTree(middlePolys.front(), bottomTree);
 	}
 
 	void ReItalicsGenerator::buildMiddle(std::vector<ClipperLib::PolyTree>& middlePolys, double& middleoffset,bool onePoly)
 	{
+		//initTestData();
+
 		//init
 		float btoomStepHeight = m_adParam.shape_bottom_height;
 		float shape_top_height = m_adParam.shape_top_height;
@@ -67,7 +66,7 @@ namespace fmesh
 
 		float middleHeight = m_adParam.total_height - bottomHeight - topHeight;
 		int count = middleHeight / 0.5;;
-		float offset = middleHeight * std::sin(10 / 2 * 3.1415926 / 180.0) / (float)count;
+		float offset = middleHeight * std::sin(m_adParam.shape_angle / 2 * 3.1415926 / 180.0) / (float)count;
 		float h = middleHeight / (float)count;
 
 		std::vector<ClipperLib::PolyTree> Steppolys(1);
@@ -76,15 +75,22 @@ namespace fmesh
 		middlePolys.resize(count + 1);
 		for (int i = 0; i <= count; ++i)
 		{
-			_simplifyPoly(&middlePolys.at(i));
-			fmesh::offsetAndExtendPolyTree(m_poly, (float)i * offset, thickness, bottomHeight + (float)i * h, middlePolys.at(i));
-
+			if (onePoly)
+			{
+				offsetPolyTree(m_poly, (float)i * offset, middlePolys.at(i));
+				setPolyTreeZ(middlePolys.at(i), bottomHeight + (float)i * h);
+			} 
+			else
+			{
+				_simplifyPoly(&middlePolys.at(i));
+				fmesh::offsetAndExtendPolyTree(m_poly, (float)i * offset, thickness, bottomHeight + (float)i * h, middlePolys.at(i));
+			}
 		}
 
 		for (int i = 0; i < count; ++i)
 		{
 			if (onePoly)
-				_buildFromDiffPolyTree_all(&middlePolys.at(i), &middlePolys.at(i + 1), thickness / 2.0,3);//outer
+				_buildFromDiffPolyTree_onePoly(&middlePolys.at(i), &middlePolys.at(i + 1));//outer
 			else
 				_buildFromDiffPolyTree_all(&middlePolys.at(i), &middlePolys.at(i + 1), thickness / 2.0);			
 		}
@@ -101,5 +107,6 @@ namespace fmesh
 		m_adParam.bottom_height = 2.0;
 		m_adParam.bottom_extend_width = 0.5;
 		m_adParam.shape_bottom_height = 3.0;
+		m_adParam.total_height = 15;
 	}
 }

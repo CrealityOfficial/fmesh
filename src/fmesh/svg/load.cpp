@@ -20,7 +20,7 @@ namespace cdrdxf
 		}
 
 		svg mySVG;
-		mySVG.pauseSVG(root);
+		mySVG.pauseSVGEX(root);
 		return mySVG.outputPaths();
 	}
 

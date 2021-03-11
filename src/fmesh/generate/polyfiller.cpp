@@ -124,6 +124,90 @@ namespace fmesh
 		}
 	}
 
+	FMESH_API void fillComplexPolyTree_onePloy(ClipperLib::PolyTree* polyTree, std::vector<Patch*>& patches, bool invert /*= false*/)
+	{
+		if (!polyTree)
+			return;
+
+		//savePolyTree(polyTree, "xxxxx");
+		std::vector<ClipperLib::PolyNode*> source;
+		std::vector<ClipperLib::PolyNode*> tmp;
+
+		for (ClipperLib::PolyNode* node : polyTree->Childs)
+			if (!node->IsHole())
+				source.push_back(node);
+
+		int parentChilds = 0;
+		while (source.size() > 0)
+		{
+			for (ClipperLib::PolyNode* node : source)
+			{
+				if (node->ChildCount() == 0)
+					continue;
+#ifdef _DEBUG
+				//double area = ClipperLib::Area(node->Contour);
+				//std::cout << area << std::endl;
+#endif
+				Patch* patch = fillOneLevelPolyNode(node);
+				if (patch)
+				{
+					bool outer = parentChilds % 2 == 0;
+					if (outer)
+					{
+// 						int gson = 0;
+// 						for (ClipperLib::PolyNode* n : node->Childs)
+// 							gson += (int)n->ChildCount();
+// 						if (gson == 0)
+// 							outer = false;
+					}
+					//bool outer = true;
+
+					bool lReverse = false;
+					if (node->Contour.size() > 0 && node->ChildCount() > 0
+						&& node->Childs.at(0)->Contour.size() > 0)
+					{
+						if (pathMaxZ(node->Contour) >= pathMaxZ(node))
+							lReverse = true;
+
+						if (invert && outer)
+						{
+							if (pathMaxZ(node->Contour) <= pathMaxZ(node->Childs.at(0)->Contour))
+							{
+								lReverse = true;
+							}
+						}
+						else if (invert && !outer)
+						{
+							if (pathMaxZ(node->Contour) > pathMaxZ(node->Childs.at(0)->Contour))
+							{
+								lReverse = false;
+							}
+						}
+					}
+
+					if ((outer && lReverse) || (!outer && !lReverse))
+						std::reverse(patch->begin(), patch->end());
+					else
+						int i = 0;
+					patches.push_back(patch);
+				}
+
+				for (ClipperLib::PolyNode* n : node->Childs)
+				{
+					for (ClipperLib::PolyNode* cn : n->Childs)
+					{
+						if (!cn->IsHole())
+							tmp.push_back(cn);
+					}
+				}
+			}
+
+			source.swap(tmp);
+			tmp.clear();
+			++parentChilds;
+		}
+	}
+
 	Patch* fillOneLevelPolyNode(ClipperLib::PolyNode* polyNode, bool invert)
 	{
 		SimplePoly poly;
@@ -170,6 +254,33 @@ namespace fmesh
 		xor2PolyNodes(nodes1, nodes4, out);
 
 		fillComplexPolyTree(&out, patches,false);
+
+		ClipperLib::PolyTree out_;
+		xor2PolyNodes(nodes5, nodes8, out_);
+
+		fillComplexPolyTree(&out_, patches, false);
+	}
+
+	FMESH_API void fillPolyTreeDepthOnePoly(ClipperLib::PolyTree* polyTree, std::vector<Patch*>& patches)
+	{
+		if (!polyTree)
+			return;
+
+		std::vector<ClipperLib::PolyNode*> nodes1;
+		std::vector<ClipperLib::PolyNode*> nodes4;
+		std::vector<ClipperLib::PolyNode*> nodes5;
+		std::vector<ClipperLib::PolyNode*> nodes8;
+		polyNodeFunc func = [&patches, &nodes1, &nodes4, &nodes5, &nodes8](ClipperLib::PolyNode* node) {
+			int depth = testPolyNodeDepth(node);
+				nodes1.push_back(node);
+		};
+
+		mmesh::loopPolyTree(func, polyTree);
+
+		ClipperLib::PolyTree out;
+		xor2PolyNodes(nodes1, nodes4, out);
+
+		fillComplexPolyTree(&out, patches, false);
 
 		ClipperLib::PolyTree out_;
 		xor2PolyNodes(nodes5, nodes8, out_);

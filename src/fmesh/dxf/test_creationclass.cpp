@@ -25,6 +25,7 @@
 #include "test_creationclass.h"
 
 #include <iostream>
+#include <map>
 #include <stdio.h>
 #include "fmesh/dxf/builder.h"
 double const pi = 3.141592653589793238;
@@ -343,40 +344,64 @@ void Test_CreationClass::myblock2Paths(ClipperLib::Paths* paths)
 
 void Test_CreationClass::myblock2MultiPaths(std::vector<ClipperLib::Paths*>& vctPaths)
 {
-
+	std::string name = "";
+	ClipperLib::Paths* paths = nullptr;
+	std::map<std::string, ClipperLib::Paths*> meshPath;
 	for (BlockObj block : myblock)
-	{
+	{	
+		std::map<std::string, ClipperLib::Paths*>::iterator iter = meshPath.find(block.name);
+		if (iter == meshPath.end())
+		{
+			//not empty
+			if (block.line.size() || block.circle.size() || block.ellipse.size() || block.polylineentities.size() || block.arc.size() || block.splines.size())
+			{
+				paths = new ClipperLib::Paths;
+				meshPath.insert(std::pair<std::string, ClipperLib::Paths*>(block.name, paths));
+			}
+			else
+				continue;
+		}
+		else
+		{
+			paths = iter->second;
+		}
+		
 		//如果line 是闭合的则添加，否则不添加
 		if (block.line.size() /*&& block.line[0].beginpoint == block.line[block.line.size() - 1].endpoint*/)
 		{
-			dealLine(block.line, vctPaths);
+			dealLine(block.line, paths);
 		}
 		if (block.circle.size())
 		{
-			dealCircle(block.circle, vctPaths);
+			dealCircle(block.circle, paths);
 		}
 		if (block.ellipse.size())
 		{
-			dealEllipse(block.ellipse, vctPaths);
+			dealEllipse(block.ellipse, paths);
 		}
 		if (block.arc.size())
 		{
-			dealArc(block.arc, vctPaths);
+			dealArc(block.arc, paths);
 		}
 		if (block.polylineentities.size())
 		{
-			dealPolylineentities(block.polylineentities, vctPaths);
+			dealPolylineentities(block.polylineentities, paths);
 		}
 		if (block.splines.size())
 		{
-			dealSplines(block.splines, vctPaths);
+			dealSplines(block.splines, paths);
 		}
+	}
+
+	std::map<std::string, ClipperLib::Paths*>::iterator iter;
+	for (iter = meshPath.begin(); iter != meshPath.end(); iter++)
+	{
+		vctPaths.push_back(iter->second);
 	}
 }
 
-void Test_CreationClass::dealLine(vector<DXFLine>& lines, std::vector<ClipperLib::Paths*>& vctPaths)
+void Test_CreationClass::dealLine(vector<DXFLine>& lines, ClipperLib::Paths* paths)
 {
-	ClipperLib::Paths* paths = new ClipperLib::Paths;
 	ClipperLib::Path linePath;
 	for (DXFLine line : lines)
 	{
@@ -385,12 +410,10 @@ void Test_CreationClass::dealLine(vector<DXFLine>& lines, std::vector<ClipperLib
 
 	}
 	paths->push_back(linePath);
-	vctPaths.push_back(paths);
 }
 
-void Test_CreationClass::dealCircle(vector<DXFCircle>& circles, std::vector<ClipperLib::Paths*>& vctPaths)
+void Test_CreationClass::dealCircle(vector<DXFCircle>& circles, ClipperLib::Paths* paths)
 {
-	ClipperLib::Paths* paths = new ClipperLib::Paths;
 	for (DXFCircle circle : circles)
 	{
 		ClipperLib::Path circlePath;
@@ -404,12 +427,10 @@ void Test_CreationClass::dealCircle(vector<DXFCircle>& circles, std::vector<Clip
 		}
 		paths->push_back(circlePath);
 	}
-	vctPaths.push_back(paths);
 }
 
-void Test_CreationClass::dealEllipse(vector<DXFEllipse>& ellipses, std::vector<ClipperLib::Paths*>& vctPaths)
+void Test_CreationClass::dealEllipse(vector<DXFEllipse>& ellipses, ClipperLib::Paths* paths)
 {
-	ClipperLib::Paths* paths = new ClipperLib::Paths;
 	for (DXFEllipse ellipse : ellipses)
 	{
 		ClipperLib::Path ellipsePath;
@@ -425,22 +446,18 @@ void Test_CreationClass::dealEllipse(vector<DXFEllipse>& ellipses, std::vector<C
 		}
 		paths->push_back(ellipsePath);
 	}
-	vctPaths.push_back(paths);
 }
 
-void Test_CreationClass::dealPolylineentities(vector<DXFPolyLineEntities>& polylineentitiess, std::vector<ClipperLib::Paths*>& vctPaths)
+void Test_CreationClass::dealPolylineentities(vector<DXFPolyLineEntities>& polylineentitiess, ClipperLib::Paths* paths)
 {
-	ClipperLib::Paths* paths = new ClipperLib::Paths;
 	for (DXFPolyLineEntities PolyLineEntities : polylineentitiess)
 	{
 		paths->push_back(PolyLineEntities.vertex);		
 	}
-	vctPaths.push_back(paths);
 }
 
-void Test_CreationClass::dealArc(vector<DXFArc>& arcs, std::vector<ClipperLib::Paths*>& vctPaths)
+void Test_CreationClass::dealArc(vector<DXFArc>& arcs, ClipperLib::Paths* paths)
 {
-	ClipperLib::Paths* paths = new ClipperLib::Paths;
 	for (DXFArc arc : arcs)
 	{
 		ClipperLib::Path arcPath;
@@ -454,17 +471,14 @@ void Test_CreationClass::dealArc(vector<DXFArc>& arcs, std::vector<ClipperLib::P
 		}
 		paths->push_back(arcPath);
 	}
-	vctPaths.push_back(paths);
 }
 
-void Test_CreationClass::dealSplines(vector<cdrdxf::DXFSpline>& spliness, std::vector<ClipperLib::Paths*>& vctPaths)
+void Test_CreationClass::dealSplines(vector<cdrdxf::DXFSpline>& spliness, ClipperLib::Paths* paths)
 {
-	ClipperLib::Paths* paths = new ClipperLib::Paths;
 	for (cdrdxf::DXFSpline DXFSpine : spliness)
 	{
 		ClipperLib::Path path;
 		convert(&DXFSpine, &path);
 		paths->push_back(path);
 	}
-	vctPaths.push_back(paths);
 }

@@ -30,12 +30,12 @@ namespace fmesh
 	void SharpsideGenerator::buildBoard(ClipperLib::PolyTree& topTree, ClipperLib::PolyTree& bottomTree)
 	{
 		std::vector<ClipperLib::PolyTree> middlePolys;
-		buildMiddle(middlePolys);
+		buildMiddle(middlePolys, true);
 
-		topTree = middlePolys.back();
-		bottomTree = middlePolys.front();
-		_buildBoardPoly(&topTree);
-		_buildBoardPoly(&bottomTree);
+		copy2PolyTree(middlePolys.back(), topTree);
+		copy2PolyTree(middlePolys.front(), bottomTree);
+		//_buildBoardPoly(&topTree);
+		//_buildBoardPoly(&bottomTree);
 	}
 
 	void SharpsideGenerator::buildMiddle(std::vector<ClipperLib::PolyTree>& middlePolys, bool onePoly)
@@ -81,14 +81,23 @@ namespace fmesh
 			{
 				_offset = i * 2 * shape_middle_width / drumHCount;;
 			}
-			offsetAndExtendPolyTree(m_poly, _offset / 2, thickness, delta, middlePolys.at(i));
+			if (onePoly)
+			{
+				offsetPolyTree(m_poly, _offset / 2, middlePolys.at(i));
+				setPolyTreeZ(middlePolys.at(i), delta);
+			} 
+			else
+			{
+				offsetAndExtendPolyTree(m_poly, _offset / 2, thickness, delta, middlePolys.at(i));
+			}
+
 			offs.at(i) = _offset;
 		}
 
 		for (size_t i = 0; i < middlePolys.size() - 1; i++)
 		{
 			if (onePoly)
-				_buildFromDiffPolyTree_diffSafty(&middlePolys.at(i), &middlePolys.at(i + 1), 1.0, 3);
+				_buildFromDiffPolyTree_onePoly(&middlePolys.at(i), &middlePolys.at(i + 1));
 			else
 				_buildFromDiffPolyTree_diffSafty(&middlePolys.at(i), &middlePolys.at(i + 1));
 		}

@@ -43,6 +43,7 @@ namespace fmesh
 		void _fillPolyTreeOutline(ClipperLib::PolyTree* tree, bool invert = false);
 		void _fillPolyTreeInner(ClipperLib::PolyTree* tree, bool invert = false);
 		void _fillPolyTreeDepth14(ClipperLib::PolyTree* tree, bool invert = false);
+		void _fillPolyTreeDepthOnePoly(ClipperLib::PolyTree* tree, bool invert = false);
 		void _buildFromSamePolyTree(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp, int flag = 0);  //0 all, 1 outer, 2 inner
 		void _buildFromDiffPolyTree(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp, int flag = 0);
 		void _buildFromDiffPolyTreeSafe(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp, double delta, int flag = 0);
@@ -55,7 +56,8 @@ namespace fmesh
 		void _buildFromDiffPolyTree_diffSafty(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp, double delta = 1.0, int flag = 0, bool invert = false);
 		void _buildFromDiffPolyTree_xor(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp, double delta = 1.0, int flag = 0, bool invert = false);
 		void _buildFromDiffPolyTree_Inner(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp, double delta = 1.0, int flag = 0, bool invert = false);		
-		
+		void _buildFromDiffPolyTree_onePoly(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp, double delta = 1.0, int flag = 0, bool invert = false);
+
 		void _buildFromDiffPolyTree_all(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp, double delta = 1.0, int flag = 0, bool invert = false);
 		void _buildFromDiffPolyTree_all_same(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp,double delta, int flag = 0, bool invert = false);
 		void _buildFromDiffPolyTree_all_diff(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp,int flag=0, bool invert = false);
@@ -77,7 +79,7 @@ namespace fmesh
 
 		void saveTopBottom(ClipperLib::PolyTree& tree, const std::string& file);
 
-
+		void areaPoly(ClipperLib::PolyTree& poly, std::vector<double>& area);
 	protected:
 		ClipperLib::Paths* m_paths;
 		ClipperLib::PolyTree m_poly;

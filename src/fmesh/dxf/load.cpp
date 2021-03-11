@@ -36,24 +36,24 @@ namespace cdrdxf
 		return paths;
 	}
 
-	//ClipperLib::Paths* loadSplineFromDXFFile(const char* fileName)
-	//{
-	//	std::unique_ptr<Test_CreationClass> creation(_loadDXF(fileName));
-	//	ClipperLib::Paths* paths = nullptr;
-	//	if (creation.get())
-	//	{
-	//		std::vector<DXFSpline*> splines = creation->splines();
-	//		size_t size = splines.size();
-	//		if (size > 0)
-	//		{
-	//			paths = new ClipperLib::Paths(size);
-	//			for (size_t i = 0; i < size; ++i)
-	//				convert(splines.at(i), &paths->at(i));
-	//		}
-	//	}
+	ClipperLib::Paths* loadSplineFromDXFFile(const char* fileName)
+	{
+		std::unique_ptr<Test_CreationClass> creation(_loadDXF(fileName));
+		ClipperLib::Paths* paths = nullptr;
+		if (creation.get())
+		{
+			std::vector<DXFSpline*> splines = creation->splines();
+			size_t size = splines.size();
+			if (size > 0)
+			{
+				paths = new ClipperLib::Paths(size);
+				for (size_t i = 0; i < size; ++i)
+					convert(splines.at(i), &paths->at(i));
+			}
+		}
 
-	//	return paths;
-	//}
+		return paths;
+	}
 
 	std::vector<ClipperLib::Paths*> loadMultiDXFFile(const char* fileName)
 	{
