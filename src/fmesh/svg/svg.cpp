@@ -1,6 +1,7 @@
 #include "svg.h"
 #include <iostream>
 #include "map"
+#include <sstream>
 
 #define SCALE1000(n) (int64_t((n) * 1000))
 
@@ -12,8 +13,22 @@
 #define  SVG_ELLIPSE "ellipse"//椭圆
 #define  SVG_POLYGON "polygon"//多边形
 #define  SVG_PATH "path"//路径
+#define  SVG_G "g"//组
 
 double const PI = 3.141592653589793238;
+
+
+//模板函数：将string类型变量转换为常用的数值类型
+template <class Type>
+Type stringToNum(const string& str)
+{
+	istringstream iss(str);
+	Type num;
+	iss >> num;
+	return num;
+}
+
+
 svg::svg()
 {
 	m_paths = new ClipperLib::Paths();
@@ -21,12 +36,159 @@ svg::svg()
 	m_BezierPoint.second = ClipperLib::DoublePoint(0, 0);
 	m_scaleX = 1.0;
 	m_scaleY = 1.0;
+	m_currentMatrix3x3[3][3] = { 0 };
 }
 
 svg::~svg()
 {
 
 }
+
+void svg::pauseSVGEX(TiXmlElement* root)
+{
+	for (TiXmlElement* tmpele = root->FirstChildElement(); tmpele; tmpele = tmpele->NextSiblingElement())
+	{
+		TiXmlElement* currentElement = tmpele;
+		string strElemValue = currentElement->Value();
+		if (strElemValue == SVG_SVG)
+		{
+			vector<string>vctBox;
+			if (currentElement->Attribute("viewBox") && currentElement->Attribute("width") && currentElement->Attribute("height"))
+			{
+				string strWidth = currentElement->Attribute("width");//SVG文件的宽度
+				string strHeight = currentElement->Attribute("height");//SVG文件的高度
+				float iWidth = atof(strWidth.data());//字体宽度
+				float iHeight = atof(strHeight.data());//字体高度
+				string strViewBox = currentElement->Attribute("viewBox");//视图
+				SplitString(strViewBox, vctBox, " ");
+				if (4 == vctBox.size())
+				{
+					float ViewBoxStartX = atof(vctBox[0].data());//ViewBox的起点X
+					float ViewBoxStartY = atof(vctBox[1].data());//ViewBox的起点Y
+					float ViewBoxWidth = atof(vctBox[2].data()) - ViewBoxStartX; //ViewBox的宽度
+					float ViewBoxHeight = atof(vctBox[3].data()) - ViewBoxStartY;//ViewBox的高度
+
+					m_scaleX = (iWidth - ViewBoxStartX) / ViewBoxWidth;
+					m_scaleY = (iHeight - ViewBoxStartY) / ViewBoxHeight;
+				}
+			}
+			else
+			{
+				m_scaleX = 1.0;
+				m_scaleY = 1.0;
+			}
+		}
+		else if (strElemValue == SVG_G)
+		{
+			vector<string> vctNum;
+			if (currentElement->Attribute("transform"))
+			{
+				string strWidth = currentElement->Attribute("transform");//偏移矩阵
+				int pos = strWidth.find("matrix(");
+				if (pos != string::npos)
+				{
+					strWidth = strWidth.substr(7, strWidth.length() - 7);
+				}
+				pos = strWidth.find(")");
+				if (pos != string::npos)
+				{
+					strWidth = strWidth.substr(0, strWidth.length() - 1);
+				}
+
+				SplitString(strWidth, vctNum, ",");
+			}
+			if (vctNum.size() == 6)
+			{
+				m_currentMatrix3x3[0][0] = stringToNum<float>(vctNum[0]);
+				m_currentMatrix3x3[0][1] = stringToNum<float>(vctNum[2]);
+				m_currentMatrix3x3[0][2] = stringToNum<float>(vctNum[4]);
+
+				m_currentMatrix3x3[1][0] = stringToNum<float>(vctNum[1]);
+				m_currentMatrix3x3[1][1] = stringToNum<float>(vctNum[3]);
+				m_currentMatrix3x3[1][2] = stringToNum<float>(vctNum[5]);
+
+				m_currentMatrix3x3[2][0] = 0;
+				m_currentMatrix3x3[2][1] = 0;
+				m_currentMatrix3x3[2][2] = 1;
+			}
+			else
+			{
+				m_currentMatrix3x3[0][0] = 1;
+				m_currentMatrix3x3[0][1] = 0;
+				m_currentMatrix3x3[0][2] = 0;
+
+				m_currentMatrix3x3[1][0] = 0;
+				m_currentMatrix3x3[1][1] = 1;
+				m_currentMatrix3x3[1][2] = 0;
+
+				m_currentMatrix3x3[2][0] = 0;
+				m_currentMatrix3x3[2][1] = 0;
+				m_currentMatrix3x3[2][2] = 1;
+			}
+		}
+		else if (strElemValue == SVG_LINE)
+		{
+			float start_x = atof(currentElement->Attribute("x1"));
+			float start_y = atof(currentElement->Attribute("y1"));
+			float end_x = atof(currentElement->Attribute("x2"));
+			float end_y = atof(currentElement->Attribute("y2"));
+			//处理线段
+			pauseLine(start_x, start_y, end_x, end_y);
+		}
+		else if (strElemValue == SVG_POLYLINE)
+		{
+			string strPoints = currentElement->Attribute("points");
+			//处理多线段
+			pausePolyline(strPoints);
+		}
+		else if (strElemValue == SVG_RECT)
+		{
+			float width = atof(currentElement->Attribute("width"));
+			float height = atof(currentElement->Attribute("height"));
+			float leftTopX = atof(currentElement->Attribute("x"));
+			float leftTopY = atof(currentElement->Attribute("y"));
+			//处理矩形
+			pauseRect(width, height, leftTopX, leftTopY);
+		}
+		else if (strElemValue == SVG_CIRCLE)
+		{
+			float cx = atof(currentElement->Attribute("cx"));
+			float cy = atof(currentElement->Attribute("cy"));
+			float rr = atof(currentElement->Attribute("r"));
+			//处理圆
+			pauseEllipse(cx, cy, rr, rr);
+		}
+		else if (strElemValue == SVG_ELLIPSE)
+		{
+			float cx = atof(currentElement->Attribute("cx"));
+			float cy = atof(currentElement->Attribute("cy"));
+			float rx = atof(currentElement->Attribute("rx"));
+			float ry = atof(currentElement->Attribute("ry"));
+			//处理椭圆
+			pauseEllipse(cx, cy, rx, ry);
+		}
+		else if (strElemValue == SVG_POLYGON)
+		{
+			string strPoints = currentElement->Attribute("points");
+			//处理多边形
+			pausePolygon(strPoints);
+		}
+		else if (strElemValue == SVG_PATH)
+		{
+			string strPath = currentElement->Attribute("d");
+			//处理path文件
+			pausePath(strPath);
+		}
+
+		//递归遍历
+		if (!currentElement->NoChildren())
+			pauseSVGEX(currentElement);
+
+	}
+}
+
+
+
 
 void svg::pauseSVG(TiXmlElement* root)
 {
@@ -62,6 +224,54 @@ void svg::pauseSVG(TiXmlElement* root)
 				m_scaleY = 1.0;
 			}
 		} 
+		else if (strElemValue == SVG_G)
+		{
+			vector<string> vctNum;
+			if (elemBrother->Attribute("transform"))
+			{
+				string strWidth = elemBrother->Attribute("transform");//偏移矩阵
+				int pos = strWidth.find("matrix(");
+				if (pos!= string::npos)
+				{
+					strWidth = strWidth.substr(7, strWidth.length()-7);
+				}
+				pos = strWidth.find(")");
+				if (pos != string::npos)
+				{
+					strWidth = strWidth.substr(0, strWidth.length() - 1);
+				}
+
+				SplitString(strWidth, vctNum,",");
+			}
+			if (vctNum.size() == 6)
+			{
+				m_currentMatrix3x3[0][0] = stringToNum<float>(vctNum[0]);
+				m_currentMatrix3x3[0][1] = stringToNum<float>(vctNum[2]);
+				m_currentMatrix3x3[0][2] = stringToNum<float>(vctNum[4]);
+
+				m_currentMatrix3x3[1][0] = stringToNum<float>(vctNum[1]);
+				m_currentMatrix3x3[1][1] = stringToNum<float>(vctNum[3]);
+				m_currentMatrix3x3[1][2] = stringToNum<float>(vctNum[5]);
+
+				m_currentMatrix3x3[2][0] = 0;
+				m_currentMatrix3x3[2][1] = 0;
+				m_currentMatrix3x3[2][2] = 1;
+			}
+			else
+			{
+				m_currentMatrix3x3[0][0] = 1;
+				m_currentMatrix3x3[0][1] = 0;
+				m_currentMatrix3x3[0][2] = 0;
+
+				m_currentMatrix3x3[1][0] = 0;
+				m_currentMatrix3x3[1][1] = 1;
+				m_currentMatrix3x3[1][2] = 0;
+
+				m_currentMatrix3x3[1][0] = 0;
+				m_currentMatrix3x3[1][1] = 0;
+				m_currentMatrix3x3[1][2] = 1;
+			}
+		}
 		else if (strElemValue == SVG_LINE)
 		{
 			float start_x = atof(elemBrother->Attribute("x1"));
@@ -136,6 +346,8 @@ void svg::pauseSVG(TiXmlElement* root)
 		}
 	}
 }
+
+
 
 void svg::pauseRect(float width, float height, float leftTopX, float leftTopY)
 {
@@ -243,7 +455,7 @@ void svg::pausePath(string strPath)
 			{
 				strTemp += strPath[n];
 				flagBegin = true;
-			} 
+			}
 			else
 			{
 				vctString.push_back(strTemp);
@@ -860,8 +1072,35 @@ ClipperLib::Path svg::DoublePoint2IntPoint(vector<ClipperLib::DoublePoint>& vctD
 	{
 		size_t nSize = polygon.size();
 		polygon.emplace_back();
-		polygon[nSize].X = SCALE1000(vctDoublePoint[i].X);
-		polygon[nSize].Y = SCALE1000(vctDoublePoint[i].Y);
+
+		//m_currentMatrix3x3 矩阵偏移
+		ClipperLib::DoublePoint dPoint;
+		dPoint.X = m_currentMatrix3x3[0][0] * vctDoublePoint[i].X + m_currentMatrix3x3[0][1] * vctDoublePoint[i].Y + m_currentMatrix3x3[0][2];
+		dPoint.Y = m_currentMatrix3x3[1][0] * vctDoublePoint[i].X + m_currentMatrix3x3[1][1] * vctDoublePoint[i].Y + m_currentMatrix3x3[1][2];
+
+
+		polygon[nSize].X = SCALE1000(dPoint.X);
+		polygon[nSize].Y = SCALE1000(dPoint.Y);
+	}
+	return polygon;
+}
+
+ClipperLib::Path svg::DoublePoint2IntPointEX(vector<ClipperLib::DoublePoint>& vctDoublePoint)
+{
+	ClipperLib::Path polygon;
+	for (int i = 0; i < vctDoublePoint.size(); i++)
+	{
+		size_t nSize = polygon.size();
+		polygon.emplace_back();
+
+		//m_currentMatrix3x3 矩阵偏移
+		ClipperLib::DoublePoint dPoint;
+		dPoint.X = m_currentMatrix3x3[0][0] * vctDoublePoint[i].X + m_currentMatrix3x3[0][1] * vctDoublePoint[i].Y + m_currentMatrix3x3[0][2];
+		dPoint.Y = -m_currentMatrix3x3[1][0] * vctDoublePoint[i].X - m_currentMatrix3x3[1][1] * vctDoublePoint[i].Y - m_currentMatrix3x3[1][2];
+
+
+		polygon[nSize].X = SCALE1000(dPoint.X);
+		polygon[nSize].Y = SCALE1000(dPoint.Y);
 	}
 	return polygon;
 }
