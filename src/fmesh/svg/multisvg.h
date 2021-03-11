@@ -11,11 +11,12 @@ namespace fmesh
 		MultiSVG();
 		~MultiSVG();
 
-		void addRect(float width, float height, 
-			float leftTopX, float leftTopY);
+		void addRect(float width, float height, float leftTopX, float leftTopY);
 		void addEllipse(float cx, float cy, float rx, float ry, int precision = 200);
 		void addPolygonS(const std::string& polygon);
 		void addPathS(const std::string& path);
+		void addLine(float start_x, float start_y, float end_x, float end_y);
+		void addPolyLine(const std::string& polygon);
 
 		std::vector<ClipperLib::Paths*> take();
 	protected:

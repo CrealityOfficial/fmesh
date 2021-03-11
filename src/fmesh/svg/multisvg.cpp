@@ -31,6 +31,37 @@ namespace fmesh
 		m_pathses.push_back(paths);
 	}
 
+	void MultiSVG::addLine(float start_x, float start_y, float end_x, float end_y)
+	{
+		ClipperLib::Paths* paths = new ClipperLib::Paths(1);
+		ClipperLib::Path& path = paths->at(0);
+
+		path.push_back(CLIPPERPOINT(start_x, start_y));
+		path.push_back(CLIPPERPOINT(end_x, end_y));
+		m_pathses.push_back(paths);
+	}
+
+	void MultiSVG::addPolyLine(const std::string& polygon)
+	{
+		ClipperLib::Paths* paths = new ClipperLib::Paths(1);
+		ClipperLib::Path& path = paths->at(0);
+
+		std::vector<std::string> Vctdest;
+		SplitString(polygon, Vctdest, " ");
+		for (std::string strTemp : Vctdest)
+		{
+			std::vector<std::string> VctPoint;
+			SplitString(strTemp, VctPoint, ",");
+			if (2 == VctPoint.size())
+			{
+				float x = atof(VctPoint[0].data());
+				float y = atof(VctPoint[1].data());
+				path.push_back(CLIPPERPOINT(x, y));
+			}
+		}
+		m_pathses.push_back(paths);
+	}
+
 	void MultiSVG::addEllipse(float cx, float cy, float rx, float ry, int precision)
 	{
 		ClipperLib::Paths* paths = new ClipperLib::Paths(1);

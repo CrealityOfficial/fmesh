@@ -31,7 +31,22 @@ namespace cdrdxf
 		while (elemBrother)
 		{
 			string strElemValue = elemBrother->Value();
-			if (strElemValue == SVG_RECT)
+			if (strElemValue == SVG_LINE)
+			{
+				float start_x = atof(elemBrother->Attribute("x1"));
+				float start_y = atof(elemBrother->Attribute("y1"));
+				float end_x = atof(elemBrother->Attribute("x2"));
+				float end_y = atof(elemBrother->Attribute("y2"));
+				//处理线段
+				t->addLine(start_x, start_y, end_x, end_y);
+			}
+			else if (strElemValue == SVG_POLYLINE)
+			{
+				string strPoints = elemBrother->Attribute("points");
+				//处理多线段
+				t->addPolyLine(strPoints);
+			}
+			else if (strElemValue == SVG_RECT)
 			{
 				float width = atof(elemBrother->Attribute("width"));
 				float height = atof(elemBrother->Attribute("height"));
