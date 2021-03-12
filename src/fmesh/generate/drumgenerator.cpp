@@ -55,12 +55,13 @@ namespace fmesh
 
 			if (onePloy)
 			{
-				offsetPolyTree(m_poly, -_offsetr * 50, middlePolys.at(i));
+				offsetPolyTreeMiter(m_poly, -_offsetr * 50, middlePolys.at(i));
 				//setPolyTreeZ(middlePolys.at(i), delta);
+				_simplifyPoly(&middlePolys.at(i));
 			} 
 			else
 			{
-				offsetAndExtendPolyTree(m_poly, -_offsetr * 50, thickness, middlePolys.at(i));
+				offsetAndExtendPolyTreeMiter(m_poly, -_offsetr * 50, thickness, middlePolys.at(i));
 				_simplifyPoly(&middlePolys.at(i));
 			}
 			if (i && GetPolyCount(&middlePolys.at(i)) != GetPolyCount(&middlePolys.at(i - 1)))
@@ -74,6 +75,20 @@ namespace fmesh
 		{
 			middlePolys.pop_back();
 		}
+
+		if (middlePolys.size())
+		{
+			middlePolys.pop_back();
+		}
+
+// 		if (middlePolys.size() > 5)
+// 		{
+// 			middlePolys.pop_back();
+// 			middlePolys.pop_back();
+// 			middlePolys.pop_back();
+// 			middlePolys.pop_back();
+// 			middlePolys.pop_back();
+// 		}
 
 		float delta1 = 0.0f;
 		float delta2 = 0.0f;
@@ -95,6 +110,7 @@ namespace fmesh
 				_buildFromDiffPolyTree_diffSafty(&middlePolys.at(i), &middlePolys.at(i + 1));
 		}
 
+//		_simplifyPoly(&middlePolys.back(),10);
 		std::vector<Patch*> patches;
 		skeletonPolyTree(middlePolys.back(), delta2, patches, middlePolys.size() / 100.0, onePloy);
 		addPatches(patches);

@@ -72,6 +72,22 @@ namespace fmesh
 		offset.Execute(dest, microDelta);
 	}
 
+	FMESH_API void extendPolyTreeMiter(ClipperLib::PolyTree& source, double delta, ClipperLib::PolyTree& dest)
+	{
+		double microDelta = 1000.0 * delta;
+
+		ClipperLib::ClipperOffset offset;
+		polyNodeFunc func = [&func, &offset](ClipperLib::PolyNode* node) {
+			offset.AddPath(node->Contour, ClipperLib::jtMiter, ClipperLib::EndType::etClosedLine);
+
+			for (ClipperLib::PolyNode* n : node->Childs)
+				func(n);
+		};
+
+		func(&source);
+		offset.Execute(dest, microDelta);
+	}
+
 	void offsetPolyTree(ClipperLib::PolyTree& source, double delta, ClipperLib::PolyTree& dest)
 	{
 		double microDelta = 1000.0 * delta;
@@ -79,6 +95,22 @@ namespace fmesh
 		ClipperLib::ClipperOffset offset;
 		polyNodeFunc func = [&func, &offset](ClipperLib::PolyNode* node) {
 			offset.AddPath(node->Contour, ClipperLib::jtRound, ClipperLib::EndType::etClosedPolygon);
+
+			for (ClipperLib::PolyNode* n : node->Childs)
+				func(n);
+		};
+
+		func(&source);
+		offset.Execute(dest, microDelta);
+	}
+
+	FMESH_API void offsetPolyTreeMiter(ClipperLib::PolyTree& source, double delta, ClipperLib::PolyTree& dest)
+	{
+		double microDelta = 1000.0 * delta;
+
+		ClipperLib::ClipperOffset offset;
+		polyNodeFunc func = [&func, &offset](ClipperLib::PolyNode* node) {
+			offset.AddPath(node->Contour, ClipperLib::jtMiter, ClipperLib::EndType::etClosedPolygon);
 
 			for (ClipperLib::PolyNode* n : node->Childs)
 				func(n);
@@ -171,6 +203,19 @@ namespace fmesh
 		{
 			offsetPolyTree(source, offset, dest);
 			extendPolyTree(dest, delta, dest);
+		}
+	}
+
+	FMESH_API void offsetAndExtendPolyTreeMiter(ClipperLib::PolyTree& source, double offset, double delta, ClipperLib::PolyTree& dest)
+	{
+		if (offset == 0.0)
+		{
+			extendPolyTreeMiter(source, delta, dest);
+		}
+		else
+		{
+			offsetPolyTreeMiter(source, offset, dest);
+			extendPolyTreeMiter(dest, delta, dest);
 		}
 	}
 

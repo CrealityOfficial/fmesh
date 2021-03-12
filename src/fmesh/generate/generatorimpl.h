@@ -75,7 +75,7 @@ namespace fmesh
 
 		void _buildBoardPoly(ClipperLib::PolyTree* tree);
 
-		void _simplifyPoly(ClipperLib::PolyTree* poly);
+		void _simplifyPoly(ClipperLib::PolyTree* poly, double distance=0);
 
 		void saveTopBottom(ClipperLib::PolyTree& tree, const std::string& file);
 

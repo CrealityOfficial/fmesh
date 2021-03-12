@@ -18,11 +18,13 @@ namespace fmesh
 
 	//extend
 	FMESH_API void extendPolyTree(ClipperLib::PolyTree& source, double delta, ClipperLib::PolyTree& dest);
+	FMESH_API void extendPolyTreeMiter(ClipperLib::PolyTree& source, double delta, ClipperLib::PolyTree& dest);
 	FMESH_API void extendPolyTree(ClipperLib::PolyTree& source, double delta, polyOffsetFunc offsetFunc, ClipperLib::PolyTree& dest);
 	FMESH_API void offsetAndExtendPolyTree(ClipperLib::PolyTree& source, double offset, double delta, double z, ClipperLib::PolyTree& dest);
 	FMESH_API void offsetExterior(ClipperLib::PolyTree& source, double offset);
 	FMESH_API void offsetExteriorInner(ClipperLib::PolyTree& source, double offset);
 	FMESH_API void offsetAndExtendPolyTree(ClipperLib::PolyTree& source, double offset, double delta, ClipperLib::PolyTree& dest);
+	FMESH_API void offsetAndExtendPolyTreeMiter(ClipperLib::PolyTree& source, double offset, double delta, ClipperLib::PolyTree& dest);
 
 	//set z
 	FMESH_API void setPolyTreeZ(ClipperLib::PolyTree& tree, double z);
@@ -37,6 +39,7 @@ namespace fmesh
 	//offset
 	FMESH_API void polyTreeOffset(ClipperLib::PolyTree& source, polyOffsetFunc offsetFunc);
 	FMESH_API void offsetPolyTree(ClipperLib::PolyTree& source, double delta, ClipperLib::PolyTree& dest);
+	FMESH_API void offsetPolyTreeMiter(ClipperLib::PolyTree& source, double delta, ClipperLib::PolyTree& dest);
 	FMESH_API void offsetPaths(std::vector<ClipperLib::Path*>& source, double delta, ClipperLib::PolyTree& dest);
 	FMESH_API void offsetPath(ClipperLib::Path* source, double delta, ClipperLib::PolyTree& dest);
 	FMESH_API void offsetPolyNodes(const std::vector<ClipperLib::PolyNode*>& polyNodes, double delta, ClipperLib::PolyTree& dest);
