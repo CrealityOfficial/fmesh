@@ -30,6 +30,11 @@ namespace cdrdxf
 			char c = str.at(i);
 			if ('A' <= c && c <= 'Z' || 'a' <= c && c <= 'z')
 			{
+				if (i + 1 >= str.size())
+				{
+					str = str.substr(0, i);
+					continue;
+				}
 				//_vct.insert(make_pair(str.substr(i,1),str.substr(i+1, str.size())));
 				if ('X' == c || 'x' == c)
 				{
