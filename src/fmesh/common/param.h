@@ -51,8 +51,6 @@ namespace fmesh
 		float extend_width;
 		float total_height;
 		float bottom_offset;
-		float width;
-		float height;
 
 		//top
 		ADTopType top_type;

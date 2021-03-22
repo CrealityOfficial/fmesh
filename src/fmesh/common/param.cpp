@@ -7,8 +7,6 @@ namespace fmesh
 		extend_width = 1.0f;
 		total_height = 26.0f;
 		bottom_offset = 0.0f;
-		width = 50.0f;
-		height = 50.0f;
 
 		//top
 		top_type = ADTopType::adtt_none;
