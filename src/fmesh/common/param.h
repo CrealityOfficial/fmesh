@@ -41,6 +41,12 @@ namespace fmesh
 		adst_num
 	};
 
+	enum class StepParamType
+	{
+		eHeight,
+		eWide
+	};
+
 	class FMESH_API ADParam
 	{
 	public:
