@@ -57,12 +57,12 @@ namespace fmesh
 
 		float middleHeight = m_adParam.total_height - shape_bottom_height - shape_top_height;
 		size_t drumHCount = middleHeight / 0.5;
-		middlePolys.resize(2 + drumHCount);
+		middlePolys.resize(drumHCount+1);
 
 		float middleHeightT = middleHeight / 2;
 		float middleHeightB = middleHeight / 2;
-		size_t drumHCountT = drumHCount / 2  +1;
-		size_t drumHCountB = drumHCount / 2  +1;
+		size_t drumHCountT = drumHCount / 2;
+		size_t drumHCountB = drumHCount / 2;
 		{
 			//1
 			double drumDelta = middleHeightT / (double)drumHCountT;
@@ -104,7 +104,7 @@ namespace fmesh
 			float offsettop = middleHeightB / 2 / drumHCountB;
 
 			size_t middle = drumHCountB / 2;
-			for (size_t i = 0; i < drumHCountB; i++)
+			for (size_t i = 0; i < drumHCountB+1; i++)
 			{
 				float delta = shape_bottom_height + (drumHCountT+i) * drumDelta;
 
@@ -130,9 +130,7 @@ namespace fmesh
 			}
 		}
 
-
-
-		for (size_t i = 0; i < middlePolys.size() - 1; i++)
+		for (size_t i = 0; i < middlePolys.size()-1; i++)
 		{
 			if (onePoly)
 				_buildFromDiffPolyTree_onePoly(&middlePolys.at(i), &middlePolys.at(i + 1));

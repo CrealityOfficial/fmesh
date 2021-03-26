@@ -59,13 +59,12 @@ namespace fmesh
 		float middleHeightB = middleHeight / 2.0f;
 		size_t drumHCount = 32;
 		size_t drumHCount1 = drumHCount / 2;
-		middlePolys.resize(drumHCount);
+		middlePolys.resize(drumHCount+1);
 
 		{
 			//bottom		
 			double drumDelta = middleHeightT / (double)drumHCount1;
 			float offset = 3.1415926 / drumHCount1;
-			size_t middle = drumHCount1 / 2;
 			for (size_t i = 0; i < drumHCount1; i++)
 			{
 				float delta = shape_bottom_height + i * drumDelta;
@@ -88,7 +87,7 @@ namespace fmesh
 			size_t drumHCount2 = drumHCount- drumHCount1;
 			double drumDelta = middleHeightB / (double)drumHCount2;
 			float offset = 3.1415926 / drumHCount2;
-			for (size_t i = 0; i < drumHCount2; i++)
+			for (size_t i = 0; i < drumHCount2+1; i++)
 			{
 				float delta = shape_bottom_height + (drumHCount2+i) * drumDelta;
 				float _offset = shape_middle_width * sin((offset * i) > 0 ? offset * i : 0);
@@ -105,7 +104,7 @@ namespace fmesh
 			}
 		}
 
-		for (size_t i = 0; i < drumHCount-1; i++)
+		for (size_t i = 0; i < middlePolys.size()-1; i++)
 		{
 			if (onePloy)
 			{
