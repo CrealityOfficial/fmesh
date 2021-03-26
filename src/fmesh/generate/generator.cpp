@@ -15,6 +15,8 @@
 #include "fmesh/generate/layergenerator.h"
 #include "fmesh/generate/sharptopgenerator.h"
 #include "fmesh/generate/reitalicsgenerator.h"
+#include "fmesh/generate/drumedgedoublegenerator.h"
+#include "fmesh/generate/sharpsidedoublegenerator.h"
 
 #include "mmesh/trimesh/trimeshutil.h"
 #include <memory>
@@ -42,6 +44,9 @@ namespace fmesh
 		REGISTER("layer", LayerGenerator)
 		REGISTER("sharptop", SharptopGenerator)
 		REGISTER("reitalics", ReItalicsGenerator)
+		REGISTER("doublec", DrumedgeDoubleGenerator)
+		REGISTER("doubles", SharpsideDoubleGenerator)
+			
 	}
 
 	void destroyBuildImpls(GeneratorImplMap& impls)
@@ -145,6 +150,12 @@ namespace fmesh
 			break;
 		case ADShapeType::adst_dingmianjieti:
 			impl = new StepsGenerator();
+			break;
+		case ADShapeType::adst_shuangc:
+			impl = new DrumedgeDoubleGenerator();
+			break;
+		case ADShapeType::adst_shuangjianjiao:
+			impl = new SharpsideDoubleGenerator();
 			break;
 		default:
 			impl = new SimpleGenerator();

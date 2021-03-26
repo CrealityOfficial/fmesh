@@ -38,6 +38,8 @@ namespace fmesh
 		adst_xiemian_front,
 		adst_xiemian_back,
 		adst_dingmianjieti,
+		adst_shuangc,
+		adst_shuangjianjiao,
 		adst_num
 	};
 
