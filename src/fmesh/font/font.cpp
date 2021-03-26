@@ -2,7 +2,7 @@
 #include "outline.h"
 
 #include <iostream>
-
+#define SIMPLERATIO 16
 namespace fmesh
 {
 	Font::Font(FT_Face _face)
@@ -126,7 +126,7 @@ namespace fmesh
 		{
 			data->oline->push((ox - data->xMin) * data->factor, oy * data->factor);
 		}
-		for (double t = 0.0; t <= 1.0; t += 1.0 / 4.0)
+		for (double t = 0.0; t <= 1.0; t += 1.0 / SIMPLERATIO)
 		{
 			px = pow(1.0 - t, 2) * data->prevx + 2 * t * (1.0 - t) * control->x + t * t * to->x;
 			py = pow(1.0 - t, 2) * data->prevy + 2 * t * (1.0 - t) * control->y + t * t * to->y;
