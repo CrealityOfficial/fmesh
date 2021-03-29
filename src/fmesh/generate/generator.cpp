@@ -17,6 +17,8 @@
 #include "fmesh/generate/reitalicsgenerator.h"
 #include "fmesh/generate/drumedgedoublegenerator.h"
 #include "fmesh/generate/sharpsidedoublegenerator.h"
+#include "fmesh/generate/wideninnergenerator.h"
+#include "fmesh/generate/widenoutergenerator.h"
 
 #include "mmesh/trimesh/trimeshutil.h"
 #include <memory>
@@ -46,7 +48,8 @@ namespace fmesh
 		REGISTER("reitalics", ReItalicsGenerator)
 		REGISTER("doublec", DrumedgeDoubleGenerator)
 		REGISTER("doubles", SharpsideDoubleGenerator)
-			
+		REGISTER("inner", WidenInnerGenerator)
+		REGISTER("outer", WidenOuterGenerator)
 	}
 
 	void destroyBuildImpls(GeneratorImplMap& impls)
@@ -156,6 +159,12 @@ namespace fmesh
 			break;
 		case ADShapeType::adst_shuangjianjiao:
 			impl = new SharpsideDoubleGenerator();
+			break;
+		case ADShapeType::adst_baobianzi_inner:
+			impl = new WidenInnerGenerator();
+			break;
+		case ADShapeType::adst_baobianzi_outer:
+			impl = new WidenOuterGenerator();
 			break;
 		default:
 			impl = new SimpleGenerator();

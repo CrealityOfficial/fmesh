@@ -40,6 +40,8 @@ namespace fmesh
 		adst_dingmianjieti,
 		adst_shuangc,
 		adst_shuangjianjiao,
+		adst_baobianzi_inner,
+		adst_baobianzi_outer,
 		adst_num
 	};
 
