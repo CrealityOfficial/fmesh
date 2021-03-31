@@ -77,6 +77,152 @@ namespace fmesh
 				outMax.Z = std::max(outMax.Z, p.Z);
 			}
 		}
+	}
 
+	void fixOrientation(std::vector<ClipperLib::Paths*>& pathses)
+	{
+		for (ClipperLib::Paths* paths : pathses)
+			fixOrientation(paths);
+	}
+
+	void fixOrientation(ClipperLib::Paths* paths)
+	{
+		if (!paths)
+			return;
+
+		size_t size = paths->size();
+		if (size == 0)
+			return;
+
+		struct FixInfo
+		{
+			ClipperLib::Path* path;
+			double area;
+			ClipperLib::IntPoint pMin;
+			ClipperLib::IntPoint pMax;
+		};
+
+		std::vector<FixInfo*> infos(size, nullptr);
+		std::list<int> candidates;
+		for (size_t i = 0; i < size; ++i)
+		{
+			FixInfo*& info = infos.at(i);
+			info = new FixInfo();
+
+			info->path = &paths->at(i);
+			info->area = ClipperLib::Area(paths->at(i));
+			pathBox(paths->at(i), info->pMin, info->pMax);
+
+			candidates.push_back((int)i);
+		}
+
+		candidates.sort([&infos](int i1, int i2)->bool {
+			return infos.at(i1)->pMin.X < infos.at(i2)->pMin.X;
+		});
+
+		struct TreeNode
+		{
+			int index;
+			int depth;
+			std::list<int> temp;
+			std::vector<TreeNode> children;
+		};
+		TreeNode rootNode;
+		rootNode.index = -1;
+		rootNode.depth = -1;
+		rootNode.temp.swap(candidates);
+
+		std::vector<std::vector<int>> simplePolygons(size);
+
+		std::function<void(TreeNode& node)> split;
+		std::function<void(TreeNode& node)> fix;
+		std::function<bool(int c, int t)> testin;
+		testin = [&infos](int c, int t) ->bool {
+			FixInfo* infoc = infos.at(c);
+			FixInfo* infot = infos.at(t);
+			if (std::abs(infot->area) > std::abs(infoc->area))
+				return false;
+
+			if((infoc->pMax.X < infot->pMin.X) || (infoc->pMax.Y < infot->pMin.Y)
+				|| (infoc->pMin.X > infot->pMax.X) || (infoc->pMin.Y > infot->pMax.Y))
+				return false;
+		
+			if (infot->path->size() < 2)
+				return false;
+
+			ClipperLib::IntPoint p1 = infot->path->at(0);
+			return ClipperLib::PointInPolygon(p1, *infoc->path);
+		};
+
+		split = [&split, &testin, &infos](TreeNode& node) {
+			std::list<int>& candidates = node.temp;
+			while (candidates.size() > 0)
+			{
+				int index = candidates.front();
+				candidates.pop_front();
+
+				TreeNode rootNode;
+				rootNode.index = index;
+				rootNode.depth = node.depth + 1;
+
+				std::vector<int> added;
+				for (std::list<int>::iterator it = candidates.begin(); it != candidates.end();)
+				{
+					std::list<int>::iterator c = it;
+					++it;
+					if (testin(index, *c))
+					{
+						bool inAdded = false;
+						for (int addedIndex : added)
+						{
+							if (testin(addedIndex, *c))
+							{
+								inAdded = true;
+								break;
+							}
+						}
+						if (!inAdded)  //test *c collide in index
+						{
+							added.push_back(*c);
+						}
+
+						rootNode.temp.push_back(*c);
+						candidates.erase(c);
+					}
+				}
+				node.children.push_back(rootNode);
+			}
+
+			for (TreeNode& cNode : node.children)
+			{
+				split(cNode);
+			}
+		};
+
+		fix = [&fix, &infos](TreeNode& node) {
+			if (node.depth >= 0)
+			{
+				FixInfo* info = infos.at(node.index);
+				bool needReverse = false;
+				if ((node.depth % 2 == 0 && info->area > 0.0)
+					|| (node.depth % 2 == 1 && info->area < 0.0))
+					needReverse = true;
+
+				if (needReverse)
+					std::reverse(info->path->begin(), info->path->end());
+			}
+			for (TreeNode& cNode : node.children)
+			{
+				fix(cNode);
+			}
+		};
+
+
+		split(rootNode);
+		fix(rootNode);
+
+		for (size_t i = 0; i < size; ++i)
+			delete infos.at(i);
+		infos.clear();
 	}
 }

@@ -11,6 +11,9 @@ namespace fmesh
 
 	FMESH_API void scalePath2ExpectLen(ClipperLib::Paths* paths, double expectLen); //mm
 	FMESH_API void calculatePathBox(ClipperLib::Paths* paths, ClipperLib::IntPoint& outMin, ClipperLib::IntPoint& outMax);
+
+	FMESH_API void fixOrientation(std::vector<ClipperLib::Paths*>& pathses);
+	FMESH_API void fixOrientation(ClipperLib::Paths* paths);
 }
 
 #endif // FMESH_PATH_1604467840196_H
