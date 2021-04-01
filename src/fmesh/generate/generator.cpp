@@ -199,14 +199,14 @@ namespace fmesh
 		return mesh;
 	}
 
-	void GeneratorProxy::setup(const ADParam& param, ClipperLib::Paths* paths)
+	void GeneratorProxy::setup(const ADParam& param, ClipperLib::Paths* paths, mmesh::StatusTracer* tracer)
 	{
 		if (!paths)
 			return;
 
 		m_impl.reset(createGenerator(param));
 		if (m_impl)
-			m_impl->setup(param, paths);
+			m_impl->setup(param, paths, tracer);
 	}
 
 	trimesh::TriMesh* GeneratorProxy::build()

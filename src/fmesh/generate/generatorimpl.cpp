@@ -15,6 +15,7 @@ namespace fmesh
 		:m_paths(nullptr)
 		, m_topTree(nullptr)
 		, m_bottomTree(nullptr)
+		, m_tracer(nullptr)
 	{
 
 	}
@@ -80,8 +81,10 @@ namespace fmesh
 		return mesh;
 	}
 
-	void GeneratorImpl::setup(const ADParam& param, ClipperLib::Paths* paths)
+	void GeneratorImpl::setup(const ADParam& param, ClipperLib::Paths* paths, mmesh::StatusTracer* tracer)
 	{
+		m_tracer = tracer;
+
 		m_paths = paths;
 		m_adParam = param;
 
@@ -102,7 +105,9 @@ namespace fmesh
 	{
 		build();
 
-		trimesh::TriMesh* mesh = generateFromPatches();
+		trimesh::TriMesh* mesh = nullptr;
+		if(!m_tracer || !m_tracer->interrupt())
+			mesh = generateFromPatches();
 		releaseResources();
 		return mesh;
 	}
@@ -111,7 +116,9 @@ namespace fmesh
 	{
 		buildShell();
 
-		trimesh::TriMesh* mesh = generateFromPatches();
+		trimesh::TriMesh* mesh = nullptr;
+		if (!m_tracer || !m_tracer->interrupt())
+			mesh = generateFromPatches();
 		releaseResources();
 		return mesh;
 	}

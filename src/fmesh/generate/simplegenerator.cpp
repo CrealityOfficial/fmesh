@@ -19,9 +19,26 @@ namespace fmesh
 		double hTop, hBottom;
 
 		_buildTop(treeTop, hTop);
+		if (m_tracer)
+		{
+			m_tracer->progress(0.2f);
+			if (m_tracer->interrupt())
+				return;
+		}
+
 		_buildBottom(treeBottom, hBottom);
 
+		if (m_tracer)
+		{
+			m_tracer->progress(0.4f);
+			if (m_tracer->interrupt())
+				return;
+		}
+
 		_buildFromSamePolyTree(&treeBottom, &treeTop);
+
+		if (m_tracer)
+			m_tracer->progress(0.8f);
 	}
 
 	void SimpleGenerator::buildShell()

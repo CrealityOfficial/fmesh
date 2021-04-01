@@ -8,6 +8,10 @@
 #include <map>
 #include <string>
 
+namespace mmesh
+{
+	class StatusTracer;
+}
 namespace fmesh
 {
 	class GeneratorImpl;
@@ -53,7 +57,7 @@ namespace fmesh
 			ExportParam* exportParam = nullptr, ClipperLib::PolyTree* topTree = nullptr, ClipperLib::PolyTree* bottomTree = nullptr);
 
 		//seperate
-		void setup(const ADParam& param, ClipperLib::Paths* paths);
+		void setup(const ADParam& param, ClipperLib::Paths* paths, mmesh::StatusTracer* tracer = nullptr);
 		trimesh::TriMesh* build();
 		trimesh::TriMesh* buildShell();
 		void buildBoard(const ExportParam& param, ClipperLib::PolyTree& topTree, ClipperLib::PolyTree& bottomTree);

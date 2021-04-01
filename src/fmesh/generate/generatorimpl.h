@@ -10,6 +10,7 @@
 #include "fmesh/contour/polytree.h"
 #include "fmesh/generate/polyfiller.h"
 #include "fmesh/generate/triangularization.h"
+#include "mmesh/common/selfdeffunc.h"
 
 namespace fmesh
 {
@@ -28,7 +29,7 @@ namespace fmesh
 		virtual void buildShell() {}
 		virtual void buildBoard(ClipperLib::PolyTree& topTree, ClipperLib::PolyTree& bottomTree) {}
 
-		void setup(const ADParam& param, ClipperLib::Paths* paths);
+		void setup(const ADParam& param, ClipperLib::Paths* paths, mmesh::StatusTracer* tracer = nullptr);
 		trimesh::TriMesh* generate();
 		trimesh::TriMesh* generateShell();
 		void generateBoard(const ExportParam& param, ClipperLib::PolyTree& topTree, ClipperLib::PolyTree& bottomTree);
@@ -95,6 +96,8 @@ namespace fmesh
 		std::vector<std::string> m_args;
 
 		std::vector<Patch*> m_patches;
+
+		mmesh::StatusTracer* m_tracer;
 	};
 }
 
