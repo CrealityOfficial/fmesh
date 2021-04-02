@@ -78,6 +78,10 @@ namespace fmesh
 		float shape_top_height;
 		float shape_middle_width;
 		float shape_angle;
+
+		//top/bottom layer count
+		int top_layers;
+		int bottom_layers;
 	};
 
 	class FMESH_API ExportParam

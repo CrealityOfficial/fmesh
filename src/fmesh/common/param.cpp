@@ -11,12 +11,12 @@ namespace fmesh
 		//top
 		top_type = ADTopType::adtt_none;
 		top_height = 2.0f;
-		top_extend_width = 2.0f;
+		top_extend_width = 1.0f;
 
 		//bottom
 		bottom_type = ADBottomType::adbt_none;
 		bottom_height = 2.0f;
-		bottom_extend_width = 0.5f;
+		bottom_extend_width = 1.0f;
 
 		//shape type
 		shape_type = ADShapeType::adst_none;
@@ -24,6 +24,9 @@ namespace fmesh
 		shape_top_height = 5.0f;
 		shape_middle_width = 2.0f;
 		shape_angle = 15.0f;
+
+		top_layers=0;
+		bottom_layers=0;
 	}
 
 	ADParam::~ADParam()

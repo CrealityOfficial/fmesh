@@ -399,7 +399,7 @@ namespace fmesh
 
 		if (m_adParam.top_type == ADTopType::adtt_close
 			|| m_adParam.top_type == ADTopType::adtt_round)
-			hTop -= m_adParam.top_height;
+			hTop -= m_adParam.bottom_layers >0?m_adParam.bottom_extend_width * m_adParam.bottom_layers : m_adParam.top_extend_width;
 		else if (m_adParam.top_type == ADTopType::adtt_step)
 			hTop -= (m_adParam.top_height + m_adParam.top_extend_width);
 
@@ -461,7 +461,7 @@ namespace fmesh
 		if (m_adParam.bottom_type == ADBottomType::adbt_close
 			|| m_adParam.bottom_type == ADBottomType::adbt_extend_inner
 			|| m_adParam.bottom_type == ADBottomType::adbt_extend_outter)
-			hBottom += m_adParam.bottom_height;
+			hBottom += m_adParam.bottom_layers>0? m_adParam.bottom_extend_width* m_adParam.bottom_layers: m_adParam.bottom_extend_width;
 		else if (m_adParam.bottom_type == ADBottomType::adbt_step)
 			hBottom += (m_adParam.bottom_height + m_adParam.bottom_extend_width);
 
