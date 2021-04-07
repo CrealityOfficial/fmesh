@@ -126,6 +126,8 @@ namespace fmesh
 	void GeneratorImpl::generateBoard(const ExportParam& param, ClipperLib::PolyTree& topTree, ClipperLib::PolyTree& bottomTree)
 	{
 		m_exportParam = param;
+		if (!topTree.ChildCount() && !topTree.ChildCount())
+			return;
 		buildBoard(topTree, bottomTree);
 	}
 
