@@ -42,18 +42,25 @@ namespace fmesh
 		double bottomHeight = m_adParam.total_height - m_adParam.shape_top_height;
 
 		//bottom
-		middlePolys.resize(1);
+		middlePolys.resize(2);
 		if (onePoly)
 		{
 			copy2PolyTree(m_poly,middlePolys.at(0));
 			setPolyTreeZ(middlePolys.at(0), bottomHeight);
+			copy2PolyTree(m_poly, middlePolys.at(1));
+			setPolyTreeZ(middlePolys.at(1), bottomHeight);
 		} 
 		else
 		{
-			offsetAndExtendPolyTree(m_poly, 0.0, thickness, bottomHeight, middlePolys.at(0));
+			//offsetAndExtendPolyTree(m_poly, 0.0, thickness, bottomHeight, middlePolys.at(0));
+
+			offsetAndExtendPolyTreeMiter(m_poly, 0.0, thickness, middlePolys.at(0));
+			setPolyTreeZ(middlePolys.at(0), bottomHeight);
+			offsetAndExtendPolyTreeMiter(m_poly, 0.0, thickness, middlePolys.at(1));
+			setPolyTreeZ(middlePolys.at(1), bottomHeight);
 		}
 
-		_simplifyPoly(&middlePolys.back());
+		_simplifyPoly(&middlePolys.back(),100);
 
 		std::vector<Patch*> patches;
 		skeletonPolyTreeSharp(middlePolys.back(), bottomHeight, m_adParam.shape_top_height, patches);

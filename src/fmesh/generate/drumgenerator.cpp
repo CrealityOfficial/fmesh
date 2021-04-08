@@ -19,14 +19,14 @@ namespace fmesh
 	{
 		std::vector<ClipperLib::PolyTree> middlePolys;
 		buildMiddle(middlePolys);
-		_buildTopBottom(&middlePolys.front(),nullptr);
+		_buildTopBottom(&middlePolys.back(),nullptr);
 	}
 
 	void DrumGenerator::buildShell()
 	{
 		std::vector<ClipperLib::PolyTree> middlePolys;
 		buildMiddle(middlePolys,true);
-		_buildTopBottom_onepoly(&middlePolys.front(), nullptr);
+		_buildTopBottom_onepoly(&middlePolys.back(), nullptr);
 	}
 
 	void DrumGenerator::buildBoard(ClipperLib::PolyTree& topTree, ClipperLib::PolyTree& bottomTree)
@@ -110,12 +110,12 @@ namespace fmesh
 				_buildFromDiffPolyTree_diffSafty(&middlePolys.at(i), &middlePolys.at(i + 1));
 		}
 
-//		_simplifyPoly(&middlePolys.back(),10);
+		_simplifyPoly(&middlePolys.back(),50);
 		std::vector<Patch*> patches;
 		skeletonPolyTree(middlePolys.back(), delta2, patches, middlePolys.size() / 100.0, onePloy);
 		addPatches(patches);
 		//_fillPolyTree(&middlePolys.back(), true);
-		m_adParam.bottom_height = bottomHeight;
+		//m_adParam.bottom_height = bottomHeight;
 	}
 
 	void DrumGenerator::initTestData()

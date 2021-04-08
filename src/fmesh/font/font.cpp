@@ -2,7 +2,7 @@
 #include "outline.h"
 
 #include <iostream>
-#define SIMPLERATIO 16
+#define SIMPLERATIO 12
 namespace fmesh
 {
 	Font::Font(FT_Face _face)
