@@ -19,14 +19,14 @@ namespace fmesh
 	{
 		std::vector<ClipperLib::PolyTree> middlePolys;
 		buildMiddle(middlePolys);
-		_buildTopBottom(&middlePolys.back(),nullptr);
+		_buildTopBottom(&middlePolys.front(),nullptr);
 	}
 
 	void DrumGenerator::buildShell()
 	{
 		std::vector<ClipperLib::PolyTree> middlePolys;
 		buildMiddle(middlePolys,true);
-		_buildTopBottom_onepoly(&middlePolys.back(), nullptr);
+		_buildTopBottom_onepoly(&middlePolys.front(), nullptr);
 	}
 
 	void DrumGenerator::buildBoard(ClipperLib::PolyTree& topTree, ClipperLib::PolyTree& bottomTree)
@@ -57,12 +57,12 @@ namespace fmesh
 			{
 				offsetPolyTreeMiter(m_poly, -_offsetr * 50, middlePolys.at(i));
 				//setPolyTreeZ(middlePolys.at(i), delta);
-				_simplifyPoly(&middlePolys.at(i));
+				//_simplifyPoly(&middlePolys.at(i));
 			} 
 			else
 			{
 				offsetAndExtendPolyTreeMiter(m_poly, -_offsetr * 50, thickness, middlePolys.at(i));
-				_simplifyPoly(&middlePolys.at(i));
+				//_simplifyPoly(&middlePolys.at(i));
 			}
 			if (i && GetPolyCount(&middlePolys.at(i)) != GetPolyCount(&middlePolys.at(i - 1)))
 			{
@@ -81,26 +81,17 @@ namespace fmesh
 			middlePolys.pop_back();
 		}
 
-// 		if (middlePolys.size() > 5)
-// 		{
-// 			middlePolys.pop_back();
-// 			middlePolys.pop_back();
-// 			middlePolys.pop_back();
-// 			middlePolys.pop_back();
-// 			middlePolys.pop_back();
-// 		}
-
 		float delta1 = 0.0f;
 		float delta2 = 0.0f;
 		double bottomHeight = m_adParam.total_height - (middlePolys.size() - 1) * offsetH;
 		if (bottomHeight < 0)
 			bottomHeight = 0;
 
-		for (size_t i = 0; i < middlePolys.size() - 1; i++)
+		for (size_t i = 0; i < middlePolys.size()-1; i++)
 		{
 			delta1 = bottomHeight + offsetH * i;
 			delta2 = bottomHeight + offsetH * (i + 1);
-			if (i % 2)
+			if (i % 2 || !i)
 				setPolyTreeZ(middlePolys.at(i), delta1);
 			setPolyTreeZ(middlePolys.at(i + 1), delta2);
 			
@@ -109,13 +100,18 @@ namespace fmesh
 			else
 				_buildFromDiffPolyTree_diffSafty(&middlePolys.at(i), &middlePolys.at(i + 1));
 		}
-
-		_simplifyPoly(&middlePolys.back(),50);
 		std::vector<Patch*> patches;
-		skeletonPolyTree(middlePolys.back(), delta2, patches, middlePolys.size() / 100.0, onePloy);
+		if (onePloy)
+		{
+			_simplifyPoly(&middlePolys.back(), 50);
+			skeletonPolyTree(middlePolys.back(), delta2, patches, middlePolys.size() / 8, onePloy);
+		}
+		else
+		{
+			_simplifyPoly(&middlePolys.back(), 40);
+			skeletonPolyTree(middlePolys.back(), delta2, patches, middlePolys.size() / 100);
+		}
 		addPatches(patches);
-		//_fillPolyTree(&middlePolys.back(), true);
-		//m_adParam.bottom_height = bottomHeight;
 	}
 
 	void DrumGenerator::initTestData()
