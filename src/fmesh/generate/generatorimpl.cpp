@@ -582,7 +582,7 @@ namespace fmesh
 		else if (m_adParam.top_type == ADTopType::adtt_round)
 			hTop -= m_adParam.top_height;
 		else if (m_adParam.top_type == ADTopType::adtt_step)
-			hTop -= (m_adParam.top_height + m_adParam.extend_width / 4.0 + m_adParam.top_extend_width / 4.0);
+			;// hTop -= (m_adParam.top_height + m_adParam.extend_width / 4.0 + m_adParam.top_extend_width / 4.0);
 		if (m_adParam.top_type == ADTopType::adtt_close)
 			hTop -= m_adParam.top_height;
 
@@ -605,32 +605,32 @@ namespace fmesh
 		}
 		else if (m_adParam.top_type == ADTopType::adtt_step)
 		{
-			double h = (m_adParam.total_height - m_adParam.top_height) > 0 ? (m_adParam.total_height - m_adParam.top_height) : 0;
-			int count = m_adParam.extend_width > 0 ? (0.5 + 1.0 * m_adParam.top_extend_width / m_adParam.extend_width) : 1;
-			std::vector<ClipperLib::PolyTree> botomSteppolys(4);
-			offsetPolyTree(m_poly, -count* m_adParam.extend_width, botomSteppolys.at(0));
-			setPolyTreeZ(botomSteppolys.at(0), h);
+			//double h = (m_adParam.total_height - m_adParam.top_height) > 0 ? (m_adParam.total_height - m_adParam.top_height) : 0;
+			//int count = m_adParam.extend_width > 0 ? (0.5 + 1.0 * m_adParam.top_extend_width / m_adParam.extend_width) : 1;
+			//std::vector<ClipperLib::PolyTree> botomSteppolys(4);
+			//offsetPolyTree(m_poly, -count* m_adParam.extend_width, botomSteppolys.at(0));
+			//setPolyTreeZ(botomSteppolys.at(0), h);
 
-			copy2PolyTree(m_poly, botomSteppolys.at(1));
-			setPolyTreeZ(botomSteppolys.at(1), h);
+			//copy2PolyTree(m_poly, botomSteppolys.at(1));
+			//setPolyTreeZ(botomSteppolys.at(1), h);
 
-			copy2PolyTree(m_poly, botomSteppolys.at(2));
-			setPolyTreeZ(botomSteppolys.at(2), m_adParam.total_height);
+			//copy2PolyTree(m_poly, botomSteppolys.at(2));
+			//setPolyTreeZ(botomSteppolys.at(2), m_adParam.total_height);
 
-			offsetPolyTree(m_poly, -count * m_adParam.extend_width, botomSteppolys.at(3));
-			setPolyTreeZ(botomSteppolys.at(3), h-0.2);
+			//offsetPolyTree(m_poly, -count * m_adParam.extend_width, botomSteppolys.at(3));
+			//setPolyTreeZ(botomSteppolys.at(3), h-0.2);
 
-			_buildFromSamePolyTree(&treeTop, &botomSteppolys.at(1));
-			_buildFromSamePolyTree(&botomSteppolys.at(1), &botomSteppolys.at(2));
-			_buildFromSamePolyTree(&botomSteppolys.at(0), &botomSteppolys.at(3));
+			//_buildFromSamePolyTree(&treeTop, &botomSteppolys.at(1));
+			//_buildFromSamePolyTree(&botomSteppolys.at(1), &botomSteppolys.at(2));
+			//_buildFromSamePolyTree(&botomSteppolys.at(0), &botomSteppolys.at(3));
 
-			std::vector<ClipperLib::PolyTree> offsetPolys(2);
-			offsetPolyTree(m_poly, -count * m_adParam.extend_width - 0.2, offsetPolys.at(0));
-			setPolyTreeZ(offsetPolys.at(0), h);
+			//std::vector<ClipperLib::PolyTree> offsetPolys(2);
+			//offsetPolyTree(m_poly, -count * m_adParam.extend_width - 0.2, offsetPolys.at(0));
+			//setPolyTreeZ(offsetPolys.at(0), h);
 
-			offsetPolyTree(m_poly, -m_adParam.extend_width - 0.2, offsetPolys.at(1));
-			setPolyTreeZ(offsetPolys.at(1), hTop);
-			_buildFromDiffPolyTree_diffSafty(&offsetPolys.at(1), &offsetPolys.at(0));
+			//offsetPolyTree(m_poly, -m_adParam.extend_width - 0.2, offsetPolys.at(1));
+			//setPolyTreeZ(offsetPolys.at(1), hTop);
+			//_buildFromDiffPolyTree_diffSafty(&offsetPolys.at(1), &offsetPolys.at(0));
 		}
 		else if (m_adParam.top_type == ADTopType::adtt_round)
 		{
@@ -658,7 +658,7 @@ namespace fmesh
 			|| m_adParam.bottom_type == ADBottomType::adbt_extend_outter)
 			hBottom = 0;//hBottom += m_adParam.bottom_height;
 		else if (m_adParam.bottom_type == ADBottomType::adbt_step)
-			hBottom = m_adParam.bottom_height;
+			;// hBottom = m_adParam.bottom_height;
 
 		//offsetAndExtendPolyTree(m_poly, offset, thickness, hBottom, treeBottom);
 		copy2PolyTree(m_poly, treeBottom);
@@ -672,33 +672,33 @@ namespace fmesh
 		}
 		else if (m_adParam.bottom_type == ADBottomType::adbt_step)
 		{
-			double h = (m_adParam.bottom_height - m_adParam.extend_width / 4.0f - m_adParam.bottom_extend_width / 4.0) ? (m_adParam.bottom_height - m_adParam.extend_width / 4.0 - m_adParam.bottom_extend_width / 4.0) : 0.5;
-			int count = m_adParam.extend_width > 0 ? (0.5 + 1.0 * m_adParam.bottom_extend_width / m_adParam.extend_width) : 1;
-			std::vector<ClipperLib::PolyTree> botomSteppolys(4);
-			offsetPolyTree(m_poly, -count* m_adParam.extend_width, botomSteppolys.at(0));
-			setPolyTreeZ(botomSteppolys.at(0), hBottom);
+			//double h = (m_adParam.bottom_height - m_adParam.extend_width / 4.0f - m_adParam.bottom_extend_width / 4.0) ? (m_adParam.bottom_height - m_adParam.extend_width / 4.0 - m_adParam.bottom_extend_width / 4.0) : 0.5;
+			//int count = m_adParam.extend_width > 0 ? (0.5 + 1.0 * m_adParam.bottom_extend_width / m_adParam.extend_width) : 1;
+			//std::vector<ClipperLib::PolyTree> botomSteppolys(4);
+			//offsetPolyTree(m_poly, -count* m_adParam.extend_width, botomSteppolys.at(0));
+			//setPolyTreeZ(botomSteppolys.at(0), hBottom);
 
-			copy2PolyTree(m_poly, botomSteppolys.at(1));
-			setPolyTreeZ(botomSteppolys.at(1), h);
+			//copy2PolyTree(m_poly, botomSteppolys.at(1));
+			//setPolyTreeZ(botomSteppolys.at(1), h);
 
-			offsetPolyTree(m_poly, -count * m_adParam.extend_width, botomSteppolys.at(2));
-			setPolyTreeZ(botomSteppolys.at(2), hBottom-0.2);
+			//offsetPolyTree(m_poly, -count * m_adParam.extend_width, botomSteppolys.at(2));
+			//setPolyTreeZ(botomSteppolys.at(2), hBottom-0.2);
 
-			copy2PolyTree(m_poly, botomSteppolys.at(3));
-			setPolyTreeZ(botomSteppolys.at(3), 0.0);
+			//copy2PolyTree(m_poly, botomSteppolys.at(3));
+			//setPolyTreeZ(botomSteppolys.at(3), 0.0);
 
-			_buildFromSamePolyTree(&botomSteppolys.at(3), &botomSteppolys.at(1));
-			_buildFromSamePolyTree(&botomSteppolys.at(1), &treeBottom);
-			_buildFromSamePolyTree(&botomSteppolys.at(0), &botomSteppolys.at(2));
+			//_buildFromSamePolyTree(&botomSteppolys.at(3), &botomSteppolys.at(1));
+			//_buildFromSamePolyTree(&botomSteppolys.at(1), &treeBottom);
+			//_buildFromSamePolyTree(&botomSteppolys.at(0), &botomSteppolys.at(2));
 
-			std::vector<ClipperLib::PolyTree> offsetPolys(2);
-			offsetPolyTree(m_poly, -count * m_adParam.extend_width - 0.2, offsetPolys.at(0));
-			setPolyTreeZ(offsetPolys.at(0), hBottom);
+			//std::vector<ClipperLib::PolyTree> offsetPolys(2);
+			//offsetPolyTree(m_poly, -count * m_adParam.extend_width - 0.2, offsetPolys.at(0));
+			//setPolyTreeZ(offsetPolys.at(0), hBottom);
 
-			offsetPolyTree(m_poly, -m_adParam.extend_width - 0.2, offsetPolys.at(1));
-			setPolyTreeZ(offsetPolys.at(1), h);
-			_buildFromDiffPolyTree_diffSafty(&offsetPolys.at(1), &offsetPolys.at(0));
-			//_buildFromDiffPolyTree_xor(&botomSteppolys.at(0), &treeBottom);
+			//offsetPolyTree(m_poly, -m_adParam.extend_width - 0.2, offsetPolys.at(1));
+			//setPolyTreeZ(offsetPolys.at(1), h);
+			//_buildFromDiffPolyTree_diffSafty(&offsetPolys.at(1), &offsetPolys.at(0));
+			////_buildFromDiffPolyTree_xor(&botomSteppolys.at(0), &treeBottom);
 
 		}
 		else if (m_adParam.bottom_type == ADBottomType::adbt_extend_inner)
