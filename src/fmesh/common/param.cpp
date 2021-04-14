@@ -25,8 +25,8 @@ namespace fmesh
 		shape_middle_width = 2.0f;
 		shape_angle = 15.0f;
 
-		top_layers=0;
-		bottom_layers=0;
+		top_layers=1;
+		bottom_layers=1;
 	}
 
 	ADParam::~ADParam()
