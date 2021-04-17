@@ -202,6 +202,7 @@ namespace fmesh
 			{
 				paths->emplace_back();
 				paths->back().swap(m_curPath);
+				m_curPath.clear();
 				break;
 			}
 			default:
@@ -212,6 +213,12 @@ namespace fmesh
 			}//end switch
 		}
 
+		if (m_curPath.size())
+		{
+			paths->emplace_back();
+			paths->back().swap(m_curPath);
+			m_curPath.clear();
+		}
 		m_pathses.push_back(paths);
 	}
 
