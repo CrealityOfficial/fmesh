@@ -18,6 +18,7 @@ namespace fmesh
 
 	//extend
 	FMESH_API void extendPolyTree(ClipperLib::PolyTree& source, double delta, ClipperLib::PolyTree& dest);
+	FMESH_API void extendPolyTreeNew(ClipperLib::PolyTree& source, double delta, ClipperLib::PolyTree& dest);
 	FMESH_API void extendPolyTreeMiter(ClipperLib::PolyTree& source, double delta, ClipperLib::PolyTree& dest);
 	FMESH_API void extendPolyTree(ClipperLib::PolyTree& source, double delta, polyOffsetFunc offsetFunc, ClipperLib::PolyTree& dest);
 	FMESH_API void offsetAndExtendPolyTree(ClipperLib::PolyTree& source, double offset, double delta, double z, ClipperLib::PolyTree& dest);
