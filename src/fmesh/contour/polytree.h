@@ -40,6 +40,7 @@ namespace fmesh
 	//offset
 	FMESH_API void polyTreeOffset(ClipperLib::PolyTree& source, polyOffsetFunc offsetFunc);
 	FMESH_API void offsetPolyTree(ClipperLib::PolyTree& source, double delta, ClipperLib::PolyTree& dest);
+	FMESH_API void passivationPolyTree(ClipperLib::PolyTree& source, double delta);
 	FMESH_API void offsetPolyTreeMiter(ClipperLib::PolyTree& source, double delta, ClipperLib::PolyTree& dest);
 	FMESH_API void offsetPaths(std::vector<ClipperLib::Path*>& source, double delta, ClipperLib::PolyTree& dest);
 	FMESH_API void offsetPath(ClipperLib::Path* source, double delta, ClipperLib::PolyTree& dest);

@@ -124,7 +124,57 @@ namespace fmesh
 		}
 	}
 
-	FMESH_API void fillComplexPolyTree_onePloy(ClipperLib::PolyTree* polyTree, std::vector<Patch*>& patches, bool invert /*= false*/)
+	void fillComplexPolyTreeReverseInnerNew(ClipperLib::PolyTree* polyTree, std::vector<Patch*>& patches, bool invert)
+	{
+		if (!polyTree)
+			return;
+
+		//savePolyTree(polyTree, "f/mypoly");
+		std::vector<ClipperLib::PolyNode*> source;
+		std::vector<ClipperLib::PolyNode*> tmp;
+
+		for (ClipperLib::PolyNode* node : polyTree->Childs)
+			if (!node->IsHole())
+				source.push_back(node);
+
+		int parentChilds = 0;
+		while (source.size() > 0)
+		{
+			for (ClipperLib::PolyNode* node : source)
+			{
+				if (node->ChildCount() == 0)
+					continue;
+#ifdef _DEBUG
+				//double area = ClipperLib::Area(node->Contour);
+				//std::cout << area << std::endl;
+#endif
+				Patch* patch = fillOneLevelPolyNode(node);
+				if (patch)
+				{
+					if (invert)
+					{
+						std::reverse(patch->begin(), patch->end());
+					}
+					patches.push_back(patch);
+				}
+
+				for (ClipperLib::PolyNode* n : node->Childs)
+				{
+					for (ClipperLib::PolyNode* cn : n->Childs)
+					{
+						if (!cn->IsHole())
+							tmp.push_back(cn);
+					}
+				}
+			}
+
+			source.swap(tmp);
+			tmp.clear();
+			++parentChilds;
+		}
+	}
+
+	void fillComplexPolyTree_onePloy(ClipperLib::PolyTree* polyTree, std::vector<Patch*>& patches, bool invert /*= false*/)
 	{
 		if (!polyTree)
 			return;
@@ -261,7 +311,7 @@ namespace fmesh
 		fillComplexPolyTree(&out_, patches, false);
 	}
 
-	FMESH_API void fillPolyTreeDepthOnePoly(ClipperLib::PolyTree* polyTree, std::vector<Patch*>& patches)
+	void fillPolyTreeDepthOnePoly(ClipperLib::PolyTree* polyTree, std::vector<Patch*>& patches)
 	{
 		if (!polyTree)
 			return;

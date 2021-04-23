@@ -11,10 +11,10 @@ namespace fmesh
 		if (flag == 1 && node->IsHole())
 			return false;
 
-		if (flag == 2 && depth != 2 && depth != 3)
+		if (flag == 2 && depth != 2 && depth != 3 && depth != 6 && depth != 7)   //14
 			return false;
 
-		if (flag == 3 && depth != 1 && depth != 4 && depth != 5 && depth != 8)      // 1, 4
+		if (flag == 3 && depth != 1 && depth != 4 && depth != 5 && depth != 8)      // 23
 			return false;
 	
 		if (flag == 4)      // 2, 3

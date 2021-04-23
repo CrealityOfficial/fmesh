@@ -56,6 +56,7 @@ namespace fmesh
 			if (onePoly)
 			{
 				copy2PolyTree(m_poly, middlePolys.at(1));
+				passivationPolyTree(middlePolys.at(1), thickness / 2.0);
 				setPolyTreeZ(middlePolys.at(1), m_adParam.total_height);
 			}
 			else

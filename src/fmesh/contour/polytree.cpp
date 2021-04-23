@@ -77,11 +77,13 @@ namespace fmesh
 	{
 		double microDelta = 1000.0 * delta;
 
+		//get origin poly
 		ClipperLib::PolyTree source1;
+		ClipperLib::PolyTree source2;
 		ClipperLib::ClipperOffset offset;
 		bool bReverse = false;
 		polyNodeFunc func = [&func, &offset, &bReverse](ClipperLib::PolyNode* node) {
-			if(bReverse)
+			if (bReverse)
 				ClipperLib::ReversePath(node->Contour);
 			offset.AddPath(node->Contour, ClipperLib::jtRound, ClipperLib::EndType::etClosedPolygon);
 
@@ -90,9 +92,15 @@ namespace fmesh
 		};
 		func(&source);
 		offset.Execute(source1, -microDelta);
-			
-		bReverse = true;
+		offset.Execute(source2, microDelta);
+		offset.Clear();
+		func(&source2);
+		offset.Execute(source2, -microDelta);
+
+		offset.Clear();
 		func(&source1);
+		bReverse = true;
+		func(&source2);
 		offset.Execute(dest, 1);
 	}
 
@@ -128,7 +136,27 @@ namespace fmesh
 		offset.Execute(dest, microDelta);
 	}
 
-	FMESH_API void offsetPolyTreeMiter(ClipperLib::PolyTree& source, double delta, ClipperLib::PolyTree& dest)
+	void passivationPolyTree(ClipperLib::PolyTree& source, double delta)
+	{
+		double microDelta = 1000.0 * delta;
+
+		//get origin poly
+		ClipperLib::PolyTree source2;
+		ClipperLib::ClipperOffset offset;
+		polyNodeFunc func = [&func, &offset](ClipperLib::PolyNode* node) {
+			offset.AddPath(node->Contour, ClipperLib::jtRound, ClipperLib::EndType::etClosedPolygon);
+
+			for (ClipperLib::PolyNode* n : node->Childs)
+				func(n);
+		};
+		func(&source);
+		offset.Execute(source2, microDelta);
+		offset.Clear();
+		func(&source2);
+		offset.Execute(source, -microDelta);
+	}
+
+	void offsetPolyTreeMiter(ClipperLib::PolyTree& source, double delta, ClipperLib::PolyTree& dest)
 	{
 		double microDelta = 1000.0 * delta;
 

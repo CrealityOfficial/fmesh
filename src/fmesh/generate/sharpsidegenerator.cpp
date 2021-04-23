@@ -84,6 +84,7 @@ namespace fmesh
 			if (onePoly)
 			{
 				offsetPolyTree(m_poly, _offset / 2, middlePolys.at(i));
+				passivationPolyTree(middlePolys.at(i), thickness / 2.0);
 				setPolyTreeZ(middlePolys.at(i), delta);
 			} 
 			else

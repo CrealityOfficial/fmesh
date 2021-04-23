@@ -63,6 +63,7 @@ namespace fmesh
 		void _buildFromDiffPolyTree_all_same(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp,double delta, int flag = 0, bool invert = false);
 		void _buildFromDiffPolyTree_all_diff(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp,int flag=0, bool invert = false);
 		
+		void _buileMergePloyTree(ClipperLib::PolyTree* treeOuter, ClipperLib::PolyTree* treeInner, ClipperLib::PolyTree& treeNew);
 		void _buildFromDiffPolyTree_firstLayer(ClipperLib::PolyTree* treeLower, int flag = 0);
 		void _buildRoof(ClipperLib::PolyTree* polyTree, double roofHeight, double thickness);
 
@@ -77,6 +78,8 @@ namespace fmesh
 		void _buildBoardPoly(ClipperLib::PolyTree* tree);
 
 		void _simplifyPoly(ClipperLib::PolyTree* poly, double distance=0);
+
+		void _simplifyPolyOneploy(ClipperLib::PolyTree* poly, bool outer=true, double distance = 0);
 
 		void saveTopBottom(ClipperLib::PolyTree& tree, const std::string& file);
 

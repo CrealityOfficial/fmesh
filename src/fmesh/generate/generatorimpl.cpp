@@ -309,9 +309,14 @@ namespace fmesh
 
 	void GeneratorImpl::_buildFromDiffPolyTree_all_diff(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp, int flag, bool invert)
 	{
-		ClipperLib::PolyTree out;
-		fmesh::xor2PolyTrees(treeLower, treeUp, out, flag);
-		_fillPolyTreeReverseInner(&out, invert);
+		//ClipperLib::PolyTree out;
+		ClipperLib::PolyTree outOuter;
+		ClipperLib::PolyTree outInner;
+		fmesh::xor2PolyTrees(treeLower, treeUp, outOuter, 2);//outer
+		fmesh::xor2PolyTrees(treeLower, treeUp, outInner, 3);//inner
+
+		_fillPolyTreeReverseInner(&outOuter, invert);
+		_fillPolyTreeReverseInner(&outInner, !invert);
 	}
 
 	void GeneratorImpl::_buildFromDiffPolyTree_xor(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp, double delta, int flag, bool invert)
@@ -360,7 +365,9 @@ namespace fmesh
 	void GeneratorImpl::_fillPolyTreeReverseInner(ClipperLib::PolyTree* tree, bool invert /*= false*/)
 	{
 		std::vector<Patch*> patches;
-		fillComplexPolyTreeReverseInner(tree, patches, invert);
+
+		//test
+		fillComplexPolyTreeReverseInnerNew(tree, patches, invert);
 		//fillComplexPolyTree(tree, patches);
 
 		addPatches(patches);
@@ -385,6 +392,24 @@ namespace fmesh
 		std::vector<Patch*> patches;
 		fillComplexPolyTree(treeLower, patches);
 		addPatches(patches, flag);
+	}
+
+	void GeneratorImpl::_buileMergePloyTree(ClipperLib::PolyTree* treeOuter, ClipperLib::PolyTree* treeInner, ClipperLib::PolyTree& treeNew)
+	{
+		ClipperLib::ClipperOffset offset;
+		bool bReverse = false;
+		polyNodeFunc func = [&func, &offset, &bReverse](ClipperLib::PolyNode* node) {
+			if (bReverse)
+				;// ClipperLib::ReversePath(node->Contour);
+			offset.AddPath(node->Contour, ClipperLib::jtRound, ClipperLib::EndType::etClosedPolygon);
+
+			for (ClipperLib::PolyNode* n : node->Childs)
+				func(n);
+		};
+		func(treeOuter);
+		bReverse = true;
+		func(treeInner);
+		offset.Execute(treeNew, 1);
 	}
 
 	void GeneratorImpl::_buildRoof(ClipperLib::PolyTree* polyTree, double roofHeight, double thickness)
@@ -791,6 +816,25 @@ namespace fmesh
 
 		polyNodeFunc func = [&distance](ClipperLib::PolyNode* node) {
 			ClipperLib::CleanPolygon(node->Contour, distance);
+		};
+		mmesh::loopPolyTree(func, poly);
+	}
+
+	void GeneratorImpl::_simplifyPolyOneploy(ClipperLib::PolyTree* poly, bool outer, double distance)
+	{
+		double x = dmax.x - dmin.x;
+		double y = dmax.y - dmin.y;
+		size_t childcount = poly->ChildCount();
+		if (!distance)
+			distance = ((x * y / 10000) / childcount) > 1 ? (x * y / 10000) / childcount : 1.415;
+		int flag = 3;
+		if (!outer)
+		{
+			flag = 2;
+		}
+		polyNodeFunc func = [&distance,&flag](ClipperLib::PolyNode* node) {
+			if (checkFlag(node, flag))
+				ClipperLib::CleanPolygon(node->Contour, distance);
 		};
 		mmesh::loopPolyTree(func, poly);
 	}

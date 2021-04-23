@@ -78,16 +78,16 @@ namespace fmesh
 			if (onePoly)
 			{
 				offsetPolyTree(m_poly, (float)i * offset, middlePolys.at(i));
+				passivationPolyTree(middlePolys.at(i), thickness / 2.0);
 				setPolyTreeZ(middlePolys.at(i), bottomHeight + (float)i * h);
 			} 
 			else
-			{
-				_simplifyPoly(&middlePolys.at(i));
-				fmesh::offsetAndExtendPolyTree(m_poly, (float)i * offset, thickness, bottomHeight + (float)i * h, middlePolys.at(i));
+			{	
+				offsetAndExtendPolyTree(m_poly, (float)i * offset, thickness, bottomHeight + (float)i * h, middlePolys.at(i));		
 			}
 		}
 
-		for (int i = 0; i < count; ++i)
+		for (int i =0; i < count; ++i)
 		{
 			if (onePoly)
 				_buildFromDiffPolyTree_onePoly(&middlePolys.at(i), &middlePolys.at(i + 1));//outer
