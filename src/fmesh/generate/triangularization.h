@@ -17,6 +17,9 @@ namespace fmesh
 	void buildFromDiffPolyTreeSafty(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp,
 		std::vector<Patch*>& patches, double delta, int flag = 0);
 
+	void buildFromSameAndDiff(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp,
+		std::vector<Patch*>& patches, int flag, double delta ,ClipperLib::PolyTree& out, ClipperLib::PolyTree& Inner);
+
 	struct PolyTreeOppoPair
 	{
 		ClipperLib::PolyNode* lower;
@@ -30,10 +33,6 @@ namespace fmesh
 	void buildFromPathes(std::vector<ClipperLib::Path*>& pathsLower, std::vector<ClipperLib::Path*>& pathsUp, Patch& patch);
 	void buildFromPath(ClipperLib::Path* pathLower, ClipperLib::Path* pathUp, Patch& patch);
 
-	void buildFromDiffPolyTree_drum(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp,
-		std::vector<Patch*>& patches, int flag, ClipperLib::PolyTree& out);
-	void buildFromDiffPolyTree_SameAndDiff(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp,
-		std::vector<Patch*>& patches, int flag, ClipperLib::PolyTree& out);
 	void buildXORFrom2PolyTree(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp, ClipperLib::PolyTree& out, int flag = 0);
 
 	inline trimesh::vec3 CInt2V(const ClipperLib::IntPoint& point)

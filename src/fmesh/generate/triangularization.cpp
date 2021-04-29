@@ -11,10 +11,10 @@ namespace fmesh
 		if (flag == 1 && node->IsHole())
 			return false;
 
-		if (flag == 2 && depth != 2 && depth != 3 && depth != 6 && depth != 7)   //14
+		if (flag == 2 && depth != 2 && depth != 3 && depth != 6 && depth != 7)   //23
 			return false;
 
-		if (flag == 3 && depth != 1 && depth != 4 && depth != 5 && depth != 8)      // 23
+		if (flag == 3 && depth != 1 && depth != 4 && depth != 5 && depth != 8)      // 14
 			return false;
 	
 		if (flag == 4)      // 2, 3
@@ -97,28 +97,23 @@ namespace fmesh
 
 	void buildFromDiffPolyTree_SameAndDiffSafty(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp,
 		std::vector<Patch*>& patches, int flag, ClipperLib::PolyTree& out, double delta)
-	{
-// 		std::vector<ClipperLib::Path*> pathsUp;
-// 		std::vector<ClipperLib::Path*> pathsLower;
-// 		size_t count = 0;
-// 		auto f = [&count, &pathsUp, &flag](ClipperLib::PolyNode* node) {
-// 			if (!checkFlag(node, flag))
-// 				return;
-// 			pathsUp.push_back(&node->Contour);
-// 		};
-// 		auto f1 = [&pathsLower, &flag](ClipperLib::PolyNode* node) {
-// 			if (!checkFlag(node, flag))
-// 				return;
-// 			pathsLower.push_back(&node->Contour);
-// 		};
-// 
-// 		mmesh::loopPolyTree(f, treeUp);
-// 		mmesh::loopPolyTree(f1, treeLower);
-		
+	{		
 		if (GetPolyCount(treeLower) == GetPolyCount(treeUp))
 			buildFromDiffPolyTreeSafty(treeLower, treeUp, patches, delta, flag);
 		else
-			fmesh::xor2PolyTrees(treeUp, treeLower, out, flag);		
+			fmesh::xor2PolyTrees(treeUp, treeLower, out, flag);			
+	}
+
+	void buildFromSameAndDiff(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp,
+		std::vector<Patch*>& patches, int flag, double delta, ClipperLib::PolyTree& out, ClipperLib::PolyTree& Inner)
+	{
+		if (GetPolyCount(treeLower) == GetPolyCount(treeUp))
+			buildFromDiffPolyTreeSafty(treeLower, treeUp, patches, delta, flag);
+		else
+		{
+			fmesh::xor2PolyTrees(treeUp, treeLower, Inner, 2);
+			fmesh::xor2PolyTrees(treeUp, treeLower, out, 3);
+		}
 	}
 
 	void buildFromDiffPolyTreeSafty(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp,
@@ -355,78 +350,6 @@ namespace fmesh
 				patch.push_back(CInt2V(pathLower->at(i3)));
 			}
 		}
-	}
-
-	void buildFromDiffPolyTree_drum(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp, std::vector<Patch*>& patches, int flag, ClipperLib::PolyTree& out)
-	{
-		std::vector<ClipperLib::Path*> pathsUp;
-		std::vector<ClipperLib::Path*> pathsLower;
-		size_t count = 0;
-		auto f = [&count, &pathsUp, &flag](ClipperLib::PolyNode* node) {
-			if (!checkFlag(node, flag))
-				return;
-			pathsUp.push_back(&node->Contour);
-		};
-		auto f1 = [&pathsLower, &flag](ClipperLib::PolyNode* node) {
-			if (!checkFlag(node, flag))
-				return;
-			pathsLower.push_back(&node->Contour);
-		};
-
-		mmesh::loopPolyTree(f, treeUp);
-		mmesh::loopPolyTree(f1, treeLower);
-
-		size_t size = pathsUp.size();
-		//if (size != pathsLower.size() && size > 0)
-		{
-			fmesh::xor2PolyTrees(treeUp, treeLower, out,flag);
-			return;
-		}
-
-		std::vector<Patch*> tmp(size);
-		for (size_t i = 0; i < size; ++i)
-			tmp.at(i) = buildFromDiffPath(pathsLower.at(i), pathsUp.at(i));
-
-		for (Patch* patch : tmp)
-			if (patch)
-				patches.push_back(patch);
-	}
-
-	void buildFromDiffPolyTree_SameAndDiff(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp, std::vector<Patch*>& patches, int flag, ClipperLib::PolyTree& out)
-	{
-		std::vector<ClipperLib::Path*> pathsUp;
-		std::vector<ClipperLib::Path*> pathsLower;
-		size_t count = 0;
-		auto f = [&count, &pathsUp, &flag](ClipperLib::PolyNode* node) {
-			if (!checkFlag(node, flag))
-				return;
-			pathsUp.push_back(&node->Contour);
-		};
-		auto f1 = [&pathsLower, &flag](ClipperLib::PolyNode* node) {
-			if (!checkFlag(node, flag))
-				return;
-			pathsLower.push_back(&node->Contour);
-		};
-
-		mmesh::loopPolyTree(f, treeUp);
-		mmesh::loopPolyTree(f1, treeLower);
-
-		size_t size = pathsUp.size();
-		if (size != pathsLower.size() && size > 0)
-		{
-			//diff
-			fmesh::xor2PolyTrees(treeUp, treeLower, out, flag);
-			return;
-		}
-
-		//same
-		std::vector<Patch*> tmp(size);
-		for (size_t i = 0; i < size; ++i)
-			tmp.at(i) = buildFromDiffPath(pathsLower.at(i), pathsUp.at(i));
-
-		for (Patch* patch : tmp)
-			if (patch)
-				patches.push_back(patch);
 	}
 
 	void buildXORFrom2PolyTree(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp, ClipperLib::PolyTree& out, int flag)

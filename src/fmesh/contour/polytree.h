@@ -21,6 +21,7 @@ namespace fmesh
 	FMESH_API void extendPolyTreeNew(ClipperLib::PolyTree& source, double delta, ClipperLib::PolyTree& dest);
 	FMESH_API void extendPolyTreeMiter(ClipperLib::PolyTree& source, double delta, ClipperLib::PolyTree& dest);
 	FMESH_API void extendPolyTree(ClipperLib::PolyTree& source, double delta, polyOffsetFunc offsetFunc, ClipperLib::PolyTree& dest);
+	FMESH_API void offsetAndExtendPolyTreeNew(ClipperLib::PolyTree& source, double offset, double delta, double z, ClipperLib::PolyTree& dest);
 	FMESH_API void offsetAndExtendPolyTree(ClipperLib::PolyTree& source, double offset, double delta, double z, ClipperLib::PolyTree& dest);
 	FMESH_API void offsetExterior(ClipperLib::PolyTree& source, double offset);
 	FMESH_API void offsetExteriorInner(ClipperLib::PolyTree& source, double offset);
@@ -52,7 +53,7 @@ namespace fmesh
 		const std::vector<ClipperLib::PolyNode*>& inner, ClipperLib::PolyTree& out);
 
 	//checkInnerOffset
-	int GetPolyCount(ClipperLib::PolyTree* poly);
+	int GetPolyCount(ClipperLib::PolyTree* poly,int flag=0);//2: Inner  3: Outer
 
 	FMESH_API void split(ClipperLib::PolyTree& source, std::vector<ClipperLib::Paths>& children);
 	FMESH_API void split_omp(ClipperLib::PolyTree& source, std::vector<ClipperLib::Paths>& children);

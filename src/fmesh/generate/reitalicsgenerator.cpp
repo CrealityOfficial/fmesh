@@ -83,16 +83,36 @@ namespace fmesh
 			} 
 			else
 			{	
-				offsetAndExtendPolyTree(m_poly, (float)i * offset, thickness, bottomHeight + (float)i * h, middlePolys.at(i));		
+				//offsetAndExtendPolyTreeMiter(m_poly, (float)i * offset, thickness, middlePolys.at(i));
+				//setPolyTreeZ(middlePolys.at(i),bottomHeight + (float)i * h);
+				offsetAndExtendPolyTree(m_poly, (float)i * offset, thickness, bottomHeight + (float)i * h, middlePolys.at(i));
+				//if (i)
+				//{
+				//	if ((middlePolys.at(i).Total() + middlePolys.at(i - 1).Total())%2)
+				//	{
+				//		middlePolys.at(i).Clear();
+				//	}
+				//}
 			}
 		}
 
-		for (int i =0; i < count; ++i)
+		for (int i =0; i < middlePolys.size()-1; ++i)
 		{
+			//int j = i + 1;
+			//while (!middlePolys.at(j).Total())
+			//{
+			//	++j;
+			//	if (j >= middlePolys.size())
+			//		break;
+			//}
 			if (onePoly)
 				_buildFromDiffPolyTree_onePoly(&middlePolys.at(i), &middlePolys.at(i + 1));//outer
 			else
-				_buildFromDiffPolyTree_all(&middlePolys.at(i), &middlePolys.at(i + 1), thickness / 2.0);			
+			{
+				//_buildFromDiffPolyTree_all(&middlePolys.at(i), &middlePolys.at(j), thickness / 2.0, 0, false, true);
+				_buildFromDiffPolyTree_diffSafty(&middlePolys.at(i), &middlePolys.at(i + 1));
+			}
+			//i += j - i - 1;
 		}
 		middleoffset = offset * count;
 	}

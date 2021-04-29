@@ -204,27 +204,11 @@ namespace fmesh
 		addPatches(patches, invert);
 	}
 
-	void GeneratorImpl::_fillPolyTreeOutline(ClipperLib::PolyTree* tree, bool invert)
-	{
-		std::vector<Patch*> patches;
-
-		fillFirstLevelPolyNode(tree, patches);
-		addPatches(patches, invert);
-	}
-
 	void GeneratorImpl::_fillPolyTreeDepth14(ClipperLib::PolyTree* tree, bool invert)
 	{
 		std::vector<Patch*> patches;
 
 		fillPolyTreeDepth14(tree, patches);
-		addPatches(patches, invert);
-	}
-
-	void GeneratorImpl::_fillPolyTreeDepthOnePoly(ClipperLib::PolyTree* tree, bool invert /*= false*/)
-	{
-		std::vector<Patch*> patches;
-
-		fillPolyTreeDepthOnePoly(tree, patches);
 		addPatches(patches, invert);
 	}
 
@@ -248,56 +232,62 @@ namespace fmesh
 		addPatches(patches);
 	}
 
-	void GeneratorImpl::_buildFromDiffPolyTreeSafe(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp, double delta, int flag)
-	{
-		std::vector<Patch*> patches;
-		buildFromDiffPolyTreeSafty(treeLower, treeUp, patches, delta, flag);
-		addPatches(patches);
-	}
-
-	void GeneratorImpl::_buildFromDiffPolyTree_drum(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp, int flag, ClipperLib::PolyTree& out)
-	{
-		std::vector<Patch*> patches;
-		buildFromDiffPolyTree_drum(treeLower, treeUp, patches, flag, out);
-		if (patches.size())
-			addPatches(patches);
-	}
-
-	void GeneratorImpl::_buildFromDiffPolyTree_diff(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp, int flag)
+	void GeneratorImpl::_buildFromDiffPolyTree_diffSafty(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp, double delta, int flag, bool invert, bool invertXor)
 	{
 		ClipperLib::PolyTree out;
-		//fmesh::xor2PolyTrees(treeUp, treeLower, out, flag);
+		ClipperLib::PolyTree inner;
+
 		std::vector<Patch*> patches;
-		buildFromDiffPolyTree_SameAndDiff(treeLower, treeUp, patches, flag, out);
+		//buildFromDiffPolyTree_SameAndDiffSafty(treeLower, treeUp, patches, flag, out, delta);
+		buildFromSameAndDiff(treeLower, treeUp, patches, flag,delta, out,inner);
 		if (patches.size())
-			addPatches(patches);
+			addPatches(patches,invert);
 		if (out.ChildCount() > 0)
 		{
-			_fillPolyTreeReverseInner(&out, flag);
+			_fillPolyTreeReverse(&inner,false);
+			_fillPolyTreeReverse(&out,true);
 		}
 	}
 
-	void GeneratorImpl::_buildFromDiffPolyTree_diffSafty(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp, double delta, int flag, bool invert)
+	void GeneratorImpl::_buildFromDiffPolyTree_all(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp, double delta, int flag,bool invertInner, bool invertOuter)
 	{
-		ClipperLib::PolyTree out;
-		//fmesh::xor2PolyTrees(treeUp, treeLower, out, flag);
-		std::vector<Patch*> patches;
-		buildFromDiffPolyTree_SameAndDiffSafty(treeLower, treeUp, patches, flag, out, delta);
-		if (patches.size())
-			addPatches(patches, invert);
-		if (out.ChildCount() > 0)
+		ClipperLib::PolyTree treeLowerInner;
+		ClipperLib::PolyTree treeUpInner;
+		;//2: Inner
+		if (GetPolyCount(treeLower, 2) == GetPolyCount(treeUp, 2))
 		{
-			_fillPolyTreeReverseInner(&out, invert);
+			_buileDetachPloyTree(treeLower, treeLowerInner, delta,2);
+			_buileDetachPloyTree(treeUp, treeUpInner, delta,2);
+			_buildFromDiffPolyTree_all_same(&treeLowerInner, &treeUpInner, delta, flag, false);
 		}
-
-	}
-
-	void GeneratorImpl::_buildFromDiffPolyTree_all(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp, double delta, int flag, bool invert)
-	{
-		if (GetPolyCount(treeLower) == GetPolyCount(treeUp))
-			_buildFromDiffPolyTree_all_same(treeLower, treeUp, delta, flag, false);
 		else
-			_buildFromDiffPolyTree_all_diff(treeUp, treeLower, flag, invert);
+		{
+			ClipperLib::PolyTree outInner;
+			fmesh::xor2PolyTrees(treeLower, treeUp, outInner, 2);//inner
+			_fillPolyTreeReverseInnerNew(&outInner, invertInner);
+		}
+
+		//3:outer
+		if (GetPolyCount(treeLower, 3) == GetPolyCount(treeUp, 3))
+		{
+			ClipperLib::PolyTree treeLowerOuter;
+			ClipperLib::PolyTree treeUpOuter;
+
+			_buileDetachPloyTree(treeLower, treeLowerOuter, delta,3);
+			_buileDetachPloyTree(treeUp, treeUpOuter, delta,3);
+			_buildFromDiffPolyTree_all_same(&treeLowerOuter, &treeUpOuter, delta, flag, false);
+		}
+		else
+		{
+			ClipperLib::PolyTree outOuter;
+			fmesh::xor2PolyTrees(treeLower, treeUp, outOuter, 3);
+			_fillPolyTreeReverseInnerNew(&outOuter, invertOuter);
+		}
+
+		//if (GetPolyCount(treeLower) == GetPolyCount(treeUp))
+		//	_buildFromDiffPolyTree_all_same(treeLower, treeUp, delta, flag, false);
+		//else
+		//	_buildFromDiffPolyTree_all_diff(treeUp, treeLower, flag);
 	}
 
 	void GeneratorImpl::_buildFromDiffPolyTree_all_same(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp, double delta, int flag, bool invert)
@@ -305,18 +295,6 @@ namespace fmesh
 		std::vector<Patch*> patches;
 		buildFromDiffPolyTreeSafty(treeLower, treeUp, patches, delta, flag);
 		addPatches(patches, invert);
-	}
-
-	void GeneratorImpl::_buildFromDiffPolyTree_all_diff(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp, int flag, bool invert)
-	{
-		//ClipperLib::PolyTree out;
-		ClipperLib::PolyTree outOuter;
-		ClipperLib::PolyTree outInner;
-		fmesh::xor2PolyTrees(treeLower, treeUp, outOuter, 2);//outer
-		fmesh::xor2PolyTrees(treeLower, treeUp, outInner, 3);//inner
-
-		_fillPolyTreeReverseInner(&outOuter, invert);
-		_fillPolyTreeReverseInner(&outInner, !invert);
 	}
 
 	void GeneratorImpl::_buildFromDiffPolyTree_xor(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp, double delta, int flag, bool invert)
@@ -367,6 +345,26 @@ namespace fmesh
 		std::vector<Patch*> patches;
 
 		//test
+		//fillComplexPolyTreeReverseInnerNew(tree, patches, invert);
+
+		fillComplexPolyTreeReverseInner(tree, patches, invert);
+		//fillComplexPolyTree(tree, patches);
+
+		addPatches(patches);
+	}
+
+	void GeneratorImpl::_fillPolyTreeReverse(ClipperLib::PolyTree* tree, bool invert)
+	{
+		std::vector<Patch*> patches;
+		fillComplexPolyTreeReverse(tree, patches, invert);
+		addPatches(patches);
+	}
+
+	void GeneratorImpl::_fillPolyTreeReverseInnerNew(ClipperLib::PolyTree* tree, bool invert)
+	{
+		std::vector<Patch*> patches;
+
+		//test
 		fillComplexPolyTreeReverseInnerNew(tree, patches, invert);
 		//fillComplexPolyTree(tree, patches);
 
@@ -409,14 +407,64 @@ namespace fmesh
 		func(treeOuter);
 		bReverse = true;
 		func(treeInner);
-		offset.Execute(treeNew, 1);
+		offset.Execute(treeNew, 0);
 	}
 
-	void GeneratorImpl::_buildRoof(ClipperLib::PolyTree* polyTree, double roofHeight, double thickness)
+	void GeneratorImpl::_buileDetachPloyTree(ClipperLib::PolyTree* tree, ClipperLib::PolyTree& treeNew,double delta,int flag)//0 all 2 inner 3 outer
 	{
-		std::vector<Patch*> patches;
-		mmesh::buildRoofs(polyTree, patches, roofHeight, thickness);
-		addPatches(patches);
+		ClipperLib::ClipperOffset offset;
+		double z=0;
+		int _flag = flag;
+		polyNodeFunc func = [&func, &offset, &_flag, &z](ClipperLib::PolyNode* node) {
+			int depth = testPolyNodeDepth(node);
+			if ((_flag == 2 && (depth == 2 || depth == 3 || depth == 6 || depth == 7))
+				|| (_flag == 3 && (depth == 1 || depth == 4 || depth == 5 || depth == 8))
+				|| _flag == 0)
+			{
+				offset.AddPath(node->Contour, ClipperLib::jtRound, ClipperLib::EndType::etClosedPolygon);
+				if (!z && node->Contour.size())
+				{
+					z = node->Contour.at(0).Z;
+				}
+			}
+			for (ClipperLib::PolyNode* n : node->Childs)
+				func(n);
+		};
+		func(tree);
+
+		//offset.Execute(treeNew, 0);
+		ClipperLib::PolyTree _treeNew;
+		offset.Execute(_treeNew, 0);
+
+		double _delta = delta * 1000;
+		offset.Execute(treeNew, -_delta);
+		offset.Clear();
+		_flag = 0;
+		func(&treeNew);
+		offset.Execute(treeNew, _delta);
+
+		if (treeNew.Total() != _treeNew.Total())
+		{
+			_flag = flag;
+			offset.Clear();
+			func(tree);
+			offset.Execute(treeNew, _delta);
+			offset.Clear();
+			_flag = 0;
+			func(&treeNew);
+			offset.Execute(treeNew, -_delta);
+		}
+
+		polyNodeFunc func1 = [&func1, &z,&flag](ClipperLib::PolyNode* node) {
+			if (flag == 2)
+			{
+				ClipperLib::ReversePath(node->Contour);
+			}		
+			for (ClipperLib::IntPoint& point : node->Contour)
+				point.Z = (int)(z);
+		};
+
+		mmesh::loopPolyTree(func1, &treeNew);
 	}
 
 	void GeneratorImpl::_buildTop(ClipperLib::PolyTree& treeTop, double& hTop, double offset)
@@ -621,12 +669,12 @@ namespace fmesh
 			;//_fillPolyTree(&treeTop);
 		else if (m_adParam.top_type == ADTopType::adtt_close)
 		{
-			std::vector<ClipperLib::PolyTree> poly(1);
-			copy2PolyTree(m_poly, poly.at(0));
-			setPolyTreeZ(poly.at(0), m_adParam.total_height);
-			_buildFromSamePolyTree(&treeTop, &poly.at(0));
-			_fillPolyTreeDepthOnePoly(&treeTop, true);
-			_fillPolyTreeDepthOnePoly(&poly.at(0));
+			//std::vector<ClipperLib::PolyTree> poly(1);
+			//copy2PolyTree(m_poly, poly.at(0));
+			//setPolyTreeZ(poly.at(0), m_adParam.total_height);
+			//_buildFromSamePolyTree(&treeTop, &poly.at(0));
+			//_fillPolyTreeDepthOnePoly(&treeTop, true);
+			//_fillPolyTreeDepthOnePoly(&poly.at(0));
 		}
 		else if (m_adParam.top_type == ADTopType::adtt_step)
 		{
@@ -693,7 +741,7 @@ namespace fmesh
 			;//_fillPolyTree(&treeBottom, true);
 		else if (m_adParam.bottom_type == ADBottomType::adbt_close)
 		{
-			_fillPolyTreeDepthOnePoly(&treeBottom, true);
+			//_fillPolyTreeDepthOnePoly(&treeBottom, true);
 		}
 		else if (m_adParam.bottom_type == ADBottomType::adbt_step)
 		{
@@ -795,17 +843,6 @@ namespace fmesh
 		}
 	}
 
-	void GeneratorImpl::_buildBoardPoly(ClipperLib::PolyTree* tree)
-	{
-		auto f = [](ClipperLib::PolyNode* node) {
-			int depth = testPolyNodeDepth(node);
-			if (depth != 1 && depth != 4 && depth != 5 && depth != 8)
-				node->Contour.clear();
-		};
-
-		mmesh::loopPolyTree(f, tree);
-	}
-
 	void GeneratorImpl::_simplifyPoly(ClipperLib::PolyTree* poly, double distance/*=0*/)
 	{
 		double x = dmax.x - dmin.x;
@@ -837,25 +874,6 @@ namespace fmesh
 				ClipperLib::CleanPolygon(node->Contour, distance);
 		};
 		mmesh::loopPolyTree(func, poly);
-	}
-
-	void GeneratorImpl::saveTopBottom(ClipperLib::PolyTree& tree, const std::string& file)
-	{
-		// 		ClipperLib::Paths paths;		
-		// 		for (ClipperLib::PolyNode* node : tree.Childs)
-		// 			if (!node->IsHole())
-		// 			{
-		// 				SimplePoly poly;
-		// 				ClipperLib::Path path;
-		// 				merge2SimplePoly(node, &poly, false);
-		// 				//saveSimplePoly(poly, file);
-		// 				for (ClipperLib::IntPoint* point : poly)
-		// 				{
-		// 					path.push_back(*point);
-		// 				}
-		// 				paths.push_back(path);
-		// 			}		
-		// 		ClipperLib::save(paths, "F:/test.stl");
 	}
 
 	void GeneratorImpl::areaPoly(ClipperLib::PolyTree& poly, std::vector<double>& area)

@@ -64,10 +64,10 @@ namespace fmesh
 		if(index >= 0 && index < drumHCount - 1)
 		{
 			ClipperLib::PolyTree out;
-			_buildFromDiffPolyTree_drum(&middlePolys.at(index), &middlePolys.at(index + 1), 0, out);
+			//_buildFromDiffPolyTree_drum(&middlePolys.at(index), &middlePolys.at(index + 1), 0, out);
 			if (out.ChildCount() > 0)
 			{
-				_fillPolyTreeReverseInner(&out, false);
+				//_fillPolyTreeReverseInner(&out, false);
 			}
 
 			if (m_tracer)

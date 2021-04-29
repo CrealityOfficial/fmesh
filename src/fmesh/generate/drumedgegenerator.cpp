@@ -80,13 +80,13 @@ namespace fmesh
 			offs.at(i) = _offset;
 		}
 
-		for (size_t i = 0; i < drumHCount; i++)
+		for (size_t i = 0; i < middlePolys.size()-1; i++)
 		{
-			if (onePloy)
-			{
-				_buildFromDiffPolyTree_onePoly(&middlePolys.at(i), &middlePolys.at(i + 1));
-			}
-			else
+			//if (onePloy)
+			//{
+				//_buildFromDiffPolyTree_onePoly(&middlePolys.at(i), &middlePolys.at(i + 1));
+			//}
+			//else
 			{
 				_buildFromDiffPolyTree_diffSafty(&middlePolys.at(i), &middlePolys.at(i + 1));
 			}

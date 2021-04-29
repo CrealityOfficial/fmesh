@@ -97,9 +97,9 @@ namespace fmesh
 
 		for (size_t i = 0; i < middlePolys.size() - 1; i++)
 		{
-			if (onePoly)
-				_buildFromDiffPolyTree_onePoly(&middlePolys.at(i), &middlePolys.at(i + 1));
-			else
+			//if (onePoly)
+			//	_buildFromDiffPolyTree_onePoly(&middlePolys.at(i), &middlePolys.at(i + 1));
+			//else
 				_buildFromDiffPolyTree_diffSafty(&middlePolys.at(i), &middlePolys.at(i + 1));
 		}
 	}

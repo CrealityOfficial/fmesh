@@ -92,19 +92,20 @@ namespace fmesh
 		};
 		func(&source);
 		offset.Execute(source1, -microDelta);
-		offset.Execute(source2, microDelta);
+
+		offset.Execute(source2, -microDelta);
 		offset.Clear();
 		func(&source2);
-		offset.Execute(source2, -microDelta);
+		offset.Execute(source2, +microDelta);
 
 		offset.Clear();
 		func(&source1);
 		bReverse = true;
 		func(&source2);
-		offset.Execute(dest, 1);
+		offset.Execute(dest, 0);
 	}
 
-	FMESH_API void extendPolyTreeMiter(ClipperLib::PolyTree& source, double delta, ClipperLib::PolyTree& dest)
+	void extendPolyTreeMiter(ClipperLib::PolyTree& source, double delta, ClipperLib::PolyTree& dest)
 	{
 		double microDelta = 1000.0 * delta;
 
@@ -230,6 +231,25 @@ namespace fmesh
 	{
 		if (offset == 0.0)
 		{
+			extendPolyTree(source, delta, dest);
+		}
+		else
+		{
+			offsetPolyTree(source, offset, dest);
+			extendPolyTree(dest, delta, dest);
+		}
+		polyNodeFunc func = [&func, &z](ClipperLib::PolyNode* node) {
+			for (ClipperLib::IntPoint& point : node->Contour)
+				point.Z += (int)(1000.0 * z);
+		};
+
+		mmesh::loopPolyTree(func, &dest);
+	}
+
+	void offsetAndExtendPolyTreeNew(ClipperLib::PolyTree& source, double offset, double delta, double z, ClipperLib::PolyTree& dest)
+	{
+		if (offset == 0.0)
+		{
 			extendPolyTreeNew(source, delta, dest);
 		}
 		else
@@ -258,7 +278,7 @@ namespace fmesh
 		}
 	}
 
-	FMESH_API void offsetAndExtendPolyTreeMiter(ClipperLib::PolyTree& source, double offset, double delta, ClipperLib::PolyTree& dest)
+	void offsetAndExtendPolyTreeMiter(ClipperLib::PolyTree& source, double offset, double delta, ClipperLib::PolyTree& dest)
 	{
 		if (offset == 0.0)
 		{
@@ -563,19 +583,31 @@ namespace fmesh
 		clipper.Execute(ClipperLib::ctXor, out, ClipperLib::pftNonZero, ClipperLib::pftNonZero);
 	}
 
-	int GetPolyCount(ClipperLib::PolyTree* poly)
+	int GetPolyCount(ClipperLib::PolyTree* poly, int flag)//2: Inner  3: Outer
 	{
 		int num = 0;
 		int index = 1;
 
-		polyNodeFunc func = [&func, &num,&index](ClipperLib::PolyNode* node) {
-				num+= fmesh::testPolyNodeDepth(node) * index;
+		polyNodeFunc func = [&func, &num, &index, &flag](ClipperLib::PolyNode* node) {
+			int depth = testPolyNodeDepth(node);
+			if ((flag == 2 &&(depth == 2|| depth == 3 || depth == 6 || depth == 7))
+				||(flag == 3 && (depth == 1 || depth == 4 || depth == 5 || depth == 8))
+				||flag == 0)
+			{
+				num += depth * index;
+			}
 
 			for (ClipperLib::PolyNode* n : node->Childs)
 			{
-				index++;
+				int depth = testPolyNodeDepth(n);
+				if ((flag == 2 && (depth == 2 || depth == 3 || depth == 6 || depth == 7))
+					|| (flag == 3 && (depth == 1 || depth == 4 || depth == 5 || depth == 8))
+					|| flag == 0)
+				{
+					index++;
+				}
 				func(n);
-			}				
+			}
 		};
 
 		func(poly);

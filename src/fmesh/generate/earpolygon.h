@@ -4,6 +4,17 @@
 #include "fmesh/common/export.h"
 #include "fmesh/generate/patch.h"
 
+#include "mmesh/trimesh/polygonstack.h"
+
+//namespace mmesh
+//{
+//	class PolygonStack;
+//}
+//
+//namespace trimesh {
+//	class TriMesh;
+//}
+
 namespace fmesh
 {
 	typedef std::vector<ClipperLib::IntPoint*> SimplePoly;
@@ -39,9 +50,14 @@ namespace fmesh
 
 		void setup(SimplePoly* poly);
 		void setup(ClipperLib::Path* path);
+		void setup(ClipperLib::PolyNode* poly);
+
 		Patch* earClipping();
+		Patch* earClippingNewType();
 		Patch* earClippingFromRefPoly(SimplePoly* poly);
 		Patch* earClippingFromPath(ClipperLib::Path* path);
+
+		Patch* earClippingFromRefPoly(ClipperLib::PolyNode* poly);
 	protected:
 		void calType(ENode* node, bool testContainEdge = true);
 		void releaseNode();
@@ -54,6 +70,13 @@ namespace fmesh
 		int m_circleSize;
 		std::list<ENode*> m_ears;
 		std::vector<ENode*> m_nodes;
+
+		//
+		mmesh::PolygonStack m_stack;
+		std::vector<trimesh::TriMesh::Face> m_tris;
+		std::vector<std::vector<int>> m_earspolygons;
+		std::vector<trimesh::dvec2> m_earspoints;
+		std::vector<double> m_earspointsZ;
 	};
 }
 

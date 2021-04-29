@@ -85,14 +85,38 @@ namespace fmesh
 			else
 			{
 				fmesh::offsetAndExtendPolyTree(m_poly, -(float)i * offset, thickness, bottomHeight + (float)i * h, middlePolys.at(i));
+			
+				//if (i)
+				//{
+				//	if ((middlePolys.at(i).Total() + middlePolys.at(i - 1).Total()) % 2)
+				//	{
+				//		middlePolys.at(i).Clear();
+				//	}
+				//}
 			}
 		}
+
 		for (int i = 0; i < count; ++i)
 		{
 			if (onePoly)
 				_buildFromDiffPolyTree_onePoly(&middlePolys.at(i), &middlePolys.at(i + 1));//outer
 			else
-				_buildFromDiffPolyTree_all(&middlePolys.at(i), &middlePolys.at(i + 1), thickness / 2.0f);		
+			{
+				//int j = i+1;
+				//while (!middlePolys.at(j).Total())
+				//{
+				//	++j;
+				//	if (j >= middlePolys.size())
+				//		break;
+				//}
+				//if (middlePolys.at(i).Total() < middlePolys.at(j).Total())
+				//	_buildFromDiffPolyTree_all(&middlePolys.at(i), &middlePolys.at(j), thickness / 2.0, 0, true, false);
+				//else
+				//	_buildFromDiffPolyTree_all(&middlePolys.at(i), &middlePolys.at(j), thickness / 2.0);
+				//i += j - i-1;
+
+				_buildFromDiffPolyTree_diffSafty(&middlePolys.at(i), &middlePolys.at(i + 1));
+			}
 		}
 		middleoffset = -(float)count * offset;
 	}

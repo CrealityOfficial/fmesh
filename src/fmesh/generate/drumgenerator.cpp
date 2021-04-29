@@ -95,9 +95,9 @@ namespace fmesh
 				setPolyTreeZ(middlePolys.at(i), delta1);
 			setPolyTreeZ(middlePolys.at(i + 1), delta2);
 			
-			if (onePloy)
-				_buildFromDiffPolyTree_onePoly(&middlePolys.at(i), &middlePolys.at(i + 1));//outer
-			else
+			//if (onePloy)
+			//	_buildFromDiffPolyTree_onePoly(&middlePolys.at(i), &middlePolys.at(i + 1));//outer
+			//else
 				_buildFromDiffPolyTree_diffSafty(&middlePolys.at(i), &middlePolys.at(i + 1));
 		}
 		std::vector<Patch*> patches;

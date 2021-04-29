@@ -7,9 +7,11 @@ namespace fmesh
 {
 	FMESH_API Patch* fillSimplePolyTree(SimplePoly* poly);
 	FMESH_API Patch* fillSimplePolyTree(ClipperLib::Path* path);
+	FMESH_API Patch* fillSimplePolyTree(ClipperLib::PolyNode* poly);
 
 	FMESH_API void fillComplexPolyTree(ClipperLib::PolyTree* polyTree, std::vector<Patch*>& patches, bool muesEven = true);
 	FMESH_API void fillComplexPolyTreeReverseInner(ClipperLib::PolyTree* polyTree, std::vector<Patch*>& patches, bool invert=false);
+	FMESH_API void fillComplexPolyTreeReverse(ClipperLib::PolyTree* polyTree, std::vector<Patch*>& patches, bool isOuter = false);
 	FMESH_API void fillComplexPolyTreeReverseInnerNew(ClipperLib::PolyTree* polyTree, std::vector<Patch*>& patches, bool invert = false);
 	FMESH_API void fillComplexPolyTree_onePloy(ClipperLib::PolyTree* polyTree, std::vector<Patch*>& patches, bool invert = false);
 	FMESH_API Patch* fillOneLevelPolyNode(ClipperLib::PolyNode* polyNode, bool invert = false);

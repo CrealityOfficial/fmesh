@@ -1,6 +1,8 @@
 #include "earpolygon.h"
 #include "fmesh/generate/triangularization.h"
 #include "fmesh/common/dvecutil.h"
+#include "mmesh/trimesh/polygonstack.h"
+#include "mmesh/clipper/circurlar.h"
 
 #include <fstream>
 namespace fmesh
@@ -181,6 +183,35 @@ namespace fmesh
 		} while (cur != m_root);
 	}
 
+	void EarPolygon::setup(ClipperLib::PolyNode* poly)
+	{
+		if (!poly)
+			return;
+		std::vector<std::vector<int>> earspolygons;
+		std::vector<trimesh::dvec2> earspoints;
+		std::vector<double> earspointsZ;
+		int count = 0;
+		polyNodeFunc func = [&func, &earspolygons, &earspoints,&earspointsZ,&count](ClipperLib::PolyNode* node) {
+
+			std::vector<int> polygon;
+			std::vector<trimesh::dvec2> points;
+			for (ClipperLib::IntPoint& point : node->Contour)
+			{
+				polygon.push_back(earspoints.size());
+				earspoints.push_back(trimesh::dvec2(point.X/1000.0, point.Y / 1000.0));
+				earspointsZ.push_back(point.Z / 1000.0);
+			}
+			earspolygons.push_back(polygon);
+		};
+		mmesh::loopPolyTree(func, poly);
+		m_earspolygons.swap(earspolygons);
+		m_earspoints.swap(earspoints);
+		m_earspointsZ.swap(earspointsZ);
+		earspolygons.clear();
+		earspoints.clear();
+		earspointsZ.clear();
+	}
+
 	Patch* EarPolygon::earClipping()
 	{
 		if (!m_root)
@@ -190,6 +221,21 @@ namespace fmesh
 		triangle->reserve(m_totalSize * 3);
 		while (earClipping(triangle));
 		releaseNode();
+	}
+
+	Patch* EarPolygon::earClippingNewType()
+	{
+		Patch* triangle = new Patch();
+		m_stack.clear();
+		m_tris.clear();
+		m_stack.prepare(m_earspolygons, m_earspoints);
+		trimesh::TriMesh::Face f;
+		while (m_stack.earClipping(f))
+		{
+			triangle->push_back(trimesh::vec3(m_earspoints.at(f.x).x, m_earspoints.at(f.x).y, m_earspointsZ.at(f.x)));
+			triangle->push_back(trimesh::vec3(m_earspoints.at(f.y).x, m_earspoints.at(f.y).y, m_earspointsZ.at(f.y)));
+			triangle->push_back(trimesh::vec3(m_earspoints.at(f.z).x, m_earspoints.at(f.z).y, m_earspointsZ.at(f.z)));
+		}
 		return triangle;
 	}
 
@@ -197,6 +243,12 @@ namespace fmesh
 	{
 		setup(poly);
 		return earClipping();
+	}
+
+	Patch* EarPolygon::earClippingFromRefPoly(ClipperLib::PolyNode* poly)
+	{
+		setup(poly);
+		return earClippingNewType();
 	}
 
 	Patch* EarPolygon::earClippingFromPath(ClipperLib::Path* path)

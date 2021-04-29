@@ -17,6 +17,8 @@ namespace fmesh
 		void processQuad(int& lowerIndex, int& upIndex, Patch* patch);  // lowerIndex upIndex in[0 , size - 2]
 		void processLast(Patch* patch);
 		int findNearest();
+
+		bool inside(std::vector<trimesh::vec3>& polygon, trimesh::vec3& p);
 	protected:
 		ClipperLib::Path* m_pathLower;
 		ClipperLib::Path* m_pathUp;

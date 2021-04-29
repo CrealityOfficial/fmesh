@@ -95,23 +95,70 @@ namespace fmesh
 		trimesh::vec3 up1 = CInt2V(m_pathUp->at((upIndex + 1 + m_upStart) % m_upSize));
 		trimesh::vec3 lower0 = CInt2V(m_pathLower->at(lowerIndex));
 		trimesh::vec3 lower1 = CInt2V(m_pathLower->at(lowerIndex + 1));
+		std::vector<trimesh::vec3> polygon;
+		//polygon.clear();
+		polygon.push_back(up0);
+		polygon.push_back(lower0);
 
 		float u0l1 = trimesh::len2(up0 - lower1);
 		float u1l0 = trimesh::len2(up1 - lower0);
-		if (u0l1 < u1l0)
+
+		if (u0l1 < u1l0 )
 		{
-			patch->push_back(up0);
-			patch->push_back(lower0);
-			patch->push_back(lower1);
-			lowerIndex++;
+			polygon.push_back(lower1);
+			//if (inside(polygon, up1))
+			{
+				//patch->push_back(up0);
+				//patch->push_back(lower0);
+				//patch->push_back(up1);
+				//upIndex++;
+			}
+			//else
+			{
+				patch->push_back(up0);
+				patch->push_back(lower0);
+				patch->push_back(lower1);
+				lowerIndex++;
+			}
 		}
 		else
 		{
-			patch->push_back(up0);
-			patch->push_back(lower0);
-			patch->push_back(up1);
-			upIndex++;
+			polygon.push_back(up1);
+			//if (inside(polygon, lower1))
+			{
+				//patch->push_back(up0);
+				//patch->push_back(lower0);
+				//patch->push_back(lower1);
+				//lowerIndex++;
+			}
+			//else
+			{
+				patch->push_back(up0);
+				patch->push_back(lower0);
+				patch->push_back(up1);
+				upIndex++;
+			}
 		}
+	}
+
+	bool Wovener::inside(std::vector<trimesh::vec3>& polygon, trimesh::vec3& p)
+	{
+		if (polygon.size() < 1)
+			return false;
+		int crossings = 0;
+		trimesh::vec3 p0 = polygon[polygon.size() - 1];
+		for (unsigned int n = 0; n < polygon.size(); n++)
+		{
+			trimesh::vec3 p1 = polygon[n];
+			if ((p0.at(1) >= p.at(1) && p1.at(1) < p.at(1)) || (p1.at(1) > p.at(1) && p0.at(1) <= p.at(1)))
+			{
+				int64_t x = p0.at(0) + (p1.at(0) - p0.at(0)) * (p.at(1) - p0.at(1)) / (p1.at(1) - p0.at(1));
+				if (x >= p.at(0))
+					crossings++;
+			}
+			p0 = p1;
+		}
+		return (crossings % 2) == 1;
 	}
 
 	void Wovener::processLast(Patch* patch)
