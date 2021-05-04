@@ -116,6 +116,7 @@ namespace fmesh
 				//i += j - i-1;
 
 				_buildFromDiffPolyTree_diffSafty(&middlePolys.at(i), &middlePolys.at(i + 1));
+				_buildFromDiffPolyTree_diff(&middlePolys.at(i), &middlePolys.at(i + 1));
 			}
 		}
 		middleoffset = -(float)count * offset;

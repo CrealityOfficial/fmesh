@@ -191,19 +191,38 @@ namespace fmesh
 		std::vector<trimesh::dvec2> earspoints;
 		std::vector<double> earspointsZ;
 		int count = 0;
-		polyNodeFunc func = [&func, &earspolygons, &earspoints,&earspointsZ,&count](ClipperLib::PolyNode* node) {
+		int index = 0;
 
+		//polyNodeFunc func = [&func, &earspolygons, &earspoints,&earspointsZ,&count](ClipperLib::PolyNode* node) {
+		//	std::vector<int> polygon;
+		//	std::vector<trimesh::dvec2> points;
+		//	for (ClipperLib::IntPoint& point : node->Contour)
+		//	{
+		//		polygon.push_back(earspoints.size());
+		//		earspoints.push_back(trimesh::dvec2(point.X/1000.0, point.Y / 1000.0));
+		//		earspointsZ.push_back(point.Z / 1000.0);
+		//	}
+		//	earspolygons.push_back(polygon);
+		//};
+		//mmesh::loopPolyTree(func, poly);
+
+
+		polyNodeFunc func = [&func, &earspolygons, &earspoints, &earspointsZ, &count](ClipperLib::PolyNode* node) {
 			std::vector<int> polygon;
 			std::vector<trimesh::dvec2> points;
 			for (ClipperLib::IntPoint& point : node->Contour)
 			{
 				polygon.push_back(earspoints.size());
-				earspoints.push_back(trimesh::dvec2(point.X/1000.0, point.Y / 1000.0));
+				earspoints.push_back(trimesh::dvec2(point.X / 1000.0, point.Y / 1000.0));
 				earspointsZ.push_back(point.Z / 1000.0);
 			}
 			earspolygons.push_back(polygon);
 		};
-		mmesh::loopPolyTree(func, poly);
+
+		func(poly);
+		for (ClipperLib::PolyNode* n : poly->Childs)
+			func(n);
+
 		m_earspolygons.swap(earspolygons);
 		m_earspoints.swap(earspoints);
 		m_earspointsZ.swap(earspointsZ);

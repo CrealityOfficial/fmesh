@@ -53,6 +53,7 @@ namespace fmesh
 		void _dealPolyTreeAxisZ(ClipperLib::PolyTree* tree, double slope, double min, double height=0); //slope
 
 		void _buildFromDiffPolyTree_diffSafty(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp, double delta = 1.0, int flag = 0, bool invert = false,bool invertXor=false);
+		void _buildFromDiffPolyTree_diff(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp, double delta = 1.0, int flag = 0, bool invert = false);
 		void _buildFromDiffPolyTree_xor(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp, double delta = 1.0, int flag = 0, bool invert = false); //steps
 		void _buildFromDiffPolyTree_Inner(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp, double delta = 1.0, int flag = 0, bool invert = false); //steps	
 		void _buildFromDiffPolyTree_onePoly(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp, double delta = 1.0, int flag = 0, bool invert = false);

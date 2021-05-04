@@ -3,6 +3,8 @@
 #include "fmesh/generate/wovener.h"
 #include "fmesh/contour/polytree.h"
 #include "fmesh/contour/path.h"
+
+#include "fmesh/contour/contour.h"
 namespace fmesh
 {
 	bool checkFlag(ClipperLib::PolyNode* node, int flag)
@@ -107,12 +109,24 @@ namespace fmesh
 	void buildFromSameAndDiff(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp,
 		std::vector<Patch*>& patches, int flag, double delta, ClipperLib::PolyTree& out, ClipperLib::PolyTree& Inner)
 	{
+//#ifdef 1
+		////save path
+		//static int j = 0;
+		//char a[128];
+		//sprintf(a, "%d", j++);
+		//std::string file = "f:/0/p";
+		//file += a;
+		//savePolyTree(treeLower, file.c_str());
+		//file += "_1";
+		//savePolyTree(treeUp, file.c_str());
+		////save end
+//#endif // 1
+		
 		if (GetPolyCount(treeLower) == GetPolyCount(treeUp))
 			buildFromDiffPolyTreeSafty(treeLower, treeUp, patches, delta, flag);
 		else
 		{
-			fmesh::xor2PolyTrees(treeUp, treeLower, Inner, 2);
-			fmesh::xor2PolyTrees(treeUp, treeLower, out, 3);
+			fmesh::xor2PolyTrees(treeUp, treeLower, out, flag);
 		}
 	}
 

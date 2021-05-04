@@ -235,17 +235,31 @@ namespace fmesh
 	void GeneratorImpl::_buildFromDiffPolyTree_diffSafty(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp, double delta, int flag, bool invert, bool invertXor)
 	{
 		ClipperLib::PolyTree out;
-		ClipperLib::PolyTree inner;
 
 		std::vector<Patch*> patches;
-		//buildFromDiffPolyTree_SameAndDiffSafty(treeLower, treeUp, patches, flag, out, delta);
-		buildFromSameAndDiff(treeLower, treeUp, patches, flag,delta, out,inner);
+		buildFromDiffPolyTree_SameAndDiffSafty(treeLower, treeUp, patches, flag, out, delta);
 		if (patches.size())
 			addPatches(patches,invert);
 		if (out.ChildCount() > 0)
 		{
-			_fillPolyTreeReverse(&inner,false);
-			_fillPolyTreeReverse(&out,true);
+			//_fillPolyTreeReverse(&inner,false);
+			//_fillPolyTreeReverse(&out,true);
+			fillComplexPolyTreeReverseInner(&out, patches);
+			addPatches(patches);
+		}
+	}
+
+	void GeneratorImpl::_buildFromDiffPolyTree_diff(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp, double delta, int flag, bool invert)
+	{
+		ClipperLib::PolyTree out;
+		std::vector<Patch*> patches;
+
+		xor2PolyTrees(treeLower, treeUp, out);
+		if (out.ChildCount() > 0)
+		{
+			fillComplexPolyTreeReverseInner(&out, patches);
+			//_fillPolyTreeReverse(&out, true);
+			addPatches(patches);
 		}
 	}
 

@@ -17,9 +17,6 @@ namespace fmesh
 	void buildFromDiffPolyTreeSafty(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp,
 		std::vector<Patch*>& patches, double delta, int flag = 0);
 
-	void buildFromSameAndDiff(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp,
-		std::vector<Patch*>& patches, int flag, double delta ,ClipperLib::PolyTree& out, ClipperLib::PolyTree& Inner);
-
 	struct PolyTreeOppoPair
 	{
 		ClipperLib::PolyNode* lower;
