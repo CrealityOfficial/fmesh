@@ -115,7 +115,7 @@ namespace fmesh
 				//	_buildFromDiffPolyTree_all(&middlePolys.at(i), &middlePolys.at(j), thickness / 2.0);
 				//i += j - i-1;
 
-				_buildFromDiffPolyTree_diffSafty(&middlePolys.at(i), &middlePolys.at(i + 1));
+				//_buildFromDiffPolyTree_diffSafty(&middlePolys.at(i), &middlePolys.at(i + 1));
 				_buildFromDiffPolyTree_diff(&middlePolys.at(i), &middlePolys.at(i + 1));
 			}
 		}
