@@ -384,6 +384,40 @@ namespace fmesh
 		fillComplexPolyTree(&out_, patches, false);
 	}
 
+	void fillPolyTreeDepth23(ClipperLib::PolyTree* polyTree, std::vector<Patch*>& patches)
+	{
+		if (!polyTree)
+			return;
+
+		std::vector<ClipperLib::PolyNode*> nodes2;
+		std::vector<ClipperLib::PolyNode*> nodes3;
+		std::vector<ClipperLib::PolyNode*> nodes6;
+		std::vector<ClipperLib::PolyNode*> nodes7;
+		polyNodeFunc func = [&patches, &nodes2, &nodes3, &nodes6, &nodes7](ClipperLib::PolyNode* node) {
+			int depth = testPolyNodeDepth(node);
+			if (depth == 2)
+				nodes2.push_back(node);
+			if (depth == 3)
+				nodes3.push_back(node);
+			if (depth == 6)
+				nodes6.push_back(node);
+			if (depth == 7)
+				nodes7.push_back(node);
+		};
+
+		mmesh::loopPolyTree(func, polyTree);
+
+		ClipperLib::PolyTree out;
+		xor2PolyNodes(nodes2, nodes3, out);
+
+		fillComplexPolyTree(&out, patches, false);
+
+		ClipperLib::PolyTree out_;
+		xor2PolyNodes(nodes6, nodes7, out_);
+
+		fillComplexPolyTree(&out_, patches, false);
+	}
+
 	void fillPolyTreeDepthOnePoly(ClipperLib::PolyTree* polyTree, std::vector<Patch*>& patches)
 	{
 		if (!polyTree)

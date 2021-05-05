@@ -212,6 +212,14 @@ namespace fmesh
 		addPatches(patches, invert);
 	}
 
+	void GeneratorImpl::_fillPolyTreeDepth23(ClipperLib::PolyTree* tree, bool invert)
+	{
+		std::vector<Patch*> patches;
+
+		fillPolyTreeDepth23(tree, patches);
+		addPatches(patches, invert);
+	}
+
 	void GeneratorImpl::_fillPolyTreeInner(ClipperLib::PolyTree* tree, bool invert)
 	{
 		std::vector<Patch*> patches;
@@ -503,7 +511,7 @@ namespace fmesh
 			offsetAndExtendPolyTree(m_poly, offset, thickness, hCloseTop, closeTop);
 
 			_fillPolyTreeDepth14(&closeTop);
-			_fillPolyTreeInner(&treeTop, true);
+			_fillPolyTreeDepth23(&treeTop,true);
 			_buildFromSamePolyTree(&treeTop, &closeTop, 3);
 		}
 		else if (m_adParam.top_type == ADTopType::adtt_step)
@@ -565,7 +573,7 @@ namespace fmesh
 			offsetAndExtendPolyTree(m_poly, offset, thickness, hCloseBottom, closeBottom);
 
 			_fillPolyTreeDepth14(&closeBottom, true);
-			_fillPolyTreeInner(&treeBottom);
+			_fillPolyTreeDepth23(&treeBottom);
 			_buildFromSamePolyTree(&closeBottom, &treeBottom, 3);
 		}
 		else if (m_adParam.bottom_type == ADBottomType::adbt_step)

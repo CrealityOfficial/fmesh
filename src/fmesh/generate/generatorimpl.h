@@ -43,6 +43,7 @@ namespace fmesh
 		void _fillPolyTree(ClipperLib::PolyTree* tree, bool invert = false);
 		void _fillPolyTreeInner(ClipperLib::PolyTree* tree, bool invert = false);//top bottom :close
 		void _fillPolyTreeDepth14(ClipperLib::PolyTree* tree, bool invert = false);//top bottom :close
+		void _fillPolyTreeDepth23(ClipperLib::PolyTree* tree, bool invert = false);//top bottom :close
 		void _buildFromSamePolyTree(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp, int flag = 0);  //0 all, 1 outer, 2 inner
 		void _buildFromDiffPolyTree(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp, int flag = 0);
 
