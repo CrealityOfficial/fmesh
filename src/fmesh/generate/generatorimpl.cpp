@@ -453,29 +453,7 @@ namespace fmesh
 				func(n);
 		};
 		func(tree);
-
-		//offset.Execute(treeNew, 0);
-		ClipperLib::PolyTree _treeNew;
-		offset.Execute(_treeNew, 0);
-
-		double _delta = delta * 1000;
-		offset.Execute(treeNew, -_delta);
-		offset.Clear();
-		_flag = 0;
-		func(&treeNew);
-		offset.Execute(treeNew, _delta);
-
-		if (treeNew.Total() != _treeNew.Total())
-		{
-			_flag = flag;
-			offset.Clear();
-			func(tree);
-			offset.Execute(treeNew, _delta);
-			offset.Clear();
-			_flag = 0;
-			func(&treeNew);
-			offset.Execute(treeNew, -_delta);
-		}
+		offset.Execute(treeNew, 0);
 
 		polyNodeFunc func1 = [&func1, &z,&flag](ClipperLib::PolyNode* node) {
 			if (flag == 2)
@@ -487,6 +465,7 @@ namespace fmesh
 		};
 
 		mmesh::loopPolyTree(func1, &treeNew);
+		adjustPolyTreeZ(treeNew);
 	}
 
 	void GeneratorImpl::_buildTop(ClipperLib::PolyTree& treeTop, double& hTop, double offset)

@@ -135,7 +135,7 @@ namespace fmesh
 		if (!polyTree)
 			return;
 
-		savePolyTree(polyTree, "f:/mypoly");
+		//savePolyTree(polyTree, "f:/mypoly");
 		std::vector<ClipperLib::PolyNode*> source;
 		std::vector<ClipperLib::PolyNode*> tmp;
 
@@ -193,7 +193,7 @@ namespace fmesh
 		if (!polyTree)
 			return;
 
-		savePolyTree(polyTree, "f:/mypoly");
+		//savePolyTree(polyTree, "f:/mypoly");
 		std::vector<ClipperLib::PolyNode*> source;
 		std::vector<ClipperLib::PolyNode*> tmp;
 

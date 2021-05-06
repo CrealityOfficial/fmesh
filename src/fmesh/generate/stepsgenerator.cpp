@@ -1,4 +1,5 @@
 #include "stepsgenerator.h"
+#include "fmesh/contour/contour.h"
 
 namespace fmesh
 {
@@ -53,10 +54,10 @@ namespace fmesh
 		} 
 		else
 		{
-			offsetAndExtendPolyTreeNew(m_poly, 0.0, thickness, bottomHeight - thickness, middlePolys.at(0));
-			offsetAndExtendPolyTreeNew(m_poly, 0.0, thickness, bottomHeight, middlePolys.at(1));
-			offsetAndExtendPolyTreeNew(m_poly, -thickness, thickness, bottomHeight, middlePolys.at(2));
-			offsetAndExtendPolyTreeNew(m_poly, -thickness, thickness, m_adParam.total_height, middlePolys.at(3));
+			offsetAndExtendPolyTree(m_poly, 0.0, thickness, bottomHeight - thickness, middlePolys.at(0));
+			offsetAndExtendPolyTree(m_poly, 0.0, thickness, bottomHeight, middlePolys.at(1));
+			offsetAndExtendPolyTree(m_poly, -thickness, thickness, bottomHeight, middlePolys.at(2));
+			offsetAndExtendPolyTree(m_poly, -thickness, thickness, m_adParam.total_height, middlePolys.at(3));
 		}
 
 		double dealt = 1.0;
@@ -70,7 +71,7 @@ namespace fmesh
 			_buildFromDiffPolyTree_xor(&middlePolys.at(1), &middlePolys.at(2), dealt, 3);
 			_buildFromSamePolyTree(&middlePolys.at(2), &middlePolys.at(3));
 			offsetExteriorInner(middlePolys.at(1), thickness, bottomHeight);
-			_buildFromDiffPolyTree_diffSafty(&middlePolys.at(0), &middlePolys.at(1));
+			_buildFromDiffPolyTree_all(&middlePolys.at(0), &middlePolys.at(1),1.0,0,true);
 			_buildFromDiffPolyTree_xor(&middlePolys.at(1), &middlePolys.at(2), dealt, 2);
 			_fillPolyTree(&middlePolys.back());
 		}

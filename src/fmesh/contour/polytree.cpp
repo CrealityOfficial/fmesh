@@ -425,6 +425,8 @@ namespace fmesh
 
 		source.Clear();
 		clipper.Execute(ClipperLib::ctUnion, source, ClipperLib::pftNonZero, ClipperLib::pftNonZero);
+
+		setPolyTreeZ(source, z);
 	}
 
 	void skeletonPolyTree(ClipperLib::PolyTree& source, double z, std::vector<Patch*>& patches, double height, bool onePoly)
