@@ -5,7 +5,7 @@ namespace fmesh
 	ADParam::ADParam()
 	{
 		extend_width = 1.0f;
-		total_height = 26.0f;
+		total_height = 20;
 		bottom_offset = 0.0f;
 
 		//top

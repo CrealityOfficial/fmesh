@@ -20,10 +20,10 @@ namespace fmesh
 		buildMiddle(middlePolys, middleoffset);
 
 		if (m_adParam.top_type != ADTopType::adtt_none)
-			_buildTopBottom(&middlePolys.front(), &middlePolys.back(), 0, middleoffset);
+			_buildTopBottomDiff(&middlePolys.front(), &middlePolys.back(), 0, middleoffset);
 		else
 		{
-			_buildTopBottom(&middlePolys.front(), nullptr);
+			_buildTopBottomDiff(&middlePolys.front(), nullptr);
 			_fillPolyTree(&middlePolys.back());
 		}
 	}

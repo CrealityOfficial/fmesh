@@ -16,7 +16,7 @@ namespace fmesh
 	{
 		std::vector<ClipperLib::PolyTree> middlePolys;
 		buildMiddle(middlePolys);
-		_buildTopBottom(&middlePolys.front(), &middlePolys.back());
+		_buildTopBottomDiff(&middlePolys.front(), &middlePolys.back());
 	}
 
 	void DrumedgeGenerator::buildShell()

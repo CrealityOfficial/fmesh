@@ -21,10 +21,10 @@ namespace fmesh
 		buildMiddle(middlePolys, middleoffset);
 
 		if (m_adParam.top_type != ADTopType::adtt_none)
-			_buildTopBottom(&middlePolys.front(), &middlePolys.back(), 0, middleoffset);
+			_buildTopBottomDiff(&middlePolys.front(), &middlePolys.back(), 0, middleoffset);
 		else
 		{
-			_buildTopBottom(&middlePolys.front(), nullptr);
+			_buildTopBottomDiff(&middlePolys.front(), nullptr);
 			_fillPolyTree(&middlePolys.back());
 		}
 	}
@@ -85,14 +85,6 @@ namespace fmesh
 			else
 			{
 				fmesh::offsetAndExtendPolyTree(m_poly, -(float)i * offset, thickness, bottomHeight + (float)i * h, middlePolys.at(i));
-			
-				//if (i)
-				//{
-				//	if ((middlePolys.at(i).Total() + middlePolys.at(i - 1).Total()) % 2)
-				//	{
-				//		middlePolys.at(i).Clear();
-				//	}
-				//}
 			}
 		}
 
@@ -102,20 +94,6 @@ namespace fmesh
 				_buildFromDiffPolyTree_onePoly(&middlePolys.at(i), &middlePolys.at(i + 1));//outer
 			else
 			{
-				//int j = i+1;
-				//while (!middlePolys.at(j).Total())
-				//{
-				//	++j;
-				//	if (j >= middlePolys.size())
-				//		break;
-				//}
-				//if (middlePolys.at(i).Total() < middlePolys.at(j).Total())
-				//	_buildFromDiffPolyTree_all(&middlePolys.at(i), &middlePolys.at(j), thickness / 2.0, 0, true, false);
-				//else
-				//	_buildFromDiffPolyTree_all(&middlePolys.at(i), &middlePolys.at(j), thickness / 2.0);
-				//i += j - i-1;
-
-				//_buildFromDiffPolyTree_diffSafty(&middlePolys.at(i), &middlePolys.at(i + 1));
 				_buildFromDiffPolyTree_diff(&middlePolys.at(i), &middlePolys.at(i + 1));
 			}
 		}

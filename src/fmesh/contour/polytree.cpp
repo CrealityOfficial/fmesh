@@ -231,16 +231,17 @@ namespace fmesh
 	{
 		if (offset == 0.0)
 		{
-			extendPolyTree(source, delta, dest);
+			offsetPolyTree(source, -delta, dest);
+			extendPolyTree(dest, delta, dest);
 		}
 		else
 		{
-			offsetPolyTree(source, offset, dest);
+			offsetPolyTree(source, offset - delta, dest);
 			extendPolyTree(dest, delta, dest);
 		}
 		polyNodeFunc func = [&func, &z](ClipperLib::PolyNode* node) {
 			for (ClipperLib::IntPoint& point : node->Contour)
-				point.Z += (int)(1000.0 * z);
+				point.Z = (int)(1000.0 * z);
 		};
 
 		mmesh::loopPolyTree(func, &dest);
@@ -331,7 +332,7 @@ namespace fmesh
 		mmesh::loopPolyTree(func, &tree);
 	}
 
-	void offsetExterior(ClipperLib::PolyTree& source, double offset)
+	void offsetExterior(ClipperLib::PolyTree& source, double offset,double z)
 	{
 		std::vector<ClipperLib::Path*> exterior;
 		std::vector<ClipperLib::Path*> interior;
@@ -372,6 +373,8 @@ namespace fmesh
 					}
 				}
 				offsetPath(exterior.at(i), offset, outTrees.at(i));
+				if(offset<0)
+					offset = -offset;
 			}
 		}
 
@@ -388,9 +391,11 @@ namespace fmesh
 		for(ClipperLib::Path* path : interior)
 			clipper.AddPath(*path, ClipperLib::ptClip, true);
 		clipper.Execute(ClipperLib::ctUnion, source, ClipperLib::pftNonZero, ClipperLib::pftNonZero);
+	
+		setPolyTreeZ(source, z);
 	}
 
-	void offsetExteriorInner(ClipperLib::PolyTree& source, double offset)
+	void offsetExteriorInner(ClipperLib::PolyTree& source, double offset, double z)
 	{
 		std::vector<std::vector<ClipperLib::PolyNode*>> depthNodes;
 		seperatePolyTree1234(&source, depthNodes);
@@ -581,6 +586,7 @@ namespace fmesh
 		}
 
 		clipper.Execute(ClipperLib::ctXor, out, ClipperLib::pftNonZero, ClipperLib::pftNonZero);
+		adjustPolyTreeZ(out);
 	}
 
 	int GetPolyCount(ClipperLib::PolyTree* poly, int flag)//2: Inner  3: Outer
