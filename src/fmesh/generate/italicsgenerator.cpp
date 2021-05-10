@@ -52,17 +52,29 @@ namespace fmesh
 
 		//init
 		float btoomStepHeight = m_adParam.shape_bottom_height;
-		float bottomHeight = m_adParam.bottom_height;
+		float bottomHeight=m_adParam.bottom_height;
 		float thickness = m_adParam.extend_width / 2.0;
 		float topHeight = m_adParam.top_height;
 		float topStepWiden = m_adParam.top_extend_width / 2.0;
 		float btoomStepWiden = m_adParam.bottom_extend_width / 2.0;
 
 		//modify
-		if (m_adParam.bottom_type == ADBottomType::adbt_step
-			|| m_adParam.bottom_type == ADBottomType::adbt_close)
+		if (m_adParam.bottom_type == ADBottomType::adbt_step)
 		{
 			bottomHeight = m_adParam.bottom_height < m_adParam.shape_bottom_height ? m_adParam.shape_bottom_height : m_adParam.bottom_height;
+		}
+		else if(m_adParam.bottom_type == ADBottomType::adbt_close)
+		{
+			bottomHeight = m_adParam.bottom_layers > 0 ? m_adParam.bottom_extend_width * m_adParam.bottom_layers : m_adParam.bottom_extend_width;
+		}
+		else
+		{
+			bottomHeight = 0;
+		}
+
+		if (m_adParam.top_type != ADTopType::adtt_step)
+		{
+			topHeight = 0;
 		}
 
 		float middleHeight = m_adParam.total_height - bottomHeight - topHeight;

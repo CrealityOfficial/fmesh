@@ -91,20 +91,20 @@ namespace fmesh
 						if (pathMaxZ(node->Contour)>=pathMaxZ(node))
 							lReverse = true;
 
-						//if (invert && outer)
-						//{
-						//	if (pathMaxZ(node->Contour) <= pathMaxZ(node->Childs.at(0)->Contour))
-						//	{
-						//		lReverse = true;
-						//	}
-						//}
-						//else if(invert&& !outer)
-						//{
-						//	if (pathMaxZ(node->Contour) > pathMaxZ(node->Childs.at(0)->Contour))
-						//	{
-						//		lReverse = false;
-						//	}
-						//}
+						if (invert && outer)
+						{
+							if (pathMaxZ(node->Contour) <= pathMaxZ(node->Childs.at(0)->Contour))
+							{
+								lReverse = true;
+							}
+						}
+						else if(invert&& !outer)
+						{
+							if (pathMaxZ(node->Contour) > pathMaxZ(node->Childs.at(0)->Contour))
+							{
+								lReverse = false;
+							}
+						}
 					}
 					
 					if ((outer && lReverse) || (!outer && !lReverse))

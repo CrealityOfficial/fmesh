@@ -61,7 +61,20 @@ namespace fmesh
 		//modify
 		if (m_adParam.top_type == ADTopType::adtt_step)
 		{
-			shape_top_height = m_adParam.shape_top_height > m_adParam.top_height ? m_adParam.shape_top_height : m_adParam.top_height;
+			topHeight = m_adParam.shape_top_height > m_adParam.top_height ? m_adParam.shape_top_height : m_adParam.top_height;
+		}
+		else if (m_adParam.top_type == ADTopType::adtt_close)
+		{
+			topHeight = m_adParam.top_layers > 0 ? m_adParam.top_extend_width * m_adParam.top_layers : m_adParam.top_extend_width;
+		}
+		else
+		{
+			topHeight = 0;
+		}
+
+		if (m_adParam.bottom_type != ADBottomType::adbt_step)
+		{
+			bottomHeight = 0;
 		}
 
 		float middleHeight = m_adParam.total_height - bottomHeight - topHeight;

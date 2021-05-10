@@ -618,7 +618,7 @@ namespace fmesh
 
 		if (m_adParam.top_type == ADTopType::adtt_close
 			|| m_adParam.top_type == ADTopType::adtt_round)
-			hTop -= m_adParam.bottom_layers > 0 ? m_adParam.bottom_extend_width * m_adParam.bottom_layers : m_adParam.top_extend_width;
+			hTop -= m_adParam.top_layers > 0 ? m_adParam.top_extend_width * m_adParam.top_layers : m_adParam.top_extend_width;
 		else if (m_adParam.top_type == ADTopType::adtt_step)
 			hTop -= (m_adParam.top_height + m_adParam.top_extend_width);
 
