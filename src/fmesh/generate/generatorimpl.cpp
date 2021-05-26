@@ -2,11 +2,8 @@
 #include "fmesh/contour/polytree.h"
 #include "fmesh/generate/trimeshbuilder.h"
 #include "fmesh/contour/path.h"
-#include "fmesh/contour/contour.h"
 
 #include "mmesh/cgal/roof.h"
-#include "fmesh/dxf/writedxf.h"
-#include "fmesh/svg/writesvg.h"
 #include "mmesh/clipper/circurlar.h"
 
 namespace fmesh
@@ -864,7 +861,8 @@ namespace fmesh
 		hTop = hTop < 0 ? 0 : hTop;
 
 		//offsetAndExtendPolyTree(m_poly, offset, thickness, hTop, treeTop);
-		copy2PolyTree(m_poly, treeTop);
+		offsetPolyTree(m_poly, offset, treeTop);
+		//copy2PolyTree(m_poly, treeTop);
 		setPolyTreeZ(treeTop, hTop);
 
 		if (m_adParam.top_type == ADTopType::adtt_none)
@@ -936,7 +934,8 @@ namespace fmesh
 			;// hBottom = m_adParam.bottom_height;
 
 		//offsetAndExtendPolyTree(m_poly, offset, thickness, hBottom, treeBottom);
-		copy2PolyTree(m_poly, treeBottom);
+		offsetPolyTree(m_poly, offset, treeBottom);
+		//copy2PolyTree(m_poly, treeBottom);
 		setPolyTreeZ(treeBottom, hBottom);
 
 		if (m_adParam.bottom_type == ADBottomType::adbt_none)

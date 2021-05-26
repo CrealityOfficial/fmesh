@@ -33,7 +33,7 @@ namespace fmesh
 		std::vector<ClipperLib::PolyTree> middlePolys;
 		double middleoffset = 0;
 		buildMiddle(middlePolys, middleoffset,true);
-		//_buildTopBottom_onepoly(&middlePolys.front(), &middlePolys.back(), 0, middleoffset);
+		_buildTopBottom_onepoly(&middlePolys.front(), &middlePolys.back(), 0, middleoffset);
 	}
 
 	void ReItalicsGenerator::buildBoard(ClipperLib::PolyTree& topTree, ClipperLib::PolyTree& bottomTree)
