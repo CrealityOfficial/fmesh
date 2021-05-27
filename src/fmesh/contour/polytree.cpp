@@ -40,6 +40,14 @@ namespace fmesh
 		ClipperLib::Clipper clipper;
 		clipper.AddPaths(*paths, ClipperLib::ptSubject, true);
 		clipper.Execute(ClipperLib::ctUnion, polyTree, ClipperLib::pftNonZero, ClipperLib::pftNonZero);
+
+		polyNodeFunc func = [&func, &clipper](ClipperLib::PolyNode* node) {
+			ClipperLib::CleanPolygon(node->Contour);//remove Repeat point
+
+			for (ClipperLib::PolyNode* n : node->Childs)
+				func(n);
+		};
+		func(&polyTree);
 	}
 
 	void copy2PolyTree(ClipperLib::PolyTree& source, ClipperLib::PolyTree& dest)
