@@ -92,7 +92,7 @@ namespace fmesh
 			} 
 			else
 			{
-				offsetAndExtendPolyTree(m_poly, _offset / 2, thickness, delta, middlePolys.at(i));
+				offsetAndExtendpolyType(m_poly, _offset / 2, thickness, delta, middlePolys.at(i),m_adParam.bluntSharpCorners);
 				_simplifyPoly(&middlePolys.at(i));
 			}
 			offs.at(i) = _offset;

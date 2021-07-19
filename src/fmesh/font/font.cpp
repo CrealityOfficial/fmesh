@@ -2,7 +2,7 @@
 #include "outline.h"
 
 #include <iostream>
-#define SIMPLERATIO 12
+//#define SIMPLERATIO 12
 namespace fmesh
 {
 	Font::Font(FT_Face _face)
@@ -15,13 +15,13 @@ namespace fmesh
 
 	}
 
-	Outline* Font::get(FT_ULong charCode)
+	Outline* Font::get(FT_ULong charCode,int simpleRatio)
 	{
 		std::unordered_map<FT_ULong, Outline*>::iterator it = m_outlines.find(charCode);
 		if (it != m_outlines.end())
 			return it->second;
 
-		Outline* ol = load(charCode);
+		Outline* ol = load(charCode, simpleRatio);
 		if (ol)
 		{
 			ol->end();
@@ -38,6 +38,8 @@ namespace fmesh
 		double xMin;
 		double factor;
 		int yMax;
+
+		int simpleRatio;
 
 		double prevx;
 		double prevy;
@@ -126,7 +128,7 @@ namespace fmesh
 		{
 			data->oline->push((ox - data->xMin) * data->factor, oy * data->factor);
 		}
-		for (double t = 0.0; t <= 1.0; t += 1.0 / SIMPLERATIO)
+		for (double t = 0.0; t <= 1.0; t += 1.0 / data->simpleRatio)
 		{
 			px = pow(1.0 - t, 2) * data->prevx + 2 * t * (1.0 - t) * control->x + t * t * to->x;
 			py = pow(1.0 - t, 2) * data->prevy + 2 * t * (1.0 - t) * control->y + t * t * to->y;
@@ -185,7 +187,7 @@ namespace fmesh
 			  0, 0
 	};
 
-	Outline* Font::load(FT_ULong charCode)
+	Outline* Font::load(FT_ULong charCode,int simpleRatio)
 	{
 		FT_Glyph glyph;
 
@@ -214,7 +216,9 @@ namespace fmesh
 		data.startcontour = false;
 		data.xMin = 1000.0;
 		data.yMax = 922;
-		data.factor = 1.0 / (1.0 / 9.0 * data.yMax);;
+		data.factor = 1.0 / (1.0 / 9.0 * data.yMax);
+
+		data.simpleRatio = simpleRatio;
 
 		error = FT_Outline_Decompose(&(og->outline), &funcs, &data);
 		if (!error)

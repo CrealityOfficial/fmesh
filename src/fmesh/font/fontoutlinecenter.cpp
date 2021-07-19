@@ -83,10 +83,10 @@ namespace fmesh
 		return fmesh::convertOutline2PolyTree(outline);
 	}
 
-	ClipperLib::Paths* FontOutlineCenter::getPath(int charCode, double expectLen)
+	ClipperLib::Paths* FontOutlineCenter::getPath(int charCode, double expectLen, const int simpleRatio)
 	{
 		if (!font) return nullptr;
-		Outline* outline = font->get((FT_ULong)charCode);
+		Outline* outline = font->get((FT_ULong)charCode, simpleRatio);
 
 		ClipperLib::Paths* paths = new ClipperLib::Paths();
 		*paths = outline->pathes();

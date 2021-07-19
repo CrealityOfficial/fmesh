@@ -46,9 +46,9 @@ namespace fmesh
 		} 
 		else
 		{
-			offsetAndExtendPolyTree(m_poly, 0.0, thickness, 0, middlePolys.at(0));
-			offsetAndExtendPolyTree(m_poly, 0.0, thickness, m_adParam.shape_bottom_height, middlePolys.at(1));
-			offsetAndExtendPolyTree(m_poly, 0.0, thickness, m_adParam.shape_bottom_height + 1, middlePolys.at(2));
+			offsetAndExtendpolyType(m_poly, 0.0, thickness, 0, middlePolys.at(0),m_adParam.bluntSharpCorners);
+			offsetAndExtendpolyType(m_poly, 0.0, thickness, m_adParam.shape_bottom_height, middlePolys.at(1), m_adParam.bluntSharpCorners);
+			offsetAndExtendpolyType(m_poly, 0.0, thickness, m_adParam.shape_bottom_height + 1, middlePolys.at(2), m_adParam.bluntSharpCorners);
 		}
 
 		if (m_adParam.total_height < m_adParam.shape_bottom_height)
@@ -61,7 +61,7 @@ namespace fmesh
 			}
 			else
 			{
-				offsetAndExtendPolyTree(m_poly, 0.0, thickness, m_adParam.total_height, middlePolys.at(1));
+				offsetAndExtendpolyType(m_poly, 0.0, thickness, m_adParam.total_height, middlePolys.at(1),m_adParam.bluntSharpCorners);
 			}
 
 			_buildFromSamePolyTree(&middlePolys.at(0), &middlePolys.at(1));

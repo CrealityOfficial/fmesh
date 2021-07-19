@@ -90,7 +90,7 @@ namespace fmesh
 		{
 			if (onePoly)
 			{
-				offsetPolyTree(m_poly, (float)i * offset, middlePolys.at(i));
+				offsetPolyType(m_poly, (float)i * offset, middlePolys.at(i),m_adParam.bluntSharpCorners);
 				passivationPolyTree(middlePolys.at(i), thickness / 2.0);
 				setPolyTreeZ(middlePolys.at(i), bottomHeight + (float)i * h);
 			} 
@@ -98,7 +98,7 @@ namespace fmesh
 			{	
 				//offsetAndExtendPolyTreeMiter(m_poly, (float)i * offset, thickness, middlePolys.at(i));
 				//setPolyTreeZ(middlePolys.at(i),bottomHeight + (float)i * h);
-				offsetAndExtendPolyTree(m_poly, (float)i * offset, thickness, bottomHeight + (float)i * h, middlePolys.at(i));
+				offsetAndExtendpolyType(m_poly, (float)i * offset, thickness, bottomHeight + (float)i * h, middlePolys.at(i),m_adParam.bluntSharpCorners);
 				//if (i)
 				//{
 				//	if ((middlePolys.at(i).Total() + middlePolys.at(i - 1).Total())%2)

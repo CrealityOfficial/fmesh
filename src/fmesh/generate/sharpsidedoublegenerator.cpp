@@ -104,13 +104,13 @@ namespace fmesh
 				}
 				if (onePoly)
 				{
-					offsetPolyTree(m_poly, _offset / 2, middlePolys.at(i));
+					offsetPolyType(m_poly, _offset / 2, middlePolys.at(i),m_adParam.bluntSharpCorners);
 					passivationPolyTree(middlePolys.at(i), thickness / 2.0);
 					setPolyTreeZ(middlePolys.at(i), delta);
 				}
 				else
 				{
-					offsetAndExtendPolyTree(m_poly, _offset / 2, thickness, delta, middlePolys.at(i));
+					offsetAndExtendpolyType(m_poly, _offset / 2, thickness, delta, middlePolys.at(i),m_adParam.bluntSharpCorners);
 				}
 			}
 		}
@@ -144,7 +144,7 @@ namespace fmesh
 				}
 				else
 				{
-					offsetAndExtendPolyTree(m_poly, _offset / 2, thickness, delta, middlePolys.at(drumHCountT + i));
+					offsetAndExtendpolyType(m_poly, _offset / 2, thickness, delta, middlePolys.at(drumHCountT + i),m_adParam.bluntSharpCorners);
 				}
 			}
 		}

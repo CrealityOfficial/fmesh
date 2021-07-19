@@ -23,10 +23,14 @@ namespace fmesh
 	FMESH_API void extendPolyTree(ClipperLib::PolyTree& source, double delta, polyOffsetFunc offsetFunc, ClipperLib::PolyTree& dest);
 	FMESH_API void offsetAndExtendPolyTreeNew(ClipperLib::PolyTree& source, double offset, double delta, double z, ClipperLib::PolyTree& dest);
 	FMESH_API void offsetAndExtendPolyTree(ClipperLib::PolyTree& source, double offset, double delta, double z, ClipperLib::PolyTree& dest);
+	FMESH_API void offsetAndExtendPolyTreeMiter(ClipperLib::PolyTree& source, double offset, double delta, double z, ClipperLib::PolyTree& dest);
 	FMESH_API void offsetExterior(ClipperLib::PolyTree& source, double offset,double z);
 	FMESH_API void offsetExteriorInner(ClipperLib::PolyTree& source, double offset, double z);
 	FMESH_API void offsetAndExtendPolyTree(ClipperLib::PolyTree& source, double offset, double delta, ClipperLib::PolyTree& dest);
 	FMESH_API void offsetAndExtendPolyTreeMiter(ClipperLib::PolyTree& source, double offset, double delta, ClipperLib::PolyTree& dest);
+
+	//blunt sharp
+	FMESH_API void offsetAndExtendpolyType(ClipperLib::PolyTree& source, double offset, double delta, double z, ClipperLib::PolyTree& dest,bool isBluntSharp);
 
 	//set z
 	FMESH_API void setPolyTreeZ(ClipperLib::PolyTree& tree, double z);
@@ -46,6 +50,10 @@ namespace fmesh
 	FMESH_API void offsetPaths(std::vector<ClipperLib::Path*>& source, double delta, ClipperLib::PolyTree& dest);
 	FMESH_API void offsetPath(ClipperLib::Path* source, double delta, ClipperLib::PolyTree& dest);
 	FMESH_API void offsetPolyNodes(const std::vector<ClipperLib::PolyNode*>& polyNodes, double delta, ClipperLib::PolyTree& dest);
+	
+	//blunt sharp
+	FMESH_API void offsetPolyType(ClipperLib::PolyTree& source, double delta, ClipperLib::PolyTree& dest, bool isBluntSharp);
+	
 	//xor
 	void xor2PolyTrees(ClipperLib::PolyTree* outer, ClipperLib::PolyTree* inner, ClipperLib::PolyTree& out);
 	FMESH_API void xor2PolyTrees(ClipperLib::PolyTree* outer, ClipperLib::PolyTree* inner, ClipperLib::PolyTree& out, int flag);

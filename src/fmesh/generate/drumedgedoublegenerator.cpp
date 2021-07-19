@@ -88,12 +88,12 @@ namespace fmesh
 				float _offset = shape_middle_width * sin((offset * i) > 0 ? offset * i : 0);
 				if (onePloy)
 				{
-					offsetPolyTree(m_poly, _offset / 2, middlePolys.at(i));
+					offsetPolyType(m_poly, _offset / 2, middlePolys.at(i),m_adParam.bluntSharpCorners);
 					setPolyTreeZ(middlePolys.at(i), delta);
 				}
 				else
 				{
-					offsetAndExtendPolyTree(m_poly, _offset / 2, thickness, delta, middlePolys.at(i));
+					offsetAndExtendpolyType(m_poly, _offset / 2, thickness, delta, middlePolys.at(i),m_adParam.bluntSharpCorners);
 					_simplifyPoly(&middlePolys.at(i));
 				}
 			}
@@ -115,7 +115,7 @@ namespace fmesh
 				}
 				else
 				{
-					offsetAndExtendPolyTree(m_poly, _offset / 2, thickness, delta, middlePolys.at(drumHCount1+ i));
+					offsetAndExtendpolyType(m_poly, _offset / 2, thickness, delta, middlePolys.at(drumHCount1+ i),m_adParam.bluntSharpCorners);
 					_simplifyPoly(&middlePolys.at(drumHCount1+ i));
 				}
 			}

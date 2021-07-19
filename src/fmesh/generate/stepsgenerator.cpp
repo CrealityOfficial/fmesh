@@ -47,17 +47,17 @@ namespace fmesh
 		{
 			copy2PolyTree(m_poly, middlePolys.at(0));
 			setPolyTreeZ(middlePolys.at(0), bottomHeight);
-			offsetPolyTree(m_poly, -thickness, middlePolys.at(1));
+			offsetPolyType(m_poly, -thickness, middlePolys.at(1),m_adParam.bluntSharpCorners);
 			setPolyTreeZ(middlePolys.at(1), bottomHeight);
-			offsetPolyTree(m_poly, -thickness, middlePolys.at(2));
+			offsetPolyType(m_poly, -thickness, middlePolys.at(2),m_adParam.bluntSharpCorners);
 			setPolyTreeZ(middlePolys.at(2), m_adParam.total_height);
 		} 
 		else
 		{
-			offsetAndExtendPolyTree(m_poly, 0.0, thickness, bottomHeight - thickness, middlePolys.at(0));
-			offsetAndExtendPolyTree(m_poly, 0.0, thickness, bottomHeight, middlePolys.at(1));
-			offsetAndExtendPolyTree(m_poly, -thickness, thickness, bottomHeight, middlePolys.at(2));
-			offsetAndExtendPolyTree(m_poly, -thickness, thickness, m_adParam.total_height, middlePolys.at(3));
+			offsetAndExtendpolyType(m_poly, 0.0, thickness, bottomHeight - thickness, middlePolys.at(0),m_adParam.bluntSharpCorners);
+			offsetAndExtendpolyType(m_poly, 0.0, thickness, bottomHeight, middlePolys.at(1), m_adParam.bluntSharpCorners);
+			offsetAndExtendpolyType(m_poly, -thickness, thickness, bottomHeight, middlePolys.at(2), m_adParam.bluntSharpCorners);
+			offsetAndExtendpolyType(m_poly, -thickness, thickness, m_adParam.total_height, middlePolys.at(3), m_adParam.bluntSharpCorners);
 		}
 
 		double dealt = 1.0;

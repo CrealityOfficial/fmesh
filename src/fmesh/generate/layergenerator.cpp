@@ -56,7 +56,7 @@ namespace fmesh
 		{
 			delta = bottomHeight + i * 0.8;
 			double offset = m_adParam.shape_top_height - sqrt(m_adParam.shape_top_height * m_adParam.shape_top_height - thickness * thickness * i * i);
-			offsetAndExtendPolyTree(m_poly, -offset, thickness, delta, middlePolys.at(i));
+			offsetAndExtendpolyType(m_poly, -offset, thickness, delta, middlePolys.at(i),m_adParam.bluntSharpCorners);
 		}
 #endif
 
@@ -100,7 +100,7 @@ namespace fmesh
 		for (size_t i = 0; i < drumHCount + 1; i++)
 		{
 			float _offset = shape_middle_width * sin((offset * i) > 0 ? offset * i : 0);
-			offsetAndExtendPolyTree(tree, _offset / 2, thickness, 0.0, middlePolys.at(i));
+			offsetAndExtendpolyType(tree, _offset / 2, thickness, 0.0, middlePolys.at(i),m_adParam.bluntSharpCorners);
 		}
 
 		int index = 0;

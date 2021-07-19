@@ -82,6 +82,8 @@ namespace fmesh
 		//top/bottom layer count
 		int top_layers;
 		int bottom_layers;
+
+		bool bluntSharpCorners;
 	};
 
 	class FMESH_API ExportParam

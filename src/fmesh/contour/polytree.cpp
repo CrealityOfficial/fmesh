@@ -142,7 +142,32 @@ namespace fmesh
 		};
 
 		func(&source);
+
 		offset.Execute(dest, microDelta);
+	}
+
+	void offsetPolyType(ClipperLib::PolyTree& source, double delta, ClipperLib::PolyTree& dest, bool isBluntSharp)
+	{	
+		if (isBluntSharp)
+		{		
+			if (delta < 0)//Zoom in and out
+			{
+				offsetPolyTree(source, delta*2, dest);
+				offsetPolyTree(dest, - delta , dest);
+			}
+			else
+				offsetPolyTree(source, delta, dest);
+		}
+		else 
+		{
+			if (delta < 0)//Zoom in and out
+			{
+				offsetPolyTreeMiter(source, delta*2, dest);
+				offsetPolyTreeMiter(dest, -delta, dest);
+			}
+			else
+				offsetPolyTreeMiter(source, delta, dest);
+		}
 	}
 
 	void passivationPolyTree(ClipperLib::PolyTree& source, double delta)
@@ -255,6 +280,26 @@ namespace fmesh
 		mmesh::loopPolyTree(func, &dest);
 	}
 
+	void offsetAndExtendPolyTreeMiter(ClipperLib::PolyTree& source, double offset, double delta, double z, ClipperLib::PolyTree& dest)
+	{
+		if (offset == 0.0)
+		{
+			offsetPolyTreeMiter(source, -delta, dest);
+			extendPolyTreeMiter(dest, delta, dest);
+		}
+		else
+		{
+			offsetPolyTreeMiter(source, offset - delta, dest);
+			extendPolyTreeMiter(dest, delta, dest);
+		}
+		polyNodeFunc func = [&func, &z](ClipperLib::PolyNode* node) {
+			for (ClipperLib::IntPoint& point : node->Contour)
+				point.Z = (int)(1000.0 * z);
+		};
+
+		mmesh::loopPolyTree(func, &dest);
+	}
+
 	void offsetAndExtendPolyTreeNew(ClipperLib::PolyTree& source, double offset, double delta, double z, ClipperLib::PolyTree& dest)
 	{
 		if (offset == 0.0)
@@ -297,6 +342,18 @@ namespace fmesh
 		{
 			offsetPolyTreeMiter(source, offset, dest);
 			extendPolyTreeMiter(dest, delta, dest);
+		}
+	}
+
+	void offsetAndExtendpolyType(ClipperLib::PolyTree& source, double offset, double delta, double z, ClipperLib::PolyTree& dest, bool isBluntSharp)
+	{
+		if (isBluntSharp)
+		{
+			offsetAndExtendPolyTree(source, offset, delta, z, dest);
+		}
+		else
+		{
+			offsetAndExtendPolyTreeMiter(source, offset, delta, z, dest);
 		}
 	}
 

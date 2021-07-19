@@ -17,9 +17,9 @@ namespace fmesh
 		Font(FT_Face _face);
 		~Font();
 
-		Outline* get(FT_ULong charCode);
+		Outline* get(FT_ULong charCode, int simpleRatio =12);
 	protected:
-		Outline* load(FT_ULong charCode);
+		Outline* load(FT_ULong charCode, int simpleRatio = 12);
 	protected:
 		FT_Face face;
 		std::unordered_map<FT_ULong, Outline*> m_outlines;

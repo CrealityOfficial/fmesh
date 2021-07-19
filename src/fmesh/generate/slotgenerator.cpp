@@ -22,10 +22,10 @@ namespace fmesh
 		
 		//step start
 		std::vector<ClipperLib::PolyTree> Steppolys(4);
-		fmesh::offsetAndExtendPolyTree(m_poly, 0, m_adParam.extend_width / 2.0, m_adParam.shape_bottom_height, Steppolys.at(0));
-		fmesh::offsetAndExtendPolyTree(m_poly, 0, m_adParam.extend_width / 2.0, m_adParam.shape_bottom_height, Steppolys.at(1));		
-		fmesh::offsetAndExtendPolyTree(m_poly, 0, m_adParam.extend_width / 2.0, m_adParam.total_height - m_adParam.shape_top_height, Steppolys.at(2));
-		fmesh::offsetAndExtendPolyTree(m_poly, 0, m_adParam.extend_width / 2.0, m_adParam.total_height - m_adParam.shape_top_height, Steppolys.at(3));
+		offsetAndExtendpolyType(m_poly, 0, m_adParam.extend_width / 2.0, m_adParam.shape_bottom_height, Steppolys.at(0),m_adParam.bluntSharpCorners);
+		offsetAndExtendpolyType(m_poly, 0, m_adParam.extend_width / 2.0, m_adParam.shape_bottom_height, Steppolys.at(1), m_adParam.bluntSharpCorners);
+		offsetAndExtendpolyType(m_poly, 0, m_adParam.extend_width / 2.0, m_adParam.total_height - m_adParam.shape_top_height, Steppolys.at(2), m_adParam.bluntSharpCorners);
+		offsetAndExtendpolyType(m_poly, 0, m_adParam.extend_width / 2.0, m_adParam.total_height - m_adParam.shape_top_height, Steppolys.at(3), m_adParam.bluntSharpCorners);
 		offsetExteriorInner(Steppolys.at(1), m_adParam.bottom_extend_width, m_adParam.shape_bottom_height);
 		offsetExteriorInner(Steppolys.at(2), m_adParam.bottom_extend_width, m_adParam.total_height - m_adParam.shape_top_height);
 		_buildFromDiffPolyTree(&Steppolys.at(0), &Steppolys.at(1));

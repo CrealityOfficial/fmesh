@@ -46,8 +46,8 @@ namespace fmesh
 		ClipperLib::PolyTree treeTop, treeBottom;
 		double hTop, hBottom;
 
-		_buildTop_onepoly(treeTop, hTop);
-		_buildBottom_onepoly(treeBottom, hBottom);
+		_buildTop_onepoly(treeTop, hTop,-m_adParam.extend_width/2.0);
+		_buildBottom_onepoly(treeBottom, hBottom, -m_adParam.extend_width / 2.0);
 
 		_buildFromSamePolyTree(&treeBottom, &treeTop);
 	}
