@@ -850,13 +850,11 @@ namespace fmesh
 		double thickness = m_adParam.extend_width / 2.0f;
 		thickness = 0.0;
 		if (m_adParam.top_type == ADTopType::adtt_close)
-			hTop -= m_adParam.top_height;
+			;// hTop -= m_adParam.top_height;
 		else if (m_adParam.top_type == ADTopType::adtt_round)
-			hTop -= m_adParam.top_height;
+			;// hTop -= m_adParam.top_height;
 		else if (m_adParam.top_type == ADTopType::adtt_step)
 			;// hTop -= (m_adParam.top_height + m_adParam.extend_width / 4.0 + m_adParam.top_extend_width / 4.0);
-		if (m_adParam.top_type == ADTopType::adtt_close)
-			hTop -= m_adParam.top_height;
 
 		hTop = hTop < 0 ? 0 : hTop;
 

@@ -19,6 +19,7 @@
 #include "fmesh/generate/sharpsidedoublegenerator.h"
 #include "fmesh/generate/wideninnergenerator.h"
 #include "fmesh/generate/widenoutergenerator.h"
+#include "fmesh/generate/neongenerator.h"
 
 #include "mmesh/trimesh/trimeshutil.h"
 #include <memory>
@@ -165,6 +166,9 @@ namespace fmesh
 			break;
 		case ADShapeType::adst_baobianzi_outer:
 			impl = new WidenOuterGenerator();
+			break;
+		case ADShapeType::adst_nihongdeng:
+			impl = new NeonGenerator();
 			break;
 		default:
 			impl = new SimpleGenerator();
