@@ -19,7 +19,7 @@ namespace fmesh
 		void setCurrent(const std::string& name);
 
 		ClipperLib::PolyTree* get(int charCode);
-		ClipperLib::Paths* getPath(int charCode, double expectLen = 50.0,const int simpleRatio = 12);
+		ClipperLib::Paths* getPath(int charCode, double expectLen = 50.0,const int simpleRatio = 30);
 		ClipperLib::Paths* getPath(const std::string& font, int charCode, double expectLen = 50);
 
 		void addSearchPath(const std::string& dir);

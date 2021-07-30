@@ -29,22 +29,22 @@ namespace fmesh
 
 	void LampGenerator::buildShell()
 	{
-		//m_adParam.bottom_type = ADBottomType::adbt_none;
+		m_adParam.bottom_type = ADBottomType::adbt_none;
 
-		//double middleoffset = 0;
-		//std::vector<ClipperLib::PolyTree> middlePolys;
-		//buildMiddle(middlePolys, middleoffset,true);
+		double middleoffset = 0;
+		std::vector<ClipperLib::PolyTree> middlePolys;
+		buildMiddle(middlePolys, middleoffset, true);
 
-		//_buildTopBottom_onepoly(nullptr, &middlePolys.back(), 0, 0);
+		_buildTopBottom_onepoly(nullptr, &middlePolys.back(), 0, 0);
 	}
 
 	void LampGenerator::buildBoard(ClipperLib::PolyTree& topTree, ClipperLib::PolyTree& bottomTree)
 	{
-		//double middleoffset = 0;
-		//std::vector<ClipperLib::PolyTree> middlePolys;
-		//buildMiddle(middlePolys, middleoffset, true);
-		////copy2PolyTree(middlePolys.back(), topTree);
-		//copy2PolyTree(middlePolys.front(), bottomTree);
+		double middleoffset = 0;
+		std::vector<ClipperLib::PolyTree> middlePolys;
+		buildMiddle(middlePolys, middleoffset, true);
+		//copy2PolyTree(middlePolys.back(), topTree);
+		copy2PolyTree(middlePolys.front(), bottomTree);
 	}
 
 	void LampGenerator::buildMiddle(std::vector<ClipperLib::PolyTree>& middlePolys, double& middleoffset, bool onePoly)
@@ -53,12 +53,20 @@ namespace fmesh
 		float thickness = m_adParam.extend_width / 2.0;
 		float offset = 0;
 		float totalH = m_adParam.total_height;
-		float thicknessH = thickness;
+		float thicknessH = thickness*2.0;
 
 		middlePolys.resize(3);
 		offsetAndExtendpolyType(m_poly, offset, thickness, 0, middlePolys.at(0), m_adParam.bluntSharpCorners);
 		offsetAndExtendpolyType(m_poly, offset, thickness, thicknessH, middlePolys.at(1), m_adParam.bluntSharpCorners);
-		offsetAndExtendpolyType(m_poly, offset, thickness, thicknessH, middlePolys.at(2), m_adParam.bluntSharpCorners);
+
+		if (onePoly)
+		{
+			offsetPolyTree(m_poly, thickness / 2, middlePolys.at(2));
+			setPolyTreeZ(middlePolys.at(2), thicknessH);
+			//offsetAndExtendpolyType(m_poly, offset, thickness, thicknessH, middlePolys.at(2), m_adParam.bluntSharpCorners);
+		}
+		else
+			offsetAndExtendpolyType(m_poly, offset, thickness, thicknessH, middlePolys.at(2), m_adParam.bluntSharpCorners);
 
 		ClipperLib::Path* path = new ClipperLib::Path;
 		mmesh::skeletonPoints(&m_poly, path);
@@ -108,11 +116,15 @@ namespace fmesh
 		ClipperLib::PolyTree newPolyT;
 		clipper.Execute(ClipperLib::ctUnion, newPolyT, ClipperLib::pftNonZero, ClipperLib::pftNonZero);
 		setPolyTreeZ(newPolyT, thicknessH);
-		_fillPolyTree(&newPolyT);
-
+		
 		_buildFromSamePolyTree(&middlePolys.at(0), &middlePolys.at(1), 3);
 		_buildFromSamePolyTree(&newPolyB, &newPolyT,2);
+
+		_fillPolyTree(&newPolyT);
 		_fillPolyTree(&newPolyB, true);
+
+		middlePolys.at(0).Clear();
+		copy2PolyTree(newPolyT, middlePolys.at(0));
 }
 
 	void LampGenerator::initTestData()
