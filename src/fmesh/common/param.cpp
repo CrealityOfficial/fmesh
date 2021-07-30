@@ -28,6 +28,9 @@ namespace fmesh
 		top_layers = 1;
 		bottom_layers = 1;
 		bluntSharpCorners = true;
+
+		roundRadius = 3.0f;
+		roundGap = 5.0f;
 	}
 
 	ADParam::~ADParam()

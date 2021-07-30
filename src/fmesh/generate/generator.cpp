@@ -20,6 +20,8 @@
 #include "fmesh/generate/wideninnergenerator.h"
 #include "fmesh/generate/widenoutergenerator.h"
 #include "fmesh/generate/neongenerator.h"
+#include "fmesh/generate/punchinggenerator.h"
+#include "fmesh/generate/lampgenerator.h"
 
 #include "mmesh/trimesh/trimeshutil.h"
 #include <memory>
@@ -169,6 +171,16 @@ namespace fmesh
 			break;
 		case ADShapeType::adst_nihongdeng:
 			impl = new NeonGenerator();
+			break;
+		case ADShapeType::adst_chongkong:
+			impl = new PunchingGenerator();
+			break;
+		case ADShapeType::adst_loukong:
+			break;
+		case ADShapeType::adst_qiantao:
+			break;
+		case ADShapeType::adst_dengpao:
+			impl = new LampGenerator();
 			break;
 		default:
 			impl = new SimpleGenerator();
