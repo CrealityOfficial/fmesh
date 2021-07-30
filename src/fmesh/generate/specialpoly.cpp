@@ -1,5 +1,6 @@
 #include "specialpoly.h"
 #include <algorithm>
+#include <unordered_set>
 
 namespace fmesh
 {
@@ -9,11 +10,21 @@ namespace fmesh
 		int index = 0;
 		ClipperLib::IntPoint point;
 
+		//find first Intersection 
+		std::unordered_set<ClipperLib::IntPoint> intersections;
+		for (size_t i = 0; i < path->size(); i++)
+		{
+			if (pathCount(path, path->at(i)) > 2)
+			{
+				intersections.insert(path->at(i));
+			}
+		}
+
 		while (path->size() > 1)
 		{
 			for (size_t i = 0; i < path->size(); i++)
 			{
-				if (1 == pathCount(path, path->at(i)))
+				if (std::find(intersections.begin(), intersections.end(), path->at(i)) != intersections.end())
 				{
 					if (i % 2 == 1)
 					{
@@ -94,7 +105,6 @@ namespace fmesh
 			for (const ClipperLib::IntPoint& p : path)
 			{
 				double a = vSize2f(p, point);
-				//if (vSize2f(p, point) < smallest_dist - 0.2)
 				if (vSize2f(p, point) < smallest_dist - 0.2)
 				{
 					return true;
