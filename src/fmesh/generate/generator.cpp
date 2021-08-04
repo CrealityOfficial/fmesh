@@ -22,6 +22,7 @@
 #include "fmesh/generate/neongenerator.h"
 #include "fmesh/generate/punchinggenerator.h"
 #include "fmesh/generate/lampgenerator.h"
+#include "fmesh/generate/nestedgenerator.h"
 
 #include "mmesh/trimesh/trimeshutil.h"
 #include <memory>
@@ -178,6 +179,7 @@ namespace fmesh
 		case ADShapeType::adst_loukong:
 			break;
 		case ADShapeType::adst_qiantao:
+			impl = new NestedGenerator();
 			break;
 		case ADShapeType::adst_dengpao:
 			impl = new LampGenerator();
