@@ -16,8 +16,8 @@ namespace fmesh
 		void buildBoard(ClipperLib::PolyTree& topTree, ClipperLib::PolyTree& bottomTree) override;
 
 	private:
-		void buildOuter(bool onePoly = false);
-		void buildInner(bool onePoly = false);
+		void buildOuter(std::vector<ClipperLib::PolyTree>& middlePolys,bool onePoly = false);
+		void buildInner(std::vector<ClipperLib::PolyTree>& middlePolys,bool onePoly = false);
 
 		ClipperLib::cInt getAABB(ClipperLib::PolyTree& poly);
 

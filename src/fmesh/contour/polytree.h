@@ -28,6 +28,7 @@ namespace fmesh
 	FMESH_API void offsetExteriorInner(ClipperLib::PolyTree& source, double offset, double z);
 	FMESH_API void offsetAndExtendPolyTree(ClipperLib::PolyTree& source, double offset, double delta, ClipperLib::PolyTree& dest);
 	FMESH_API void offsetAndExtendPolyTreeMiter(ClipperLib::PolyTree& source, double offset, double delta, ClipperLib::PolyTree& dest);
+	FMESH_API void extendPolyTreeOpen(ClipperLib::Paths& paths, double delta, ClipperLib::PolyTree& dest);
 
 	//blunt sharp
 	FMESH_API void offsetAndExtendpolyType(ClipperLib::PolyTree& source, double offset, double delta, double z, ClipperLib::PolyTree& dest,bool isBluntSharp);
@@ -39,6 +40,7 @@ namespace fmesh
 
 	//Polygon skeleton
 	FMESH_API void skeletonPolyTree(ClipperLib::PolyTree& source, double z, std::vector<Patch*>& patches,double height, bool onePoly = false);
+	double skeletonPoly(ClipperLib::PolyTree& source, ClipperLib::PolyTree& poly, double thickness);
 	//Polygon sharp 
 	void skeletonPolyTreeSharp(ClipperLib::PolyTree& source, double z,double height, std::vector<Patch*>& patches,bool onePoly=false);
 

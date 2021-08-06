@@ -16,19 +16,34 @@ namespace fmesh
 
 	void NestedGenerator::build()
 	{
-		buildOuter();
-		buildInner();
+		m_adParam.bottom_type = fmesh::ADBottomType::adbt_close;
+
+		std::vector<ClipperLib::PolyTree> middlePolysOuter;
+		std::vector<ClipperLib::PolyTree> middlePolysInner;
+		buildOuter(middlePolysOuter);
+		_buildFromSamePolyTree(&middlePolysOuter.front(), &middlePolysOuter.back());
+
+		buildInner(middlePolysInner);
+
 	}
 
 	void NestedGenerator::buildShell()
 	{
-		buildOuter(true);
-		buildInner(true);
+		m_adParam.bottom_type = fmesh::ADBottomType::adbt_close;
+
+		std::vector<ClipperLib::PolyTree> middlePolysOuter;
+		std::vector<ClipperLib::PolyTree> middlePolysInner;
+		buildOuter(middlePolysOuter,true);
+		_buildFromSamePolyTree(&middlePolysOuter.front(), &middlePolysOuter.back());
+
+		buildInner(middlePolysInner,true);
 	}
 
 	void NestedGenerator::buildBoard(ClipperLib::PolyTree& topTree, ClipperLib::PolyTree& bottomTree)
 	{
-
+		std::vector<ClipperLib::PolyTree> middlePolysOuter;
+		buildOuter(middlePolysOuter, true);
+		copy2PolyTree(middlePolysOuter.front(), bottomTree);
 	}
 
 	ClipperLib::cInt NestedGenerator::getAABB(ClipperLib::PolyTree& poly)
@@ -52,28 +67,29 @@ namespace fmesh
 		return pointMax.X - pointMin.X;
 	}
 
-	void NestedGenerator::buildOuter(bool onePoly)
+	void NestedGenerator::buildOuter(std::vector<ClipperLib::PolyTree>& middlePolys,bool onePoly)
 	{
-		ClipperLib::PolyTree treeTop, treeBottom;
+		middlePolys.resize(2);
 		double hTop, hBottom;
 
 		if (onePoly)
 		{
-			_buildBottom_onepoly(treeBottom, hBottom, 0);
-			_buildTop_onepoly(treeTop, hTop, 0);
+			_buildBottom_onepoly(middlePolys.at(0), hBottom, 0);
+			_buildTop_onepoly(middlePolys.at(1), hTop, 0);
 		}
 		else
 		{
-			_buildTop(treeTop, hTop);
-			_buildBottom(treeBottom, hBottom);
+			_buildTop(middlePolys.at(1), hTop);
+			_buildBottom(middlePolys.at(0), hBottom);
 		}
-		_buildFromSamePolyTree(&treeBottom, &treeTop);
 	}
 
-	void NestedGenerator::buildInner(bool onePoly)
+	void NestedGenerator::buildInner(std::vector<ClipperLib::PolyTree>& middlePolys,bool onePoly)
 	{
 		float thickness = m_adParam.extend_width / 2.0 ;
 		ClipperLib::PolyTree inner;
+
+		middlePolys.resize(3);
 
 		ClipperLib::cInt len = getAABB(m_poly);
 		len += m_adParam.bottom_extend_width * 10000;
@@ -87,10 +103,6 @@ namespace fmesh
 			}
 		};
 		mmesh::loopPolyTree(func1, &inner);
-
-		std::vector<ClipperLib::PolyTree> middlePolys;
-		middlePolys.resize(3);
-
 
 		offsetAndExtendpolyType(inner, 0, thickness, m_adParam.top_height, middlePolys.at(2), m_adParam.bluntSharpCorners);		
 

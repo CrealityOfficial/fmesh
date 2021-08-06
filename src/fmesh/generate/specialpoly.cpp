@@ -4,7 +4,7 @@
 
 namespace fmesh
 {
-	void sortPath(ClipperLib::Path* path, ClipperLib::Paths* paths)
+	void sortPath(ClipperLib::Path* path, ClipperLib::Paths* paths, bool getPerLine)
 	{
 		//get start point
 		int index = 0;
@@ -46,6 +46,12 @@ namespace fmesh
 				deletePoint(path, index);
 				point = path->at(index);
 				deletePoint(path, index);
+
+				if (getPerLine == true)
+				{
+					if (std::find(intersections.begin(), intersections.end(), point) != intersections.end())
+						break;
+				}
 
 				index = findNext(path, point);
 			}
@@ -202,4 +208,89 @@ namespace fmesh
 			}
 		}
 	}
+
+	float PointTOline(ClipperLib::IntPoint const& a, ClipperLib::IntPoint const& b, ClipperLib::IntPoint const& p) {
+		double ap_ab = (b.X - a.X) * (p.X - a.X) + (b.Y - a.Y) * (p.Y - a.Y);//cross( a , p , b );
+		if (ap_ab <= 0)
+			return sqrt((p.X - a.X) * (p.X - a.X) + (p.Y - a.Y) * (p.Y - a.Y));
+
+		double d2 = (b.X - a.X) * (b.X - a.X) + (b.Y - a.Y) * (b.Y - a.Y);
+		if (ap_ab >= d2) return sqrt((p.X - b.X) * (p.X - b.X) + (p.Y - b.Y) * (p.Y - b.Y));
+
+		double r = ap_ab / d2;
+		double px = a.X + (b.X - a.X) * r;
+		double py = a.Y + (b.Y - a.Y) * r;
+		return sqrt((p.X - px) * (p.X - px) + (p.Y - py) * (p.Y - py));
+	}
+
+	float getMinLen(const ClipperLib::Paths& paths, const ClipperLib::IntPoint point)
+	{
+		if (paths.size() < 1 && paths[0].size() < 2)
+			return 0.0;
+
+		float ans1 = PointTOline(paths[0][0], paths[0][1], point);
+		for (ClipperLib::Path path : paths)
+		{
+			for (int i = 0; i < path.size() - 1; i++)
+			{
+				ans1 = std::min(ans1, PointTOline(path[i], path[i + 1], point));
+			}
+		}
+		return ans1;
+	}
+
+	float optimizePaths(ClipperLib::Paths& paths, ClipperLib::Paths& pathOrigin)
+	{
+		std::vector<std::vector<float>> pathsValue;
+		pathsValue.resize(paths.size());
+		for (size_t i = 0; i < paths.size(); i++)
+		{
+			pathsValue[i].resize(paths[i].size());
+		}
+
+		float average = getMinLen(pathOrigin, paths[0][0]);
+		for (size_t i = 0; i < paths.size(); i++)
+		{
+			for (size_t j = 0; j < paths[i].size(); j++)
+			{
+				pathsValue[i][j] = getMinLen(pathOrigin, paths[i][j]);
+				average = (average + pathsValue[i][j]) / 2.0;
+			}
+		}
+
+		bool needDel = false;
+		for (size_t i = 0; i < paths.size(); )
+		{
+			if (paths[i].size() == 1)
+				continue;
+			needDel = false;
+			for (size_t j = 0; j < paths[i].size(); j++)
+			{
+				if (pathsValue[i][j] < average * 2 / 3)
+				{
+					needDel = true;
+					break;
+				}
+			}
+
+			if (needDel || paths[i].size() == 1)
+			{
+				paths.erase(paths.begin() + i);
+				pathsValue.erase(pathsValue.begin() + i);
+			}
+			else
+				i++;
+		}
+
+		float len = 999999.99;
+		for (size_t i = 0; i < pathsValue.size(); i++)
+		{
+			for (size_t j = 0; j < pathsValue[i].size(); j++)
+			{
+				len = pathsValue[i][j] > len ? len : pathsValue[i][j];
+			}
+		}
+		return len;
+	}
 }
+

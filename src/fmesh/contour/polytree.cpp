@@ -5,6 +5,7 @@
 #include "fmesh/generate/triangularization.h"
 #include "mmesh/cgal/roof.h"
 #include <algorithm>
+#include "skeleton2polytree.h"
 
 namespace fmesh
 {
@@ -77,6 +78,19 @@ namespace fmesh
 		};
 
 		func(&source);
+		offset.Execute(dest, microDelta);
+	}
+
+	void extendPolyTreeOpen(ClipperLib::Paths& paths, double delta, ClipperLib::PolyTree& dest)
+	{
+		double microDelta = 1000.0 * delta;
+
+		ClipperLib::ClipperOffset offset;
+		for (ClipperLib::Path path : paths)
+		{
+			offset.AddPath(path, ClipperLib::jtSquare, ClipperLib::EndType::etOpenSquare);
+		}
+
 		offset.Execute(dest, microDelta);
 	}
 
@@ -529,6 +543,23 @@ namespace fmesh
 
 			patches.push_back(tpath);
 		}
+	}
+
+	double skeletonPoly(ClipperLib::PolyTree& source, ClipperLib::PolyTree& poly, double thickness)
+	{
+		ClipperLib::PolyTree roofLine;
+		ClipperLib::PolyTree roofPoint;
+		ClipperLib::Paths* paths = new ClipperLib::Paths;
+		mmesh::roofLine(&source, &roofLine, &roofPoint, paths, true);
+
+		ClipperLib::Paths* sPaths = new ClipperLib::Paths;
+		dealSkeleton(roofLine, sPaths);
+
+
+		double len = averageLen(source, *sPaths);
+
+		fmesh::extendPolyTreeOpen(*sPaths, (thickness * 2 + len / 1000.0), poly);
+		return len / 1000.0;
 	}
 
 	void skeletonPolyTreeSharp(ClipperLib::PolyTree& source, double z, double height, std::vector<Patch*>& patches,bool onePoly)

@@ -20,7 +20,11 @@ namespace fmesh
 	int pathCount(ClipperLib::Path* path, const ClipperLib::IntPoint& p);
 	bool deletePoint(ClipperLib::Path* path, int index);
 	int findNext(ClipperLib::Path* path, ClipperLib::IntPoint point);
-	void sortPath(ClipperLib::Path* path, ClipperLib::Paths* paths);
+	void sortPath(ClipperLib::Path* path, ClipperLib::Paths* paths,bool getPerLine = false);
+
+	float PointTOline(ClipperLib::IntPoint const& a, ClipperLib::IntPoint const& b, ClipperLib::IntPoint const& p);
+	float getMinLen(const ClipperLib::Paths& paths, const ClipperLib::IntPoint point);
+	float optimizePaths(ClipperLib::Paths& paths, ClipperLib::Paths& pathOrigin);
 }
 
 #endif // FMESH_SPECIALPOLY_1604475054469_H
