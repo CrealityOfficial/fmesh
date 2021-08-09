@@ -47,16 +47,16 @@ namespace fmesh
 		//scale
 		double xLen = (double)(bmax.X - bmin.X);
 		double yLen = (double)(bmax.Y - bmin.Y);
-		//double scale = 1000.0 * expectLen / std::max(xLen, yLen);
-		double scaleX = 1000.0 * expectLen / xLen;
-		double scaleY = 1000.0 * expectLen / yLen;
+		double scale = 1000.0 * expectLen / std::max(xLen, yLen);
+		//double scaleX = 1000.0 * expectLen / xLen;
+		//double scaleY = 1000.0 * expectLen / yLen;
 		for (ClipperLib::Path& path : *paths)
 		{
 			for (ClipperLib::IntPoint& p : path)
 			{
 				ClipperLib::IntPoint ep;
-				ep.X = (int)(scaleX * ((double)p.X - (double)bmin.X) + (double)bmin.X);
-				ep.Y = (int)(scaleY * ((double)p.Y - (double)bmin.Y) + (double)bmin.Y);
+				ep.X = (int)(scale * ((double)p.X - (double)bmin.X) + (double)bmin.X);
+				ep.Y = (int)(scale * ((double)p.Y - (double)bmin.Y) + (double)bmin.Y);
 
 				p = ep;
 			}
