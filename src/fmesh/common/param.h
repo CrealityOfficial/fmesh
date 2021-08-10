@@ -44,7 +44,7 @@ namespace fmesh
 		adst_baobianzi_outer,
 		adst_nihongdeng,
 		adst_chongkong,
-		adst_loukong,
+		//adst_loukong,
 		adst_qiantao,
 		adst_dengpao,
 		adst_num

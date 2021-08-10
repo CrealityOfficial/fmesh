@@ -176,8 +176,8 @@ namespace fmesh
 		case ADShapeType::adst_chongkong:
 			impl = new PunchingGenerator();
 			break;
-		case ADShapeType::adst_loukong:
-			break;
+		//case ADShapeType::adst_loukong:
+		//	break;
 		case ADShapeType::adst_qiantao:
 			impl = new NestedGenerator();
 			break;
