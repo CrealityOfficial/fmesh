@@ -79,7 +79,8 @@ namespace fmesh
 
 		float middleHeight = m_adParam.total_height - bottomHeight - topHeight;
 		int count = middleHeight / 0.5;;
-		float offset = middleHeight * std::sin(m_adParam.shape_angle / 2 * 3.1415926 / 180.0) / (float)count;
+		//float offset = middleHeight * std::sin(m_adParam.shape_angle / 2 * 3.1415926 / 180.0) / (float)count;
+		float offset = m_adParam.shape_angle / 2.0 / (float)count;
 		float h = middleHeight / (float)count;
 
 		std::vector<ClipperLib::PolyTree> Steppolys(1);
