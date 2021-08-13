@@ -24,7 +24,7 @@ namespace fmesh
 			_buildTopBottomDiff(&middlePolys.front(), &middlePolys.back(), 0, middleoffset);
 		else
 		{
-			_buildTopBottomDiff(&middlePolys.front(), nullptr);
+			_buildTopBottomDiff(&middlePolys.front(), nullptr,0, middleoffset);
 			_fillPolyTree(&middlePolys.back());
 		}
 	}
