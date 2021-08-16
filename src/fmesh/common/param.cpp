@@ -10,12 +10,12 @@ namespace fmesh
 
 		//top
 		top_type = ADTopType::adtt_none;
-		top_height = 2.0f;
+		top_height = 3.0f;
 		top_extend_width = 1.0f;
 
 		//bottom
 		bottom_type = ADBottomType::adbt_none;
-		bottom_height = 2.0f;
+		bottom_height = 3.0f;
 		bottom_extend_width = 1.0f;
 
 		//shape type
@@ -40,8 +40,8 @@ namespace fmesh
 
 	ExportParam::ExportParam()
 	{
-		top_offset = 0.08;
-		bottom_offset = 0.08;
+		top_offset = -1.0;
+		bottom_offset = -1.0;
 	}
 
 	ExportParam::~ExportParam()
