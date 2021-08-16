@@ -21,9 +21,9 @@ namespace fmesh
 
 		double middleoffset = 0;
 		std::vector<ClipperLib::PolyTree> middlePolys;
-		buildMiddle(middlePolys, middleoffset);
+		buildMiddle(middlePolys, middleoffset, true);
 
-		_buildTopBottomDiff(nullptr,&middlePolys.back(), 0, 0);
+		_buildTopBottom_onepoly(nullptr, &middlePolys.back(), 0, 0);
 	}
 
 	void PunchingGenerator::buildShell()
@@ -43,7 +43,7 @@ namespace fmesh
 		std::vector<ClipperLib::PolyTree> middlePolys;
 		buildMiddle(middlePolys, middleoffset, true);
 		//copy2PolyTree(middlePolys.back(), topTree);
-		copy2PolyTree(middlePolys.front(), bottomTree);
+		offsetPolyType(middlePolys.front(), m_adParam.exoprtParam.bottom_offset, bottomTree, m_adParam.bluntSharpCorners);
 	}
 
 	void PunchingGenerator::buildMiddle(std::vector<ClipperLib::PolyTree>& middlePolys, double& middleoffset, bool onePoly)
@@ -52,6 +52,11 @@ namespace fmesh
 		float thickness = m_adParam.extend_width / 2.0;
 		float offset = 0;
 		float totalH = m_adParam.total_height;
+
+		if (m_adParam.bottom_extend_width <2.0f)
+		{
+			m_adParam.bottom_extend_width = 6.0f;
+		}
 
 		if (onePoly)
 			middlePolys.resize(4);
@@ -110,8 +115,8 @@ namespace fmesh
 		//ClipperLib::PolyTree out;
 		middlePolys.at(0).Clear();
 		setPolyTreeZ(newPath2, m_adParam.extend_width);
-		fmesh::xor2PolyTrees(&newPath2, &middlePolys.at(2), middlePolys.at(0));
-		_buildFromDiffPolyTree_firstLayer(&middlePolys.at(0));
+		//fmesh::xor2PolyTrees(&newPath2, &middlePolys.at(2), middlePolys.at(0));
+		//_buildFromDiffPolyTree_firstLayer(&middlePolys.at(0));
 
 		_buildFromSamePolyTree(&newPath3, &newPath2);
 

@@ -32,10 +32,8 @@ namespace fmesh
 		std::vector<ClipperLib::PolyTree> middlePolys;
 		buildMiddle(middlePolys, true);
 
-		copy2PolyTree(middlePolys.back(), topTree);
-		copy2PolyTree(middlePolys.front(), bottomTree);
-		//_buildBoardPoly(&topTree);
-		//_buildBoardPoly(&bottomTree);
+		offsetPolyType(middlePolys.back(), m_adParam.exoprtParam.top_offset, topTree, m_adParam.bluntSharpCorners);
+		offsetPolyType(middlePolys.front(), m_adParam.exoprtParam.bottom_offset, bottomTree, m_adParam.bluntSharpCorners);
 	}
 
 	void SharpsideDoubleGenerator::buildMiddle(std::vector<ClipperLib::PolyTree>& middlePolys, bool onePoly)

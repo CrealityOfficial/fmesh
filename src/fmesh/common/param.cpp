@@ -4,7 +4,7 @@ namespace fmesh
 {
 	ADParam::ADParam()
 	{
-		extend_width = 1.0f;
+		extend_width = 0.8f;
 		total_height = 20;
 		bottom_offset = 0.0f;
 
@@ -29,7 +29,7 @@ namespace fmesh
 		bottom_layers = 1;
 		bluntSharpCorners = true;
 
-		roundRadius = 3.0f;
+		roundRadius = 2.5f;
 		roundGap = 5.0f;
 	}
 
