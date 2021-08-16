@@ -56,6 +56,16 @@ namespace fmesh
 		eWide
 	};
 
+	class FMESH_API ExportParam
+	{
+	public:
+		ExportParam();
+		~ExportParam();
+
+		float top_offset;
+		float bottom_offset;
+	};
+
 	class FMESH_API ADParam
 	{
 	public:
@@ -92,16 +102,8 @@ namespace fmesh
 		float roundGap;
 
 		bool bluntSharpCorners;
-	};
 
-	class FMESH_API ExportParam
-	{
-	public:
-		ExportParam();
-		~ExportParam();
-
-		float top_offset;
-		float bottom_offset;
+		ExportParam exoprtParam;
 	};
 }
 

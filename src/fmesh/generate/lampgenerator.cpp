@@ -44,7 +44,7 @@ namespace fmesh
 		std::vector<ClipperLib::PolyTree> middlePolys;
 		buildMiddle(middlePolys, middleoffset, true);
 		//copy2PolyTree(middlePolys.back(), topTree);
-		copy2PolyTree(middlePolys.front(), bottomTree);
+		offsetPolyType(middlePolys.front(), m_adParam.exoprtParam.bottom_offset, bottomTree, m_adParam.bluntSharpCorners);
 	}
 
 	void LampGenerator::buildMiddle(std::vector<ClipperLib::PolyTree>& middlePolys, double& middleoffset, bool onePoly)

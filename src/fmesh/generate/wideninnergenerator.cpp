@@ -19,8 +19,8 @@ namespace fmesh
 		ClipperLib::PolyTree treeTop, treeBottom;
 		double hTop, hBottom;
 
-		_buildTop_onepoly(treeTop, hTop);
-		_buildBottom_onepoly(treeBottom, hBottom);
+		_buildTop(treeTop, hTop);
+		_buildBottom(treeBottom, hBottom);
 
 		_buildFromSamePolyTree(&treeBottom, &treeTop);
 	}
@@ -42,12 +42,12 @@ namespace fmesh
 		m_adParam.bottom_type = ADBottomType::adbt_extend_inner;
 		double hTop, hBottom;
 
-		_buildTop_onepoly(topTree, hTop);
-		_buildBottom_onepoly(bottomTree, hBottom);
+		ClipperLib::PolyTree _treeTop, _treeBottom;
 
-// 		std::vector<double> area;
-// 		areaPoly(topTree, area);
-// 		_buildBoardPoly(&topTree);
-// 		_buildBoardPoly(&bottomTree);
+		_buildTop_onepoly(_treeTop, hTop);
+		_buildBottom_onepoly(_treeBottom, hBottom);
+
+		offsetPolyType(_treeTop, m_adParam.exoprtParam.bottom_offset, topTree, m_adParam.bluntSharpCorners);
+		offsetPolyType(_treeBottom, m_adParam.exoprtParam.top_offset, bottomTree, m_adParam.bluntSharpCorners);
 	}
 }

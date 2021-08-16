@@ -44,6 +44,8 @@ namespace fmesh
 		std::vector<ClipperLib::PolyTree> middlePolysOuter;
 		buildOuter(middlePolysOuter, true);
 		copy2PolyTree(middlePolysOuter.front(), bottomTree);
+
+		offsetPolyType(middlePolysOuter.front(), m_adParam.exoprtParam.bottom_offset, bottomTree, m_adParam.bluntSharpCorners);
 	}
 
 	ClipperLib::cInt NestedGenerator::getAABB(ClipperLib::PolyTree& poly)

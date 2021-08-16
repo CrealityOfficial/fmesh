@@ -572,8 +572,8 @@ namespace fmesh
 		{
 			std::vector<ClipperLib::PolyTree> polys(2);
 			offsetAndExtendpolyType(m_poly, offset, thickness, 0, polys.at(0), m_adParam.bluntSharpCorners);
-			offsetAndExtendpolyType(m_poly, offset, thickness, m_adParam.extend_width, polys.at(1), m_adParam.bluntSharpCorners);
-			offsetAndExtendpolyType(m_poly, offset, thickness, m_adParam.extend_width, treeBottom, m_adParam.bluntSharpCorners);
+			offsetAndExtendpolyType(m_poly, offset, thickness, thickness, polys.at(1), m_adParam.bluntSharpCorners);
+			offsetAndExtendpolyType(m_poly, offset, thickness, thickness, treeBottom, m_adParam.bluntSharpCorners);
 			offsetExteriorInner(polys.at(0), m_adParam.bottom_extend_width,0.0);
 			offsetExteriorInner(polys.at(1), m_adParam.bottom_extend_width, m_adParam.extend_width);
 
@@ -587,8 +587,8 @@ namespace fmesh
 		{
 			std::vector<ClipperLib::PolyTree> polys(2);
 			offsetAndExtendpolyType(m_poly, offset, thickness, 0, polys.at(0), m_adParam.bluntSharpCorners);
-			offsetAndExtendpolyType(m_poly, offset, thickness, m_adParam.extend_width, polys.at(1), m_adParam.bluntSharpCorners);
-			offsetAndExtendpolyType(m_poly, offset, thickness, m_adParam.extend_width, treeBottom, m_adParam.bluntSharpCorners);
+			offsetAndExtendpolyType(m_poly, offset, thickness, thickness, polys.at(1), m_adParam.bluntSharpCorners);
+			offsetAndExtendpolyType(m_poly, offset, thickness, thickness, treeBottom, m_adParam.bluntSharpCorners);
 			offsetExterior(polys.at(0), m_adParam.bottom_extend_width / 2.0f,0.0);
 			offsetExterior(polys.at(1), m_adParam.bottom_extend_width / 2.0f, m_adParam.extend_width);
 
