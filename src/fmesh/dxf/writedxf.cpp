@@ -40,77 +40,87 @@ namespace cdrdxf
 	void processDXFData(std::vector<std::vector<ClipperLib::Path*>>& paths, const std::string& file)
 	{
 		DL_Dxf dxf;
-		DL_WriterA* dw = dxf.out(file.c_str(), DL_Codes::AC1015);
+		DL_WriterA* dw = dxf.out(file.c_str(), DL_Codes::AC1009);
 		if (dw->openFailed())
 			return;
 		// section header:
 		dxf.writeHeader(*dw);
-		dw->sectionEnd();
+		dw->sectionEnd(); //end DXF header
 		// section tables:
-		dw->sectionTables();
+		dw->sectionTables();  // open tables section
 		// VPORT:
-		dxf.writeVPort(*dw);
+		dxf.writeVPort(*dw);   //write Viewports
 		// LTYPE:
-		dw->tableLinetypes(1);
+		dw->tableLinetypes(3);
 		dxf.writeLinetype(*dw, DL_LinetypeData("CONTINUOUS", "Continuous", 0, 0, 0.0));
 		dxf.writeLinetype(*dw, DL_LinetypeData("BYLAYER", "", 0, 0, 0.0));
 		dxf.writeLinetype(*dw, DL_LinetypeData("BYBLOCK", "", 0, 0, 0.0));
-		dw->tableEnd();
+		dw->tableEnd();   // end Linetypes
 		// LAYER:
-		dw->tableLayers(paths.size());
+		dw->tableLayers(paths.size());  //write Layers
 		for (size_t i = 0; i < paths.size(); i++)
 		{
-			std::string str = "model_"+std::to_string(i);
+			std::string str = "lmodel_"+std::to_string(i);
 			dxf.writeLayer(
 				*dw,
 				DL_LayerData(str, 0),
 				DL_Attributes("", 1, 0x00ff0000, 15, "CONTINUOUS")
 			);
 		}
-		dw->tableEnd();
-		dxf.writeBlockRecord(*dw);
-		dw->tableEnd();
-		dw->sectionEnd();
-		// BLOCK:
-		dw->sectionBlocks();
-		// LINE:
+		dw->tableEnd();  //end layers
+
+		dxf.writeBlockRecord(*dw);  //write Block Records
+		//
 		for (size_t num = 0; num < paths.size(); num++)
 		{
+			std::string str = "bsmodel_" + std::to_string(num);
+			dxf.writeBlockRecord(*dw, str);
+		}
+		dw->tableEnd();  //end Block Records
+
+		dw->sectionEnd();  //end Tables Section
+		// BLOCK:
+		//dw->sectionBlocks();  //write Blocks Section
+		//for (size_t num = 0; num < paths.size(); num++)
+		//{
+		//	for (size_t i = 0; i < paths.at(num).size(); i++)
+		//	{
+		//		std::string str = "bmodel_" + std::to_string(num) + std::to_string(i);;
+		//		dxf.writeBlock(*dw,
+		//			DL_BlockData(str, 0, 0.0, 0.0, 0.0));
+		//		dxf.writeEndBlock(*dw, str);
+		//	}
+
+		//}
+		//dw->sectionEnd();  //end Tables Section
+		
+		// LINE:
+		dw->sectionEntities();
+		for (size_t num = 0; num < paths.size(); num++)
+		{		
+			//dw->sectionEntities();  //laser soft not support this
 			for (size_t i = 0; i < paths.at(num).size(); i++)
 			{
+				std::string str = "model_" + std::to_string(num) + std::to_string(i);
+				DL_Attributes attributes(str, 256, -1, -1, "BYLAYER");
+
 				ClipperLib::Path*& path = paths.at(num).at(i);
 				if (!path->size())
 					continue;
-				std::string str = "model_" + std::to_string(num);
-				dxf.writeBlock(*dw, DL_BlockData(str, 0, 0.0, 0.0, 0.0));
-				DL_Attributes attributes(str, 256, -1, -1, "BYLAYER");
-				dw->sectionEnd();
-				// ENTITIES:
-				dw->sectionEntities();
-				for (size_t j = 0; j < path->size() - 1; j++)
+
+				DL_PolylineData ployData(path->size(),0,1,1);
+				dxf.writePolyline(*dw, ployData, attributes);
+
+				for (size_t j = 0; j < path->size(); j++)
 				{
-					DL_LineData lineData(INT2MM(path->at(j).X),
-						INT2MM(path->at(j).Y),
-						0,
-						INT2MM(path->at(j + 1).X),
-						INT2MM(path->at(j + 1).Y),
-						0);
-					dxf.writeLine(*dw, lineData, attributes);
+					DL_VertexData vertex(INT2MM(path->at(j).X), INT2MM(path->at(j).Y), 0);
+					dxf.writeVertex(*dw, vertex);
 				}
-				if (path->size() > 0)
-				{
-					DL_LineData lineData(INT2MM(path->at(path->size() - 1).X),
-						INT2MM(path->at(path->size() - 1).Y),
-						0,
-						INT2MM(path->at(0).X),
-						INT2MM(path->at(0).Y),
-						0);
-					dxf.writeLine(*dw, lineData, attributes);
-				}
-				dxf.writeEndBlock(*dw, str);
-			}
+				dxf.writePolylineEnd(*dw);
+			}		
 		}
-		dw->sectionEnd();
+		dw->sectionEnd(); //end Entities
+		
 		dw->dxfEOF();
 		dw->close();
 		delete dw;

@@ -21,9 +21,9 @@ namespace fmesh
 
 		double middleoffset = 0;
 		std::vector<ClipperLib::PolyTree> middlePolys;
-		buildMiddle(middlePolys, middleoffset, true);
+		buildMiddle(middlePolys, middleoffset);
 
-		_buildTopBottom_onepoly(nullptr, &middlePolys.back(), 0, 0);
+		_buildTopBottomDiff(nullptr, &middlePolys.back(), 0, 0);
 	}
 
 	void PunchingGenerator::buildShell()
@@ -110,13 +110,17 @@ namespace fmesh
 		ClipperLib::PolyTree newPath3;
 		clipper.Execute(ClipperLib::ctUnion, newPath2, ClipperLib::pftNonZero, ClipperLib::pftNonZero);
 		clipper.Execute(ClipperLib::ctUnion, newPath3, ClipperLib::pftNonZero, ClipperLib::pftNonZero);
-		_fillPolyTree(&newPath2, true);
+		if(!onePoly)
+			_fillPolyTree(&newPath2, true);
 
 		//ClipperLib::PolyTree out;
 		middlePolys.at(0).Clear();
 		setPolyTreeZ(newPath2, m_adParam.extend_width);
-		//fmesh::xor2PolyTrees(&newPath2, &middlePolys.at(2), middlePolys.at(0));
-		//_buildFromDiffPolyTree_firstLayer(&middlePolys.at(0));
+		if (!onePoly)
+		{
+			fmesh::xor2PolyTrees(&newPath2, &middlePolys.at(2), middlePolys.at(0));
+			_buildFromDiffPolyTree_firstLayer(&middlePolys.at(0));
+		}
 
 		_buildFromSamePolyTree(&newPath3, &newPath2);
 
