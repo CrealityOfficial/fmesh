@@ -40,8 +40,10 @@ namespace fmesh
 
 	ExportParam::ExportParam()
 	{
-		top_offset = -1.0;
-		bottom_offset = -1.0;
+		top_offset = 0.0;
+		bottom_offset = 0.0;
+		top_offset_other = -0.3;
+		bottom_offset_other = - 0.3;
 	}
 
 	ExportParam::~ExportParam()

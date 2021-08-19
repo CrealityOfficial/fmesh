@@ -64,6 +64,8 @@ namespace fmesh
 
 		float top_offset;
 		float bottom_offset;
+		float top_offset_other;
+		float bottom_offset_other;
 	};
 
 	class FMESH_API ADParam
