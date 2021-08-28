@@ -20,31 +20,31 @@ namespace fmesh
 	void MultiSVG::addRect(float width, float height,
 		float leftTopX, float leftTopY)
 	{
-		ClipperLib::Paths* paths = new ClipperLib::Paths(1);
-		ClipperLib::Path& path = paths->at(0);
+		//ClipperLib::Paths* paths = new ClipperLib::Paths(1);
+		ClipperLib::Path* path = new ClipperLib::Path;
 
-		path.push_back(CLIPPERPOINT(leftTopX, leftTopY));
-		path.push_back(CLIPPERPOINT(leftTopX, leftTopY + height));
-		path.push_back(CLIPPERPOINT(leftTopX + width, leftTopY + height));
-		path.push_back(CLIPPERPOINT(leftTopX + width, leftTopY));
+		path->push_back(CLIPPERPOINT(leftTopX, leftTopY));
+		path->push_back(CLIPPERPOINT(leftTopX, leftTopY + height));
+		path->push_back(CLIPPERPOINT(leftTopX + width, leftTopY + height));
+		path->push_back(CLIPPERPOINT(leftTopX + width, leftTopY));
 
-		m_pathses.push_back(paths);
+		m_path.push_back(path);
 	}
 
 	void MultiSVG::addLine(float start_x, float start_y, float end_x, float end_y)
 	{
-		ClipperLib::Paths* paths = new ClipperLib::Paths(1);
-		ClipperLib::Path& path = paths->at(0);
+		//ClipperLib::Paths* paths = new ClipperLib::Paths(1);
+		ClipperLib::Path* path = new ClipperLib::Path;
 
-		path.push_back(CLIPPERPOINT(start_x, start_y));
-		path.push_back(CLIPPERPOINT(end_x, end_y));
-		m_pathses.push_back(paths);
+		path->push_back(CLIPPERPOINT(start_x, start_y));
+		path->push_back(CLIPPERPOINT(end_x, end_y));
+		m_path.push_back(path);
 	}
 
 	void MultiSVG::addPolyLine(const std::string& polygon)
 	{
-		ClipperLib::Paths* paths = new ClipperLib::Paths(1);
-		ClipperLib::Path& path = paths->at(0);
+		//ClipperLib::Paths* paths = new ClipperLib::Paths(1);
+		ClipperLib::Path* path = new ClipperLib::Path;
 
 		std::vector<std::string> Vctdest;
 		SplitString(polygon, Vctdest, " ");
@@ -56,16 +56,16 @@ namespace fmesh
 			{
 				float x = atof(VctPoint[0].data());
 				float y = atof(VctPoint[1].data());
-				path.push_back(CLIPPERPOINT(x, y));
+				path->push_back(CLIPPERPOINT(x, y));
 			}
 		}
-		m_pathses.push_back(paths);
+		m_path.push_back(path);
 	}
 
 	void MultiSVG::addEllipse(float cx, float cy, float rx, float ry, int precision)
 	{
-		ClipperLib::Paths* paths = new ClipperLib::Paths(1);
-		ClipperLib::Path& path = paths->at(0);
+		//ClipperLib::Paths* paths = new ClipperLib::Paths(1);
+		ClipperLib::Path* path = new ClipperLib::Path;
 
 		double delta = 2.0 * _PI / (double)precision;
 		for (unsigned int i = 0; i < precision; i++)//Ë³Ê±ÕëÈ¡µã
@@ -73,16 +73,16 @@ namespace fmesh
 			double Angle = (double)i * delta;
 			float x = (cx + rx * cos(Angle));
 			float y = (cy + ry * sin(Angle));
-			path.push_back(CLIPPERPOINT(x, y));
+			path->push_back(CLIPPERPOINT(x, y));
 		}
 
-		m_pathses.push_back(paths);
+		m_path.push_back(path);
 	}
 
 	void MultiSVG::addPolygonS(const std::string& polygon)
 	{
-		ClipperLib::Paths* paths = new ClipperLib::Paths(1);
-		ClipperLib::Path& path = paths->at(0);
+		//ClipperLib::Paths* paths = new ClipperLib::Paths(1);
+		ClipperLib::Path* path = new ClipperLib::Path;
 
 		std::vector<std::string> Vctdest;
 		SplitString(polygon, Vctdest, " ");
@@ -94,11 +94,11 @@ namespace fmesh
 			{
 				float x = atof(VctPoint[0].data());
 				float y = atof(VctPoint[1].data());
-				path.push_back(CLIPPERPOINT(x, y));
+				path->push_back(CLIPPERPOINT(x, y));
 			}
 		}
 
-		m_pathses.push_back(paths);
+		m_path.push_back(path);
 	}
 
 	void MultiSVG::addPathS(const std::string& strPath)
@@ -225,7 +225,47 @@ namespace fmesh
 	std::vector<ClipperLib::Paths*> MultiSVG::take()
 	{
 		std::vector<ClipperLib::Paths*> tmp;
-		tmp.swap(m_pathses);
+
+		for (size_t i = 0; i < m_pathses.size(); i++)
+		{
+			for (size_t j = 0; j < m_pathses[i]->size(); j++)
+			{
+				m_path.push_back(&m_pathses[i]->at(j));
+			}
+			//m_path.insert(m_path.end(),&m_pathses[i]->begin(),m_pathses[i]->end());
+		}
+
+		std::vector<ClipperLib::Paths*> pathses;
+		for (size_t i = 0; i < m_path.size(); i++)
+		{
+			ClipperLib::Paths* paths = nullptr;
+			if (pathses.size())
+			{
+				aabb old = getAABB(&pathses.back()->back());
+				aabb cur = getAABB(m_path[i]);
+				if ((old.pMmin.X >= cur.pMmin.X
+					&& old.pMax.X <= cur.pMax.X
+					&& old.pMmin.Y >= cur.pMmin.Y
+					&& old.pMax.Y <= cur.pMax.Y)
+					|| (old.pMmin.X <= cur.pMmin.X
+					&& old.pMax.X >= cur.pMax.X
+					&& old.pMmin.Y <= cur.pMmin.Y
+					&& old.pMax.Y >= cur.pMax.Y))
+				{
+					paths = pathses.back();
+					paths->push_back(*m_path[i]);
+					continue;
+				}
+			}
+
+			paths = new ClipperLib::Paths;
+			paths->push_back(*m_path[i]);
+			pathses.push_back(paths);
+		}
+
+		//m_pathses.insert(m_pathses.end(), pathses.begin(), pathses.end());
+
+		tmp.swap(pathses);
 		m_pathses.clear();
 		return tmp;
 	}
@@ -765,5 +805,23 @@ namespace fmesh
 	void MultiSVG::savePenultPoint(bool isBezier)
 	{
 		m_BezierPoint.first = isBezier;
+	}
+	
+	aabb MultiSVG::getAABB(ClipperLib::Path* path)
+	{
+		aabb _aabb;
+		for (const ClipperLib::IntPoint& p : *path)
+		{
+			if (_aabb.pMax.X < p.X)
+				_aabb.pMax.X = p.X;
+			else if (_aabb.pMmin.X > p.X)
+				_aabb.pMmin.X = p.X;
+
+			if (_aabb.pMax.Y < p.Y)
+				_aabb.pMax.Y = p.Y;
+			else if (_aabb.pMmin.Y > p.Y)
+				_aabb.pMmin.Y = p.Y;
+		}
+		return _aabb;
 	}
 }

@@ -1,10 +1,21 @@
 #ifndef FMESH_MULTISVG_1609985536284_H
 #define FMESH_MULTISVG_1609985536284_H
 #include <clipper/clipper.hpp>
+//#include <limits>
 
 #define CLIPPERPOINT(x, y) ClipperLib::IntPoint((int)(1000.0f * x), (int)(1000.0f * y))
 namespace fmesh
 {
+	typedef struct AABB
+	{
+		ClipperLib::IntPoint pMmin;
+		ClipperLib::IntPoint pMax;
+		AABB()
+			:pMmin((std::numeric_limits<ClipperLib::cInt>::min(), std::numeric_limits<ClipperLib::cInt>::min()))
+			, pMax((std::numeric_limits<ClipperLib::cInt>::max(), std::numeric_limits<ClipperLib::cInt>::max()))
+		{}
+	}aabb;
+
 	class MultiSVG
 	{
 	public:
@@ -24,6 +35,8 @@ namespace fmesh
 		void SplitStringS(const std::string& Src, std::vector<std::string>& Vctdest, std::vector<std::string>& VctS);
 		bool isSpechars(char chars);
 
+		aabb getAABB(ClipperLib::Path* path);
+
 		void pausePathMm(std::string stringPoint);
 		void pausePathLl(std::string stringPoint);
 		void pausePathHh(std::string stringPoint);
@@ -37,6 +50,7 @@ namespace fmesh
 		void savePenultPoint(bool isBezier = false);
 	protected:
 		std::vector<ClipperLib::Paths*> m_pathses;
+		std::vector<ClipperLib::Path*> m_path;
 
 		ClipperLib::DoublePoint m_currentPosition;
 		bool m_isBigchars;
