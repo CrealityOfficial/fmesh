@@ -874,6 +874,7 @@ namespace fmesh
 			//_buildFromSamePolyTree(&treeTop, &poly.at(0));
 			//_fillPolyTreeDepthOnePoly(&treeTop, true);
 			//_fillPolyTreeDepthOnePoly(&poly.at(0));
+			_fillPolyTree(&treeTop);
 		}
 		else if (m_adParam.top_type == ADTopType::adtt_step)
 		{
@@ -943,6 +944,7 @@ namespace fmesh
 		else if (m_adParam.bottom_type == ADBottomType::adbt_close)
 		{
 			//_fillPolyTreeDepthOnePoly(&treeBottom, true);
+			_fillPolyTree(&treeBottom, true);
 		}
 		else if (m_adParam.bottom_type == ADBottomType::adbt_step)
 		{
