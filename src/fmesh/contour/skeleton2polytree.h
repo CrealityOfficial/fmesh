@@ -21,7 +21,7 @@ namespace fmesh
 	bool needDelPath(ClipperLib::PolyTree& source, ClipperLib::Path& path, double alen);
 	bool isIntersect(ClipperLib::Paths& paths, ClipperLib::IntPoint point);
 	double getMinLen(ClipperLib::PolyTree& source, ClipperLib::IntPoint point);
-	double PointTOline(ClipperLib::IntPoint const& a, ClipperLib::IntPoint const& b, ClipperLib::IntPoint const& p);
+	double PointTolines(ClipperLib::IntPoint const& a, ClipperLib::IntPoint const& b, ClipperLib::IntPoint const& p);
 }
 
 #endif // FMESH_SKELETON2POLYTREE_1604475054469_H

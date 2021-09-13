@@ -315,7 +315,7 @@ namespace fmesh
 		return alen;
 	}
 
-	double PointTOline(ClipperLib::IntPoint const& a, ClipperLib::IntPoint const& b, ClipperLib::IntPoint const& p) {
+	double PointTolines(ClipperLib::IntPoint const& a, ClipperLib::IntPoint const& b, ClipperLib::IntPoint const& p) {
 		double ap_ab = (b.X - a.X) * (p.X - a.X) + (b.Y - a.Y) * (p.Y - a.Y);//cross( a , p , b );
 		if (ap_ab <= 0)
 			return sqrt((p.X - a.X) * (p.X - a.X) + (p.Y - a.Y) * (p.Y - a.Y));
@@ -340,7 +340,7 @@ namespace fmesh
 			{
 				for (int k = 0; k < n->Contour.size() - 1; k++)
 				{
-					value = PointTOline(n->Contour[k], n->Contour[k + 1], point);
+					value = PointTolines(n->Contour[k], n->Contour[k + 1], point);
 					if (bInit)
 					{
 						bInit = false;
