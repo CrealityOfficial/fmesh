@@ -17,14 +17,18 @@ namespace fmesh
 	void SharptopGenerator::build()
 	{
 		std::vector<ClipperLib::PolyTree> middlePolys;
-		buildMiddle(middlePolys);
-		_buildTopBottomDiff(&middlePolys.front(), nullptr);
+		buildMiddle(middlePolys, true);
+		if (middlePolys.size() == 0)
+			return;
+		_buildTopBottom_onepoly(&middlePolys.front(), nullptr);
 	}
 
 	void SharptopGenerator::buildShell()
 	{
 		std::vector<ClipperLib::PolyTree> middlePolys;
 		buildMiddle(middlePolys,true);
+		if (middlePolys.size() == 0)
+			return;
 		_buildTopBottom_onepoly(&middlePolys.front(), nullptr);
 	}
 
@@ -32,7 +36,8 @@ namespace fmesh
 	{
 		std::vector<ClipperLib::PolyTree> middlePolys;
 		buildMiddle(middlePolys, true);
-
+		if (middlePolys.size() == 0)
+			return;
 		offsetPolyType(middlePolys.front(), m_adParam.exoprtParam.bottom_offset, bottomTree, m_adParam.bluntSharpCorners);
 	}
 
@@ -41,6 +46,54 @@ namespace fmesh
 
 		double thickness = m_adParam.extend_width / 2.0;
 		double bottomHeight = m_adParam.total_height - m_adParam.shape_top_height;
+
+		//detect
+		float offsetH = 0.4;
+		size_t drumHCount = 800;
+		int lastvalueX = 0;
+		int lastvalueY = 0;
+		std::vector<ClipperLib::PolyTree> _middlePolys;
+		_middlePolys.resize(1 + drumHCount);
+		for (int i = 0; i < drumHCount; i++)
+		{
+			//float _offsetr = m_adParam.shape_top_height - sqrt(pow(m_adParam.shape_top_height, 2) - pow(i * offsetr, 2));
+			float _offsetr = 0.05f;
+			offsetAndExtendPolyTreeMiter(m_poly, -0.05 * i, thickness, _middlePolys.at(i));
+			if (i > 1)
+			{
+				ClipperLib::IntPoint P = getAABBvalue(&_middlePolys.at(i));
+				ClipperLib::IntPoint P1 = getAABBvalue(&_middlePolys.at(i - 1));
+				int _lastvalueX = std::abs(P.X - P1.X);
+				int _lastvalueY = std::abs(P.Y - P1.Y);
+				if (P.X < P1.X * 2 / 3 || P.Y < P1.Y * 2 / 3)
+				{
+					_middlePolys.at(i).Clear();
+					_middlePolys.at(i - 1).Clear();
+					break;
+				}
+				lastvalueX = _lastvalueX;
+				lastvalueY = _lastvalueX;
+			}
+
+			if (i > 0 && GetPolyCount(&_middlePolys.at(i)) != GetPolyCount(&_middlePolys.at(i - 1)))
+			{
+				_middlePolys.at(i).Clear();
+				break;
+			}
+		}
+		while (_middlePolys.size() && !_middlePolys.back().ChildCount())
+		{
+			_middlePolys.pop_back();
+		}
+
+		if (_middlePolys.size())
+		{
+			_middlePolys.pop_back();
+		}
+		else
+		{
+			return;
+		}
 
 		//bottom
 		middlePolys.resize(2);
@@ -64,7 +117,8 @@ namespace fmesh
 		_simplifyPoly(&middlePolys.back(),100);
 
 		std::vector<Patch*> patches;
-		skeletonPolyTreeSharp(middlePolys.back(), bottomHeight, m_adParam.shape_top_height, patches);
+		double topHeight = _middlePolys.size() / 100 > m_adParam.shape_top_height ? _middlePolys.size() / 100 : m_adParam.shape_top_height;
+		skeletonPolyTreeSharp(middlePolys.back(), bottomHeight, topHeight, patches, onePoly);
 
 		addPatches(patches);
 	}

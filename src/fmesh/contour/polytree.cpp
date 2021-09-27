@@ -134,7 +134,7 @@ namespace fmesh
 		ClipperLib::ClipperOffset offset;
 		polyNodeFunc func = [&func, &offset](ClipperLib::PolyNode* node) {
 			offset.AddPath(node->Contour, ClipperLib::jtMiter, ClipperLib::EndType::etClosedLine);
-
+			offset.MiterLimit = 10.0f;
 			for (ClipperLib::PolyNode* n : node->Childs)
 				func(n);
 		};
@@ -211,7 +211,7 @@ namespace fmesh
 		ClipperLib::ClipperOffset offset;
 		polyNodeFunc func = [&func, &offset](ClipperLib::PolyNode* node) {
 			offset.AddPath(node->Contour, ClipperLib::jtMiter, ClipperLib::EndType::etClosedPolygon);
-
+			offset.MiterLimit = 10.0f;
 			for (ClipperLib::PolyNode* n : node->Childs)
 				func(n);
 		};
@@ -699,33 +699,39 @@ namespace fmesh
 
 	int GetPolyCount(ClipperLib::PolyTree* poly, int flag)//2: Inner  3: Outer
 	{
-		int num = 0;
+		int num = 1;
 		int index = 1;
 
 		polyNodeFunc func = [&func, &num, &index, &flag](ClipperLib::PolyNode* node) {
-			int depth = testPolyNodeDepth(node);
-			if ((flag == 2 &&(depth == 2|| depth == 3 || depth == 6 || depth == 7))
-				||(flag == 3 && (depth == 1 || depth == 4 || depth == 5 || depth == 8))
-				||flag == 0)
-			{
-				num += depth * index;
-			}
+			num += num * index;
 
 			for (ClipperLib::PolyNode* n : node->Childs)
 			{
-				int depth = testPolyNodeDepth(n);
-				if ((flag == 2 && (depth == 2 || depth == 3 || depth == 6 || depth == 7))
-					|| (flag == 3 && (depth == 1 || depth == 4 || depth == 5 || depth == 8))
-					|| flag == 0)
-				{
+				if (n->Contour.size() > 0)
 					index++;
-				}
 				func(n);
 			}
 		};
 
 		func(poly);
 		return num;
+	}
+
+	double GetPolyArea(ClipperLib::PolyTree* poly, int flag)//2: Inner  3: Outer
+	{
+		double area = 0.0f;
+		polyNodeFunc func = [&func, &area, &flag](ClipperLib::PolyNode* node) {
+
+			for (ClipperLib::PolyNode* n : node->Childs)
+			{
+				if (n->Contour.size() > 0)
+					area += ClipperLib::Area(n->Contour);
+				func(n);
+			}
+		};
+
+		func(poly);
+		return area;
 	}
 
 	void split(ClipperLib::PolyTree& source, std::vector<ClipperLib::Paths>& dests)

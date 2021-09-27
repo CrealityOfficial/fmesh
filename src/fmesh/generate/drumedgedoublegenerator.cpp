@@ -16,14 +16,16 @@ namespace fmesh
 	{
 		std::vector<ClipperLib::PolyTree> middlePolys;
 		buildMiddle(middlePolys);
-		_buildTopBottomDiff(&middlePolys.front(), &middlePolys.back());
+		if (middlePolys.size())
+			_buildTopBottomDiff(&middlePolys.front(), &middlePolys.back());
 	}
 
 	void DrumedgeDoubleGenerator::buildShell()
 	{
 		std::vector<ClipperLib::PolyTree> middlePolys;
 		buildMiddle(middlePolys, true);
-		_buildTopBottom_onepoly(&middlePolys.front(), &middlePolys.back());
+		if (middlePolys.size())
+			_buildTopBottom_onepoly(&middlePolys.front(), &middlePolys.back());
 	}
 
 	void DrumedgeDoubleGenerator::buildBoard(ClipperLib::PolyTree& topTree, ClipperLib::PolyTree& bottomTree)
@@ -31,8 +33,11 @@ namespace fmesh
 		std::vector<ClipperLib::PolyTree> middlePolys;
 		buildMiddle(middlePolys, true);
 
-		offsetPolyType(middlePolys.back(), m_adParam.exoprtParam.top_offset,topTree, m_adParam.bluntSharpCorners);
-		offsetPolyType(middlePolys.front(), m_adParam.exoprtParam.bottom_offset,bottomTree, m_adParam.bluntSharpCorners);
+		if (middlePolys.size())
+		{
+			offsetPolyType(middlePolys.back(), m_adParam.exoprtParam.top_offset, topTree, m_adParam.bluntSharpCorners);
+			offsetPolyType(middlePolys.front(), m_adParam.exoprtParam.bottom_offset, bottomTree, m_adParam.bluntSharpCorners);
+		}
 	}
 
 	void DrumedgeDoubleGenerator::buildMiddle(std::vector<ClipperLib::PolyTree>& middlePolys, bool onePloy)

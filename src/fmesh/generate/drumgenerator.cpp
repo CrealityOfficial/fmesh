@@ -4,6 +4,7 @@
 #include "mmesh/clipper/circurlar.h"
 #include "specialpoly.h"
 #include "mmesh/cgal/roof.h"
+#include <cmath>
 
 namespace fmesh
 {
@@ -21,14 +22,16 @@ namespace fmesh
 	{
 		std::vector<ClipperLib::PolyTree> middlePolys;
 		buildMiddle(middlePolys);
-		_buildTopBottomDiff(&middlePolys.front(), nullptr);
+		if (middlePolys.size())
+			_buildTopBottomDiff(&middlePolys.front(), nullptr);
 	}
 
 	void DrumGenerator::buildShell()
 	{
 		std::vector<ClipperLib::PolyTree> middlePolys;
 		buildMiddle(middlePolys,true);
-		_buildTopBottom_onepoly(&middlePolys.front(), nullptr);
+		if (middlePolys.size())
+			_buildTopBottom_onepoly(&middlePolys.front(), nullptr);
 	}
 
 	void DrumGenerator::buildBoard(ClipperLib::PolyTree& topTree, ClipperLib::PolyTree& bottomTree)
@@ -36,45 +39,61 @@ namespace fmesh
 		std::vector<ClipperLib::PolyTree> middlePolys;
 		buildMiddle(middlePolys, true);
 		//_buildBoardPoly(&bottomTree);
-
-		offsetPolyType(middlePolys.front(), m_adParam.exoprtParam.bottom_offset, bottomTree, m_adParam.bluntSharpCorners);
+		if (middlePolys.size())
+			offsetPolyType(middlePolys.front(), m_adParam.exoprtParam.bottom_offset, bottomTree, m_adParam.bluntSharpCorners);
 	}
 
 	void DrumGenerator::buildMiddle(std::vector<ClipperLib::PolyTree>& middlePolys, bool onePloy)
 	{
 		double thickness = m_adParam.extend_width / 2.0;
 
-		double x = dmax.x - dmin.x;
-		double y = dmax.y - dmin.y;
-
 		float offsetH = 0.4;
-		size_t drumHCount = 150;
+		size_t drumHCount = 800;
 
-		float offsetr = 1.0 * m_adParam.shape_top_height / drumHCount;
+		//float offsetr = 1.0 * m_adParam.shape_top_height / drumHCount;
+		int lastvalueX = 0;
+		int lastvalueY = 0;
 		middlePolys.resize(1 + drumHCount);
-		for (size_t i = 0; i < drumHCount; i++)
+		for (int i = 0; i < drumHCount; i++)
 		{
-			float _offsetr = m_adParam.shape_top_height - sqrt(pow(m_adParam.shape_top_height, 2) - pow(i * offsetr, 2));
-
+			//float _offsetr = m_adParam.shape_top_height - sqrt(pow(m_adParam.shape_top_height, 2) - pow(i * offsetr, 2));
+			float _offsetr = 0.05f;
 			if (onePloy)
 			{
-				offsetPolyTreeMiter(m_poly, -_offsetr * 50, middlePolys.at(i));
+				offsetPolyTreeMiter(m_poly, -_offsetr * i, middlePolys.at(i));
 				//setPolyTreeZ(middlePolys.at(i), delta);
 				//_simplifyPoly(&middlePolys.at(i));
 			}
 			else
 			{
-				offsetAndExtendPolyTreeMiter(m_poly, -_offsetr * 50, thickness, middlePolys.at(i));
+				offsetAndExtendPolyTreeMiter(m_poly, -0.05*i, thickness, middlePolys.at(i));
 				//_simplifyPoly(&middlePolys.at(i));
 			}
-			if (i && GetPolyCount(&middlePolys.at(i)) != GetPolyCount(&middlePolys.at(i - 1)))
+			if (i>1)
+			{
+				ClipperLib::IntPoint P = getAABBvalue(&middlePolys.at(i));
+				ClipperLib::IntPoint P1 = getAABBvalue(&middlePolys.at(i - 1));
+				int _lastvalueX = std::abs(P.X - P1.X);
+				int _lastvalueY = std::abs(P.Y - P1.Y);
+				if (P.X < P1.X *2/3 || P.Y < P1.Y * 2 / 3)
+				{
+					middlePolys.at(i).Clear();
+					middlePolys.at(i-1).Clear();
+					break;
+				}				
+				lastvalueX = _lastvalueX;
+				lastvalueY = _lastvalueX;
+			}
+
+			if (i > 0 && GetPolyCount(&middlePolys.at(i)) != GetPolyCount(&middlePolys.at(i - 1)))
 			{
 				middlePolys.at(i).Clear();
 				break;
 			}
+
 		}
 
-		while (!middlePolys.back().ChildCount())
+		while (middlePolys.size() && !middlePolys.back().ChildCount())
 		{
 			middlePolys.pop_back();
 		}
@@ -83,20 +102,38 @@ namespace fmesh
 		{
 			middlePolys.pop_back();
 		}
+		else
+		{
+			return;
+		}
 
-		float delta1 = 0.0f;
+		//float delta1 = 0.0f;
+		//float delta2 = 0.0f;
+		//double bottomHeight = m_adParam.total_height - (middlePolys.size() - 1) * offsetH;
+		//if (bottomHeight < 0)
+		//	bottomHeight = 0;
+
+		float offsetr1 = m_adParam.shape_top_height / drumHCount;
+		//double bottomHeight = m_adParam.total_height - m_adParam.shape_top_height;
+		//float raduis = m_adParam.shape_top_height;
+		
+		float raduis = middlePolys.size() > 100? middlePolys.size()/10 : raduis;
+		double bottomHeight =  m_adParam.total_height - raduis >0? m_adParam.total_height - raduis :0.0f;
 		float delta2 = 0.0f;
-		double bottomHeight = m_adParam.total_height - (middlePolys.size() - 1) * offsetH;
-		if (bottomHeight < 0)
-			bottomHeight = 0;
+		for (size_t i = 0; i < middlePolys.size(); i++)
+		{
+			float _offsetr = sqrt(pow(raduis, 2) - pow((i * offsetr1 - raduis), 2));
+			delta2 = bottomHeight + _offsetr;
+			setPolyTreeZ(middlePolys.at(i), delta2);
+		}
 
 		for (size_t i = 0; i < middlePolys.size() - 1; i++)
 		{
-			delta1 = bottomHeight + offsetH * i;
-			delta2 = bottomHeight + offsetH * (i + 1);
-			if (i % 2 || !i)
-				setPolyTreeZ(middlePolys.at(i), delta1);
-			setPolyTreeZ(middlePolys.at(i + 1), delta2);
+			//delta1 = bottomHeight + offsetH * i;
+			//delta2 = bottomHeight + offsetH * (i + 1);
+			//if (i % 2 || !i)
+			//	setPolyTreeZ(middlePolys.at(i), delta1);
+			//setPolyTreeZ(middlePolys.at(i + 1), delta2);
 
 			//if (onePloy)
 			//	_buildFromDiffPolyTree_onePoly(&middlePolys.at(i), &middlePolys.at(i + 1));//outer
@@ -106,18 +143,19 @@ namespace fmesh
 		std::vector<Patch*> patches;
 		if (onePloy)
 		{
-			_simplifyPoly(&middlePolys.back(), 50);
-			skeletonPolyTree(middlePolys.back(), delta2, patches, middlePolys.size() / 8, onePloy);
+			//_simplifyPoly(&middlePolys.back(), 50);
+			//skeletonPolyTree(middlePolys.back(), delta2, patches, middlePolys.size() / 150, onePloy);
 		}
 		else
 		{
-			_simplifyPoly(&middlePolys.back(), 40);
-			skeletonPolyTree(middlePolys.back(), delta2, patches, middlePolys.size() / 100);
+			_simplifyPoly(&middlePolys.back());
+			//skeletonPolyTree(middlePolys.back(), delta2, patches, middlePolys.size() / 300);
+			skeletonPolyTree(middlePolys.back(), delta2, patches, 0.1);
 		}
 		addPatches(patches);
 	}
 
-	/*
+/*
 	void DrumGenerator::buildMiddle(std::vector<ClipperLib::PolyTree>& middlePolys, bool onePloy)
 	{
 		ClipperLib::Path* path = new ClipperLib::Path;
@@ -172,8 +210,7 @@ namespace fmesh
 		}
 		addPatches(patches);
 	}
-	*/
-
+*/
 /*
 void DrumGenerator::buildMiddle(std::vector<ClipperLib::PolyTree>& middlePolys, bool onePloy)
 {

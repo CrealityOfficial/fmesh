@@ -18,7 +18,8 @@ namespace fmesh
 		double middleoffset = 0;
 
 		buildMiddle(middlePolys, middleoffset);
-
+		if (middlePolys.size() == 0)
+			return;
 		if (m_adParam.top_type != ADTopType::adtt_none)
 			_buildTopBottomDiff(&middlePolys.front(), &middlePolys.back(), 0, middleoffset);
 		else
@@ -33,6 +34,8 @@ namespace fmesh
 		std::vector<ClipperLib::PolyTree> middlePolys;
 		double middleoffset = 0;
 		buildMiddle(middlePolys, middleoffset,true);
+		if (middlePolys.size() == 0)
+			return;
 		_buildTopBottom_onepoly(&middlePolys.front(), &middlePolys.back(), 0, middleoffset);
 	}
 
@@ -41,7 +44,8 @@ namespace fmesh
 		double middleoffset = 0;
 		std::vector<ClipperLib::PolyTree> middlePolys;
 		buildMiddle(middlePolys, middleoffset, true);
-
+		if (middlePolys.size() == 0)
+			return;
 		offsetPolyType(middlePolys.back(), m_adParam.exoprtParam.top_offset, topTree, m_adParam.bluntSharpCorners);
 		offsetPolyType(middlePolys.front(), m_adParam.exoprtParam.bottom_offset, bottomTree, m_adParam.bluntSharpCorners);
 	}

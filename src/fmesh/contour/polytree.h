@@ -64,6 +64,8 @@ namespace fmesh
 
 	//checkInnerOffset
 	int GetPolyCount(ClipperLib::PolyTree* poly,int flag=0);//2: Inner  3: Outer
+	double GetPolyArea(ClipperLib::PolyTree* poly, int flag = 0);//2: Inner  3: Outer
+	ClipperLib::IntPoint getAABBvalue(ClipperLib::PolyTree* poly, int flag = 0);
 
 	FMESH_API void split(ClipperLib::PolyTree& source, std::vector<ClipperLib::Paths>& children);
 	FMESH_API void split_omp(ClipperLib::PolyTree& source, std::vector<ClipperLib::Paths>& children);

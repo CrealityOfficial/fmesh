@@ -6,6 +6,15 @@
 
 namespace fmesh
 {
+	typedef struct AABB
+	{
+		ClipperLib::IntPoint pMmin;
+		ClipperLib::IntPoint pMax;
+		AABB()
+			:pMmin((std::numeric_limits<ClipperLib::cInt>::max(), std::numeric_limits<ClipperLib::cInt>::max()))
+			, pMax((std::numeric_limits<ClipperLib::cInt>::min(), std::numeric_limits<ClipperLib::cInt>::min()))
+		{}
+	}aabb;
 
 	void generateLines(ClipperLib::Paths& originPloy, ClipperLib::Paths& newPaths, const double& laceGap, const double& laceRadius, bool isskeleton = false);
 	void generateRounds(const ClipperLib::Paths& originPath, ClipperLib::Paths& newPloy, const double& laceGap, const double& laceRadius);
@@ -25,6 +34,8 @@ namespace fmesh
 	float PointTOline(ClipperLib::IntPoint const& a, ClipperLib::IntPoint const& b, ClipperLib::IntPoint const& p);
 	float getMinLen(const ClipperLib::Paths& paths, const ClipperLib::IntPoint point);
 	float optimizePaths(ClipperLib::Paths& paths, ClipperLib::Paths& pathOrigin);
+
+	aabb getAABB(ClipperLib::Path* path);
 }
 
 #endif // FMESH_SPECIALPOLY_1604475054469_H
