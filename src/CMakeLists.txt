@@ -6,7 +6,7 @@ __find_dxflib()
 __files_group(${CMAKE_CURRENT_SOURCE_DIR}/fmesh/ SRCS)
 
 set(LIBS trimesh2 clipper mmesh freetype dxflib librevenge tinyxml)
-set(DEFS FMESH_DLL)
+set(DEFS FMESH_DLL TIXML_USE_STL)
 __add_real_target(fmesh dll SOURCE ${SRCS} INC ${INCS} LIB ${LIBS} DEF ${DEFS})
 
 set_property(TARGET fmesh PROPERTY INTERFACE_INCLUDE_DIRECTORIES ${CMAKE_CURRENT_SOURCE_DIR})
