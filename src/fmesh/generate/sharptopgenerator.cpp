@@ -17,10 +17,10 @@ namespace fmesh
 	void SharptopGenerator::build()
 	{
 		std::vector<ClipperLib::PolyTree> middlePolys;
-		buildMiddle(middlePolys, true);
+		buildMiddle(middlePolys);
 		if (middlePolys.size() == 0)
 			return;
-		_buildTopBottom_onepoly(&middlePolys.front(), nullptr);
+		_buildTopBottomDiff(&middlePolys.front(), nullptr);
 	}
 
 	void SharptopGenerator::buildShell()
