@@ -21,7 +21,8 @@ namespace fmesh
 		double middleoffset = 0;
 		std::vector<ClipperLib::PolyTree> middlePolys;
 		buildMiddle(middlePolys, middleoffset);
-
+		if (middlePolys.size() == 0)
+			return;
 		_buildTopBottomDiff(&middlePolys.back(), &middlePolys.front(), 0, middleoffset);
 	}
 
@@ -33,6 +34,8 @@ namespace fmesh
 		double middleoffset = 0;
 		std::vector<ClipperLib::PolyTree> middlePolys;
 		buildMiddle(middlePolys, middleoffset,true);
+		if (middlePolys.size() == 0)
+			return;
 		_buildTopBottom_onepoly(&middlePolys.back(), &middlePolys.front(), 0, middleoffset);
 	}
 
@@ -41,7 +44,8 @@ namespace fmesh
 		double middleoffset = 0;
 		std::vector<ClipperLib::PolyTree> middlePolys;
 		buildMiddle(middlePolys, middleoffset, true);
-
+		if (middlePolys.size() == 0)
+			return;
 		offsetPolyType(middlePolys.back(), m_adParam.exoprtParam.top_offset, topTree, m_adParam.bluntSharpCorners);
 		offsetPolyType(middlePolys.front(), m_adParam.exoprtParam.bottom_offset, bottomTree, m_adParam.bluntSharpCorners);
 	}

@@ -814,12 +814,14 @@ namespace fmesh
 		{
 			if (_aabb.pMax.X < p.X)
 				_aabb.pMax.X = p.X;
-			else if (_aabb.pMmin.X > p.X)
+			
+			if (_aabb.pMmin.X > p.X)
 				_aabb.pMmin.X = p.X;
 
 			if (_aabb.pMax.Y < p.Y)
 				_aabb.pMax.Y = p.Y;
-			else if (_aabb.pMmin.Y > p.Y)
+			
+			if (_aabb.pMmin.Y > p.Y)
 				_aabb.pMmin.Y = p.Y;
 		}
 		return _aabb;

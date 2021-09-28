@@ -266,7 +266,7 @@ namespace fmesh
 			needDel = false;
 			for (size_t j = 0; j < paths[i].size(); j++)
 			{
-				if (pathsValue[i][j] < average * 2 / 3)
+				if (pathsValue[i][j] < average * 1 / 2)
 				{
 					needDel = true;
 					break;
@@ -292,5 +292,52 @@ namespace fmesh
 		}
 		return len;
 	}
+
+	aabb getAABB(ClipperLib::Path* path)
+	{
+		aabb _aabb;
+		for (const ClipperLib::IntPoint& p : *path)
+		{
+			if (_aabb.pMax.X < p.X)
+				_aabb.pMax.X = p.X;
+			
+			if (_aabb.pMmin.X > p.X)
+				_aabb.pMmin.X = p.X;
+
+			if (_aabb.pMax.Y < p.Y)
+				_aabb.pMax.Y = p.Y;
+			
+			if (_aabb.pMmin.Y > p.Y)
+				_aabb.pMmin.Y = p.Y;
+		}
+		return _aabb;
+	}
+
+	ClipperLib::IntPoint getAABBvalue(ClipperLib::PolyTree* poly, int flag = 0)
+	{
+		aabb _aabb;
+		polyNodeFunc func = [&func, &_aabb, &flag](ClipperLib::PolyNode* node) {
+
+			for (ClipperLib::PolyNode* n : node->Childs)
+			{
+				if (n->Contour.size() > 0)
+				{
+					aabb box = getAABB(&n->Contour);
+					if (box.pMax.X - box.pMmin.X > _aabb.pMax.X- _aabb.pMmin.X
+						|| box.pMax.Y - box.pMmin.Y > _aabb.pMax.Y - _aabb.pMmin.Y)
+					{
+						_aabb = box;
+						return ClipperLib::IntPoint(_aabb.pMax.X - _aabb.pMmin.X, _aabb.pMax.Y - _aabb.pMmin.Y);
+					}
+				}
+				func(n);
+			}
+		};
+
+		func(poly);
+		return ClipperLib::IntPoint(_aabb.pMax.X - _aabb.pMmin.X, _aabb.pMax.Y - _aabb.pMmin.Y);
+	}
+
+
 }
 

@@ -11,8 +11,8 @@ namespace fmesh
 		ClipperLib::IntPoint pMmin;
 		ClipperLib::IntPoint pMax;
 		AABB()
-			:pMmin((std::numeric_limits<ClipperLib::cInt>::min(), std::numeric_limits<ClipperLib::cInt>::min()))
-			, pMax((std::numeric_limits<ClipperLib::cInt>::max(), std::numeric_limits<ClipperLib::cInt>::max()))
+			:pMmin((std::numeric_limits<ClipperLib::cInt>::max(), std::numeric_limits<ClipperLib::cInt>::max()))
+			, pMax((std::numeric_limits<ClipperLib::cInt>::min(), std::numeric_limits<ClipperLib::cInt>::min()))
 		{}
 	}aabb;
 

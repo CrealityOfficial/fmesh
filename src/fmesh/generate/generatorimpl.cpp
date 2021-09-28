@@ -953,7 +953,7 @@ namespace fmesh
 		{
 			//_fillPolyTreeDepthOnePoly(&treeBottom, true);
 			//_fillPolyTree(&treeBottom, true);
-			_fillPolyTreeDepth14(&treeBottom,true);
+			_fillPolyTreeOnePloy(&treeBottom,true);
 		}
 		else if (m_adParam.bottom_type == ADBottomType::adbt_step)
 		{
