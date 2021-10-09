@@ -45,9 +45,9 @@ namespace fmesh
 		ClipperLib::IntPoint bmax;
 		calculatePathBox(paths, bmin, bmax);
 		//scale
-		double xLen = (double)(bmax.X - bmin.X);
-		double yLen = (double)(bmax.Y - bmin.Y);
-		double scale = 1000.0 * expectLen / std::max(xLen, yLen);
+		ClipperLib::cInt val = std::max((bmax.X - bmin.X), (bmax.Y - bmin.Y));
+		val = (val == 0 ? 1 : val);
+		double scale = 1000.0 * expectLen / val;
 		//double scaleX = 1000.0 * expectLen / xLen;
 		//double scaleY = 1000.0 * expectLen / yLen;
 		for (ClipperLib::Path& path : *paths)
