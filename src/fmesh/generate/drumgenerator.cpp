@@ -3,8 +3,8 @@
 #include <clipper/clipper.hpp>
 #include "mmesh/clipper/circurlar.h"
 #include "specialpoly.h"
-#include "mmesh/cgal/roof.h"
 #include <cmath>
+#include "cmesh/mesh/roof.h"
 
 namespace fmesh
 {

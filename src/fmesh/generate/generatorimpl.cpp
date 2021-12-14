@@ -3,7 +3,6 @@
 #include "fmesh/generate/trimeshbuilder.h"
 #include "fmesh/contour/path.h"
 
-#include "mmesh/cgal/roof.h"
 #include "mmesh/clipper/circurlar.h"
 
 namespace fmesh
