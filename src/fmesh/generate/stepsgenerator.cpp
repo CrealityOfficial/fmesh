@@ -77,7 +77,7 @@ namespace fmesh
 			_buildFromSamePolyTree(&middlePolys.at(2), &middlePolys.at(3));
 			offsetExteriorInner(middlePolys.at(1), thickness, bottomHeight);
 			_buildFromDiffPolyTree_all(&middlePolys.at(0), &middlePolys.at(1),1.0,0,true);
-			_buildFromDiffPolyTree_xor(&middlePolys.at(1), &middlePolys.at(2), dealt, 2);
+			//_buildFromDiffPolyTree_xor(&middlePolys.at(1), &middlePolys.at(2), dealt, 2);
 			_fillPolyTree(&middlePolys.back());
 		}
 	}
