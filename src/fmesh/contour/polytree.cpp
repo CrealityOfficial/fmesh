@@ -3,7 +3,7 @@
 
 #include "fmesh/generate/polyfiller.h"
 #include "fmesh/generate/triangularization.h"
-#include "mmesh/cgal/roof.h"
+#include "cmesh/mesh/roof.h"
 #include <algorithm>
 #include "skeleton2polytree.h"
 
@@ -523,7 +523,7 @@ namespace fmesh
 		ClipperLib::PolyTree roofLine;
 		ClipperLib::PolyTree roofPoint;
 		ClipperLib::Paths* paths = new ClipperLib::Paths;
-		mmesh::roofLine(&source, &roofLine, &roofPoint, paths, onePoly);
+		cmesh::roofLine(&source, &roofLine, &roofPoint, paths, onePoly);
 
 		for (size_t i=0;i< paths->size();i++)
 		{
@@ -560,7 +560,7 @@ namespace fmesh
 		ClipperLib::PolyTree roofLine;
 		ClipperLib::PolyTree roofPoint;
 		ClipperLib::Paths* paths = new ClipperLib::Paths;
-		mmesh::roofLine(&source, &roofLine, &roofPoint, paths, true);
+		cmesh::roofLine(&source, &roofLine, &roofPoint, paths, true);
 
 		ClipperLib::Paths* sPaths = new ClipperLib::Paths;
 		dealSkeleton(roofLine, sPaths);
@@ -577,7 +577,7 @@ namespace fmesh
 		ClipperLib::PolyTree roofLine;
 		ClipperLib::PolyTree roofPoint;
 		ClipperLib::Paths* paths = new ClipperLib::Paths;
-		mmesh::roofLine(&source, &roofLine, &roofPoint, paths, onePoly);
+		cmesh::roofLine(&source, &roofLine, &roofPoint, paths, onePoly);
 
 		for (size_t i = 0; i < paths->size(); i++)
 		{

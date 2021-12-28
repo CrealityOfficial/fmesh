@@ -1,7 +1,7 @@
 #include "lampgenerator.h"
 #include "mmesh/clipper/circurlar.h"
 #include "specialpoly.h"
-#include "mmesh/cgal/roof.h"
+#include "cmesh/mesh/roof.h"
 
 namespace fmesh
 {
@@ -73,7 +73,7 @@ namespace fmesh
 			offsetAndExtendpolyType(m_poly, offset, thickness, thicknessH, middlePolys.at(2), m_adParam.bluntSharpCorners);
 
 		ClipperLib::Path* path = new ClipperLib::Path;
-		mmesh::skeletonPoints(&m_poly, path);
+		cmesh::skeletonPoints(&m_poly, path);
 
 		ClipperLib::Paths paths;
 		sortPath(path, &paths);
