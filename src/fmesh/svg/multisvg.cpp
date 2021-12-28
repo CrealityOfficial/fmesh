@@ -235,35 +235,56 @@ namespace fmesh
 			//m_path.insert(m_path.end(),&m_pathses[i]->begin(),m_pathses[i]->end());
 		}
 
+		std::vector<aabb> vctAABB(m_path.size());
+		for (size_t i = 0; i < m_path.size(); i++)
+		{
+			vctAABB[i] = getAABB(m_path[i]);
+		}
+
+		std::vector<int> areaAABB(m_path.size(), -1);
+
+		if (m_path.size())
+		{
+			areaAABB[0] = 0;
+		}
 		std::vector<ClipperLib::Paths*> pathses;
 		for (size_t i = 0; i < m_path.size(); i++)
 		{
-			ClipperLib::Paths* paths = nullptr;
-			if (pathses.size())
+			for (size_t j = 0; j < m_path.size(); j++)
 			{
-				aabb old = getAABB(&pathses.back()->back());
-				aabb cur = getAABB(m_path[i]);
-				if ((old.pMmin.X >= cur.pMmin.X
-					&& old.pMax.X <= cur.pMax.X
-					&& old.pMmin.Y >= cur.pMmin.Y
-					&& old.pMax.Y <= cur.pMax.Y)
-					|| (old.pMmin.X <= cur.pMmin.X
-					&& old.pMax.X >= cur.pMax.X
-					&& old.pMmin.Y <= cur.pMmin.Y
-					&& old.pMax.Y >= cur.pMax.Y))
-				{
-					paths = pathses.back();
-					paths->push_back(*m_path[i]);
+				if (i == j)
 					continue;
+
+				if (intersectAABB(vctAABB[i], vctAABB[j]))
+				{
+					int num = std::max(areaAABB[i], areaAABB[j]);
+					if (num == -1)
+					{
+						num = i;
+					}
+					areaAABB[i] = num;
+					areaAABB[j] = num;	
 				}
 			}
-
-			paths = new ClipperLib::Paths;
-			paths->push_back(*m_path[i]);
-			pathses.push_back(paths);
 		}
 
-		//m_pathses.insert(m_pathses.end(), pathses.begin(), pathses.end());
+		for (size_t i = 0; i < m_path.size(); i++)
+		{
+			ClipperLib::Paths* paths = nullptr;
+			if (i == areaAABB[i])
+			{
+				paths = new ClipperLib::Paths;
+				paths->push_back(*m_path[i]);			
+				for (size_t j = i+1; j < areaAABB.size(); j++)
+				{
+					if (i == areaAABB[j])
+					{
+						paths->push_back(*m_path[j]);
+					}
+				}
+				pathses.push_back(paths);
+			}
+		}
 
 		tmp.swap(pathses);
 		m_pathses.clear();
@@ -825,5 +846,44 @@ namespace fmesh
 				_aabb.pMmin.Y = p.Y;
 		}
 		return _aabb;
+	}
+
+	bool MultiSVG::intersectAABB(const aabb& a,const aabb& b)
+	{
+		ClipperLib::Path pathA;
+		pathA.push_back(ClipperLib::IntPoint(a.pMmin.X, a.pMmin.Y));
+		pathA.push_back(ClipperLib::IntPoint(a.pMmin.X, a.pMax.Y));
+		pathA.push_back(ClipperLib::IntPoint(a.pMax.X, a.pMmin.Y));
+		pathA.push_back(ClipperLib::IntPoint(a.pMax.X, a.pMax.Y));
+		ClipperLib::Path pathB;
+		pathB.push_back(ClipperLib::IntPoint(b.pMmin.X, b.pMmin.Y));
+		pathB.push_back(ClipperLib::IntPoint(b.pMmin.X, b.pMax.Y));
+		pathB.push_back(ClipperLib::IntPoint(b.pMax.X, b.pMmin.Y));
+		pathB.push_back(ClipperLib::IntPoint(b.pMax.X, b.pMax.Y));
+
+		for (const ClipperLib::IntPoint& point: pathA)
+		{
+
+			if (point.X>= b.pMmin.X 
+				&& point.X <= b.pMax.X
+				&& point.Y >= b.pMmin.Y
+				&& point.Y <= b.pMax.Y)
+			{
+				return true;
+			}
+		}
+
+		for (const ClipperLib::IntPoint& point : pathB)
+		{
+			if (point.X >= a.pMmin.X
+				&& point.X <= a.pMax.X
+				&& point.Y >= a.pMmin.Y
+				&& point.Y <= a.pMax.Y)
+			{
+				return true;
+			}
+		}
+
+		return false;
 	}
 }

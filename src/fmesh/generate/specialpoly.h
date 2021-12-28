@@ -6,11 +6,11 @@
 
 namespace fmesh
 {
-	typedef struct AABB
+	typedef struct SAABB
 	{
 		ClipperLib::IntPoint pMmin;
 		ClipperLib::IntPoint pMax;
-		AABB()
+		SAABB()
 			:pMmin((std::numeric_limits<ClipperLib::cInt>::max(), std::numeric_limits<ClipperLib::cInt>::max()))
 			, pMax((std::numeric_limits<ClipperLib::cInt>::min(), std::numeric_limits<ClipperLib::cInt>::min()))
 		{}

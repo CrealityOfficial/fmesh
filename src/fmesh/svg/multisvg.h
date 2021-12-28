@@ -6,13 +6,12 @@
 #define CLIPPERPOINT(x, y) ClipperLib::IntPoint((int)(1000.0f * x), (int)(1000.0f * y))
 namespace fmesh
 {
-	typedef struct AABB
+	typedef struct SAABB
 	{
 		ClipperLib::IntPoint pMmin;
 		ClipperLib::IntPoint pMax;
-		AABB()
-			:pMmin((std::numeric_limits<ClipperLib::cInt>::max(), std::numeric_limits<ClipperLib::cInt>::max()))
-			, pMax((std::numeric_limits<ClipperLib::cInt>::min(), std::numeric_limits<ClipperLib::cInt>::min()))
+		SAABB():pMmin(std::numeric_limits<ClipperLib::cInt>::max(), std::numeric_limits<ClipperLib::cInt>::max())
+			,pMax(std::numeric_limits<ClipperLib::cInt>::min(), std::numeric_limits<ClipperLib::cInt>::min())
 		{}
 	}aabb;
 
@@ -36,6 +35,7 @@ namespace fmesh
 		bool isSpechars(char chars);
 
 		aabb getAABB(ClipperLib::Path* path);
+		bool intersectAABB(const aabb& a, const aabb& b);
 
 		void pausePathMm(std::string stringPoint);
 		void pausePathLl(std::string stringPoint);

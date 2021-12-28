@@ -16,7 +16,6 @@ namespace fmesh
 
 	void PunchingGenerator::build()
 	{
-
 		m_adParam.bottom_type = ADBottomType::adbt_none;
 
 		double middleoffset = 0;
@@ -62,6 +61,8 @@ namespace fmesh
 			m_adParam.bottom_extend_width = 6.0f;
 		}
 
+		float bootomH = m_adParam.bottom_layers * 0.3;
+
 		if (onePoly)
 			middlePolys.resize(4);
 		else
@@ -72,10 +73,10 @@ namespace fmesh
 		offsetAndExtendpolyType(m_poly, offset, thickness, 0, middlePolys.at(0), m_adParam.bluntSharpCorners);
 		//offsetAndExtendpolyType(m_poly, offset/2.0f, thickness, 0, middlePath, m_adParam.bluntSharpCorners);
 
-		offsetAndExtendpolyType(m_poly, offset, thickness, m_adParam.extend_width, middlePolys.at(1), m_adParam.bluntSharpCorners);
-		offsetAndExtendpolyType(m_poly, offset, thickness, m_adParam.extend_width, middlePolys.at(2), m_adParam.bluntSharpCorners);
+		offsetAndExtendpolyType(m_poly, offset, thickness, bootomH, middlePolys.at(1), m_adParam.bluntSharpCorners);
+		offsetAndExtendpolyType(m_poly, offset, thickness, bootomH, middlePolys.at(2), m_adParam.bluntSharpCorners);
 		offsetExteriorInner(middlePolys.at(0), m_adParam.bottom_extend_width, 0.0);
-		offsetExteriorInner(middlePolys.at(1), m_adParam.bottom_extend_width, m_adParam.extend_width);
+		offsetExteriorInner(middlePolys.at(1), m_adParam.bottom_extend_width, bootomH);
 		if (onePoly)
 			offsetAndExtendpolyType(m_poly, offset, thickness, totalH, middlePolys.at(3), m_adParam.bluntSharpCorners);
 		//_buildFromSamePolyTree(&middlePolys.at(0), &middlePolys.at(1));
@@ -119,7 +120,7 @@ namespace fmesh
 
 		//ClipperLib::PolyTree out;
 		middlePolys.at(0).Clear();
-		setPolyTreeZ(newPath2, m_adParam.extend_width);
+		setPolyTreeZ(newPath2, bootomH);
 		if (!onePoly)
 		{
 			fmesh::xor2PolyTrees(&newPath2, &middlePolys.at(2), middlePolys.at(0));
