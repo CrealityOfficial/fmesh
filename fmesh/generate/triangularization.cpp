@@ -1,5 +1,5 @@
 #include "triangularization.h"
-#include "mmesh/clipper/circurlar.h"
+#include "fmesh/clipper/circurlar.h"
 #include "fmesh/generate/wovener.h"
 #include "fmesh/contour/polytree.h"
 #include "fmesh/contour/path.h"
@@ -52,14 +52,14 @@ namespace fmesh
 			pathsLower.push_back(&node->Contour);
 		};
 
-		mmesh::loopPolyTree(f, treeUp);
+		fmesh::loopPolyTree(f, treeUp);
 		if (count == 0)
 			return nullptr;
 
 		Patch* patch = new Patch();
 		patch->reserve(3 * count);
 
-		mmesh::loopPolyTree(f1, treeLower);
+		fmesh::loopPolyTree(f1, treeLower);
 		buildFromPathes(pathsLower, pathsUp, *patch);
 		return patch;
 	}
@@ -81,8 +81,8 @@ namespace fmesh
 			pathsLower.push_back(&node->Contour);
 		};
 
-		mmesh::loopPolyTree(f, treeUp);
-		mmesh::loopPolyTree(f1, treeLower);
+		fmesh::loopPolyTree(f, treeUp);
+		fmesh::loopPolyTree(f1, treeLower);
 
 		size_t size = pathsUp.size();
 		if (size != pathsLower.size() && size > 0)
@@ -382,8 +382,8 @@ namespace fmesh
 			pathsLower.push_back(&node->Contour);
 		};
 
-		mmesh::loopPolyTree(f, treeUp);
-		mmesh::loopPolyTree(f1, treeLower);
+		fmesh::loopPolyTree(f, treeUp);
+		fmesh::loopPolyTree(f1, treeLower);
 
 		fmesh::xor2PolyTrees(treeUp, treeLower, out);
 	}

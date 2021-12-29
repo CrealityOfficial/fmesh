@@ -2,7 +2,7 @@
 #include "fmesh/generate/earpolygon.h"
 #include "fmesh/generate/triangularization.h"
 #include "fmesh/common/dvecutil.h"
-#include "mmesh/clipper/circurlar.h"
+#include "fmesh/clipper/circurlar.h"
 #include "fmesh/contour/contour.h"
 #include "fmesh/contour/polytree.h"
 #include <algorithm>
@@ -44,7 +44,7 @@ namespace fmesh
 			}
 		};
 
-		mmesh::loopPolyTree(func, polyTree);
+		fmesh::loopPolyTree(func, polyTree);
 	}
 
 	void fillComplexPolyTreeReverseInner(ClipperLib::PolyTree* polyTree, std::vector<Patch*>& patches, bool invert)
@@ -371,7 +371,7 @@ namespace fmesh
 				nodes8.push_back(node);
 		};
 
-		mmesh::loopPolyTree(func, polyTree);
+		fmesh::loopPolyTree(func, polyTree);
 
 		ClipperLib::PolyTree out;
 		xor2PolyNodes(nodes1, nodes4, out);
@@ -405,7 +405,7 @@ namespace fmesh
 				nodes7.push_back(node);
 		};
 
-		mmesh::loopPolyTree(func, polyTree);
+		fmesh::loopPolyTree(func, polyTree);
 
 		ClipperLib::PolyTree out;
 		xor2PolyNodes(nodes2, nodes3, out);
@@ -432,7 +432,7 @@ namespace fmesh
 				nodes1.push_back(node);
 		};
 
-		mmesh::loopPolyTree(func, polyTree);
+		fmesh::loopPolyTree(func, polyTree);
 
 		ClipperLib::PolyTree out;
 		xor2PolyNodes(nodes1, nodes4, out);
@@ -457,7 +457,7 @@ namespace fmesh
 				nodes2.push_back(node);
 		};
 
-		mmesh::loopPolyTree(func, polyTree);
+		fmesh::loopPolyTree(func, polyTree);
 
 		for (ClipperLib::PolyNode* node : nodes2)
 		{
@@ -490,7 +490,7 @@ namespace fmesh
 			}
 		};
 
-		mmesh::loopPolyTree(func, polyTree);
+		fmesh::loopPolyTree(func, polyTree);
 	}
 
 	ClipperLib::cInt pathMaxX(ClipperLib::Path& path)

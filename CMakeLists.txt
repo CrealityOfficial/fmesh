@@ -1,18 +1,20 @@
-cmake_minimum_required(VERSION 3.1)
-project(fmesh)
+__find_librevenge()
+__find_tinyxml()
+__find_freetype()
+__find_dxflib()
 
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/")
-include(ConfigureAllModules) 
+__files_group(${CMAKE_CURRENT_SOURCE_DIR}/fmesh/ SRCS)
 
-if (WIN32)
-else()
-    set(CMAKE_CXX_FLAGS "-fPIC")
-    set(CMAKE_C_FLAGS "-fPIC")
+set(LIBS trimesh2 clipper mmesh cmesh freetype dxflib librevenge tinyxml)
+set(DEFS FMESH_DLL TIXML_USE_STL)
+__add_real_target(fmesh dll SOURCE ${SRCS} INC ${INCS} LIB ${LIBS} DEF ${DEFS})
+
+set_property(TARGET fmesh PROPERTY INTERFACE_INCLUDE_DIRECTORIES ${CMAKE_CURRENT_SOURCE_DIR})
+
+if(APPLE)
+	__add_openmp_lib(fmesh)
 endif()
 
-__find_trimesh2()
-__find_clipper()
-__include_boost()
-
-add_subdirectory(mmesh/external mmesh)
-add_subdirectory(src)
+if(INSTALL_FMESH)
+	INSTALL(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/fmesh DESTINATION include/ FILES_MATCHING PATTERN "*.h")
+endif()

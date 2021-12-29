@@ -3,7 +3,7 @@
 #include "fmesh/generate/trimeshbuilder.h"
 #include "fmesh/contour/path.h"
 
-#include "mmesh/clipper/circurlar.h"
+#include "fmesh/clipper/circurlar.h"
 
 namespace fmesh
 {
@@ -468,7 +468,7 @@ namespace fmesh
 				point.Z = (int)(z);
 		};
 
-		mmesh::loopPolyTree(func1, &treeNew);
+		fmesh::loopPolyTree(func1, &treeNew);
 		adjustPolyTreeZ(treeNew);
 	}
 
@@ -1065,7 +1065,7 @@ namespace fmesh
 		polyNodeFunc func = [&distance](ClipperLib::PolyNode* node) {
 			ClipperLib::CleanPolygon(node->Contour, distance);
 		};
-		mmesh::loopPolyTree(func, poly);
+		fmesh::loopPolyTree(func, poly);
 	}
 
 	void GeneratorImpl::_simplifyPolyOneploy(ClipperLib::PolyTree* poly, bool outer, double distance)
@@ -1084,7 +1084,7 @@ namespace fmesh
 			if (checkFlag(node, flag))
 				ClipperLib::CleanPolygon(node->Contour, distance);
 		};
-		mmesh::loopPolyTree(func, poly);
+		fmesh::loopPolyTree(func, poly);
 	}
 
 	void GeneratorImpl::areaPoly(ClipperLib::PolyTree& poly, std::vector<double>& area)
