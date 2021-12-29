@@ -1,5 +1,5 @@
 #include "nestedgenerator.h"
-#include "mmesh/clipper/circurlar.h"
+#include "fmesh/clipper/circurlar.h"
 #include "specialpoly.h"
 
 namespace fmesh
@@ -64,7 +64,7 @@ namespace fmesh
 				}
 			}
 		};
-		mmesh::loopPolyTree(func, &poly);
+		fmesh::loopPolyTree(func, &poly);
 
 		return pointMax.X - pointMin.X;
 	}
@@ -104,7 +104,7 @@ namespace fmesh
 				p.X += len;
 			}
 		};
-		mmesh::loopPolyTree(func1, &inner);
+		fmesh::loopPolyTree(func1, &inner);
 
 		offsetAndExtendpolyType(inner, 0, thickness, m_adParam.top_height, middlePolys.at(2), m_adParam.bluntSharpCorners);		
 

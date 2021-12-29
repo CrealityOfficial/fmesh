@@ -1,5 +1,5 @@
 #include "punchinggenerator.h"
-#include "mmesh/clipper/circurlar.h"
+#include "fmesh/clipper/circurlar.h"
 #include "specialpoly.h"
 
 namespace fmesh
@@ -93,7 +93,7 @@ namespace fmesh
 		polyNodeFunc func = [](ClipperLib::PolyNode* node) {
 			ClipperLib::CleanPolygon(node->Contour, 5);
 		};
-		mmesh::loopPolyTree(func, &middlePath);
+		fmesh::loopPolyTree(func, &middlePath);
 
 		ClipperLib::Paths sourcePaths;
 		ClipperLib::PolyTreeToPaths(middlePath, sourcePaths);
@@ -105,7 +105,7 @@ namespace fmesh
 		polyNodeFunc func1 = [&func, &clipper](ClipperLib::PolyNode* node) {
 				clipper.AddPath(node->Contour, ClipperLib::ptClip, true);
 		};
-		mmesh::loopPolyTree(func1, &middlePolys.at(0));
+		fmesh::loopPolyTree(func1, &middlePolys.at(0));
 		for (ClipperLib::Path& path : newPaths)
 		{
 			ClipperLib::ReversePath(path);

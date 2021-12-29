@@ -1,5 +1,5 @@
 #include "lampgenerator.h"
-#include "mmesh/clipper/circurlar.h"
+#include "fmesh/clipper/circurlar.h"
 #include "specialpoly.h"
 #include "cmesh/mesh/roof.h"
 
@@ -100,7 +100,7 @@ namespace fmesh
 				
 		};
 		flag = 3;//outer
-		mmesh::loopPolyTree(func1, &middlePolys.at(0));
+		fmesh::loopPolyTree(func1, &middlePolys.at(0));
 		for (ClipperLib::Path& path : outPaths)
 		{
 			ClipperLib::ReversePath(path);
@@ -112,7 +112,7 @@ namespace fmesh
 		//top
 		clipper.Clear();
 		flag = 2;//inner
-		mmesh::loopPolyTree(func1, &middlePolys.at(1));
+		fmesh::loopPolyTree(func1, &middlePolys.at(1));
 		for (ClipperLib::Path& path : outPaths)
 		{
 			clipper.AddPath(path, ClipperLib::ptClip, true);
