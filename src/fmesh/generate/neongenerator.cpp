@@ -16,7 +16,7 @@ namespace fmesh
 	{
 		//initTestData();
 		m_adParam.bottom_type = ADBottomType::adbt_close;
-		m_adParam.bottom_layers = 2;
+		//m_adParam.bottom_layers = 2;
 
 		double middleoffset = 0;
 		std::vector<ClipperLib::PolyTree> middlePolys;
@@ -29,7 +29,7 @@ namespace fmesh
 	void NeonGenerator::buildShell()
 	{
 		m_adParam.bottom_type = ADBottomType::adbt_close;
-		m_adParam.bottom_layers = 2;
+		//m_adParam.bottom_layers = 2;
 
 		double middleoffset = 0;
 		std::vector<ClipperLib::PolyTree> middlePolys;

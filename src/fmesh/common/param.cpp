@@ -27,6 +27,8 @@ namespace fmesh
 
 		top_layers = 1;
 		bottom_layers = 1;
+		close_bottom_height=0.0f;
+		close_up_height=0.0f;
 		bluntSharpCorners = true;
 
 		roundRadius = 2.5f;

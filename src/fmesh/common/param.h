@@ -99,6 +99,8 @@ namespace fmesh
 		//top/bottom layer count
 		int top_layers;
 		int bottom_layers;
+		float close_bottom_height;
+		float close_up_height;
 
 		float roundRadius;
 		float roundGap;
