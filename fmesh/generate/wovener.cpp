@@ -19,7 +19,7 @@ namespace fmesh
 
 	}
 
-	Patch* Wovener::woven(ClipperLib::Path* pathLower, ClipperLib::Path* pathUp)
+	Patch* Wovener::woven(ClipperLibXYZ::Path* pathLower, ClipperLibXYZ::Path* pathUp)
 	{
 //#ifdef 1
 		////save path
@@ -28,14 +28,14 @@ namespace fmesh
 		//sprintf(a, "%d", i++);
 		//std::string file = "f:/0/";
 		//file += a;
-		//ClipperLib::Paths pathlowers;
+		//ClipperLibXYZ::Paths pathlowers;
 		//pathlowers.push_back(*pathLower);
-		//ClipperLib::Paths pathUps;
+		//ClipperLibXYZ::Paths pathUps;
 		//pathUps.push_back(*pathUp);
 		//if (pathLower->size())
-		//	ClipperLib::save(pathlowers, file + ".path");
+		//	ClipperLibXYZ::save(pathlowers, file + ".path");
 		//if (pathUp->size())
-		//	ClipperLib::save(pathUps, file + "_1.path");
+		//	ClipperLibXYZ::save(pathUps, file + "_1.path");
 		//save end
 //#endif // 1
 

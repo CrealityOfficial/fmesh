@@ -16,7 +16,7 @@ namespace fmesh
 
 	void SharptopGenerator::build()
 	{
-		std::vector<ClipperLib::PolyTree> middlePolys;
+		std::vector<ClipperLibXYZ::PolyTree> middlePolys;
 		buildMiddle(middlePolys);
 		if (middlePolys.size() == 0)
 			return;
@@ -25,23 +25,23 @@ namespace fmesh
 
 	void SharptopGenerator::buildShell()
 	{
-		std::vector<ClipperLib::PolyTree> middlePolys;
+		std::vector<ClipperLibXYZ::PolyTree> middlePolys;
 		buildMiddle(middlePolys,true);
 		if (middlePolys.size() == 0)
 			return;
 		_buildTopBottom_onepoly(&middlePolys.front(), nullptr);
 	}
 
-	void SharptopGenerator::buildBoard(ClipperLib::PolyTree& topTree, ClipperLib::PolyTree& bottomTree)
+	void SharptopGenerator::buildBoard(ClipperLibXYZ::PolyTree& topTree, ClipperLibXYZ::PolyTree& bottomTree)
 	{
-		std::vector<ClipperLib::PolyTree> middlePolys;
+		std::vector<ClipperLibXYZ::PolyTree> middlePolys;
 		buildMiddle(middlePolys, true);
 		if (middlePolys.size() == 0)
 			return;
 		offsetPolyType(middlePolys.front(), m_adParam.exoprtParam.bottom_offset, bottomTree, m_adParam.bluntSharpCorners);
 	}
 
-	void SharptopGenerator::buildMiddle(std::vector<ClipperLib::PolyTree>& middlePolys, bool onePoly)
+	void SharptopGenerator::buildMiddle(std::vector<ClipperLibXYZ::PolyTree>& middlePolys, bool onePoly)
 	{
 
 		double thickness = m_adParam.extend_width / 2.0;
@@ -52,7 +52,7 @@ namespace fmesh
 		size_t drumHCount = 800;
 		int lastvalueX = 0;
 		int lastvalueY = 0;
-		std::vector<ClipperLib::PolyTree> _middlePolys;
+		std::vector<ClipperLibXYZ::PolyTree> _middlePolys;
 		_middlePolys.resize(1 + drumHCount);
 		for (int i = 0; i < drumHCount; i++)
 		{
@@ -61,8 +61,8 @@ namespace fmesh
 			offsetAndExtendPolyTreeMiter(m_poly, -0.05 * i, thickness, _middlePolys.at(i));
 			if (i > 1)
 			{
-				ClipperLib::IntPoint P = getAABBvalue(&_middlePolys.at(i));
-				ClipperLib::IntPoint P1 = getAABBvalue(&_middlePolys.at(i - 1));
+				ClipperLibXYZ::IntPoint P = getAABBvalue(&_middlePolys.at(i));
+				ClipperLibXYZ::IntPoint P1 = getAABBvalue(&_middlePolys.at(i - 1));
 				int _lastvalueX = std::abs(P.X - P1.X);
 				int _lastvalueY = std::abs(P.Y - P1.Y);
 				if (P.X < P1.X * 2 / 3 || P.Y < P1.Y * 2 / 3)

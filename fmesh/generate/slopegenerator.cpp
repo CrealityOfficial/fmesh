@@ -14,26 +14,26 @@ namespace fmesh
 
 	void SlopeGenerator::build()
 	{
-		std::vector<ClipperLib::PolyTree> middlePolys;
+		std::vector<ClipperLibXYZ::PolyTree> middlePolys;
 		buildMiddle(middlePolys);
 	}
 
 	void SlopeGenerator::buildShell()
 	{
-		std::vector<ClipperLib::PolyTree> middlePolys;
+		std::vector<ClipperLibXYZ::PolyTree> middlePolys;
 		buildMiddle(middlePolys,true);
 	}
 
-	void SlopeGenerator::buildBoard(ClipperLib::PolyTree& topTree, ClipperLib::PolyTree& bottomTree)
+	void SlopeGenerator::buildBoard(ClipperLibXYZ::PolyTree& topTree, ClipperLibXYZ::PolyTree& bottomTree)
 	{
-		std::vector<ClipperLib::PolyTree> middlePolys;
+		std::vector<ClipperLibXYZ::PolyTree> middlePolys;
 		buildMiddle(middlePolys, true);
 		if (middlePolys.size() == 0)
 			return;
 		offsetPolyType(middlePolys.front(), m_adParam.exoprtParam.bottom_offset, bottomTree, m_adParam.bluntSharpCorners);
 	}
 
-	void SlopeGenerator::buildMiddle(std::vector<ClipperLib::PolyTree>& middlePolys, bool onePoly)
+	void SlopeGenerator::buildMiddle(std::vector<ClipperLibXYZ::PolyTree>& middlePolys, bool onePoly)
 	{
 		double thickness = m_adParam.extend_width / 2.0;;
 

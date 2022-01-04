@@ -6,7 +6,7 @@
 
 namespace cdrdxf
 {
-	void convert(DXFSpline* spline, ClipperLib::Path* path)
+	void convert(DXFSpline* spline, ClipperLibXYZ::Path* path)
 	{
 		if (!spline || !path)
 			return;
@@ -39,10 +39,10 @@ namespace cdrdxf
 			path->resize(n);
 			for (size_t i = 0; i < n; ++i)
 			{
-				ClipperLib::IntPoint& p = path->at(i);
+				ClipperLibXYZ::IntPoint& p = path->at(i);
 				Point& pp = fitPoints.at(i);
-				p.X = (ClipperLib::cInt)(1000.0 * pp.x);
-				p.Y = (ClipperLib::cInt)(1000.0 * pp.y);
+				p.X = (ClipperLibXYZ::cInt)(1000.0 * pp.x);
+				p.Y = (ClipperLibXYZ::cInt)(1000.0 * pp.y);
 			}
 		}
 	}

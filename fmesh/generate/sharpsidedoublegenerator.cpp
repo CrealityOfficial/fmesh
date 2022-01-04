@@ -14,7 +14,7 @@ namespace fmesh
 
 	void SharpsideDoubleGenerator::build()
 	{
-		std::vector<ClipperLib::PolyTree> middlePolys;
+		std::vector<ClipperLibXYZ::PolyTree> middlePolys;
 		buildMiddle(middlePolys);
 		if (middlePolys.size() == 0)
 			return;
@@ -23,16 +23,16 @@ namespace fmesh
 
 	void SharpsideDoubleGenerator::buildShell()
 	{
-		std::vector<ClipperLib::PolyTree> middlePolys;
+		std::vector<ClipperLibXYZ::PolyTree> middlePolys;
 		buildMiddle(middlePolys,true);
 		if (middlePolys.size() == 0)
 			return;
 		_buildTopBottom_onepoly(&middlePolys.front(), &middlePolys.back());
 	}
 
-	void SharpsideDoubleGenerator::buildBoard(ClipperLib::PolyTree& topTree, ClipperLib::PolyTree& bottomTree)
+	void SharpsideDoubleGenerator::buildBoard(ClipperLibXYZ::PolyTree& topTree, ClipperLibXYZ::PolyTree& bottomTree)
 	{
-		std::vector<ClipperLib::PolyTree> middlePolys;
+		std::vector<ClipperLibXYZ::PolyTree> middlePolys;
 		buildMiddle(middlePolys, true);
 		if (middlePolys.size() == 0)
 			return;
@@ -40,7 +40,7 @@ namespace fmesh
 		offsetPolyType(middlePolys.front(), m_adParam.exoprtParam.bottom_offset, bottomTree, m_adParam.bluntSharpCorners);
 	}
 
-	void SharpsideDoubleGenerator::buildMiddle(std::vector<ClipperLib::PolyTree>& middlePolys, bool onePoly)
+	void SharpsideDoubleGenerator::buildMiddle(std::vector<ClipperLibXYZ::PolyTree>& middlePolys, bool onePoly)
 	{
 		float shape_bottom_height = m_adParam.shape_bottom_height;
 		float shape_top_height = m_adParam.shape_top_height;

@@ -4,14 +4,14 @@
 
 namespace fmesh
 {
-	void sortPath(ClipperLib::Path* path, ClipperLib::Paths* paths, bool getPerLine)
+	void sortPath(ClipperLibXYZ::Path* path, ClipperLibXYZ::Paths* paths, bool getPerLine)
 	{
 		//get start point
 		int index = 0;
-		ClipperLib::IntPoint point;
+		ClipperLibXYZ::IntPoint point;
 
 		//find first Intersection 
-		std::unordered_set<ClipperLib::IntPoint> intersections;
+		std::unordered_set<ClipperLibXYZ::IntPoint> intersections;
 		for (size_t i = 0; i < path->size(); i++)
 		{
 			if (pathCount(path, path->at(i)) > 2)
@@ -28,7 +28,7 @@ namespace fmesh
 				{
 					if (i % 2 == 1)
 					{
-						ClipperLib::IntPoint point = path->at(i);
+						ClipperLibXYZ::IntPoint point = path->at(i);
 						path->at(i) = path->at(i - 1);
 						path->at(i - 1) = point;
 						index = i - 1;
@@ -39,7 +39,7 @@ namespace fmesh
 				}
 			}
 
-			ClipperLib::Path _path;
+			ClipperLibXYZ::Path _path;
 			while (index >= 0)
 			{
 				_path.push_back(path->at(index));
@@ -61,7 +61,7 @@ namespace fmesh
 		}
 	}
 
-	int findNext(ClipperLib::Path* path, ClipperLib::IntPoint point)
+	int findNext(ClipperLibXYZ::Path* path, ClipperLibXYZ::IntPoint point)
 	{
 		if (path->size() < 2)
 			return -1;
@@ -71,7 +71,7 @@ namespace fmesh
 			{
 				if (i % 2 == 1)
 				{
-					ClipperLib::IntPoint point = path->at(i);
+					ClipperLibXYZ::IntPoint point = path->at(i);
 					path->at(i) = path->at(i - 1);
 					path->at(i - 1) = point;
 					return i - 1;
@@ -82,7 +82,7 @@ namespace fmesh
 		return -1;
 	}
 
-	int pathCount(ClipperLib::Path* path, const ClipperLib::IntPoint& p)
+	int pathCount(ClipperLibXYZ::Path* path, const ClipperLibXYZ::IntPoint& p)
 	{
 		int count = 0;
 		for (size_t i = 0; i < path->size(); i++)
@@ -95,7 +95,7 @@ namespace fmesh
 		return count;
 	}
 
-	bool deletePoint(ClipperLib::Path* path, int index)
+	bool deletePoint(ClipperLibXYZ::Path* path, int index)
 	{
 		if (index<0 || index > path->size())
 			return false;
@@ -104,11 +104,11 @@ namespace fmesh
 		return true;
 	}
 
-	bool isCollision(const ClipperLib::Paths& paths, const ClipperLib::IntPoint& point, const double& smallest_dist)
+	bool isCollision(const ClipperLibXYZ::Paths& paths, const ClipperLibXYZ::IntPoint& point, const double& smallest_dist)
 	{
-		for (const ClipperLib::Path& path : paths)
+		for (const ClipperLibXYZ::Path& path : paths)
 		{
-			for (const ClipperLib::IntPoint& p : path)
+			for (const ClipperLibXYZ::IntPoint& p : path)
 			{
 				double a = vSize2f(p, point);
 				if (vSize2f(p, point) < smallest_dist - 0.2)
@@ -120,24 +120,24 @@ namespace fmesh
 		return false;
 	}
 
-	void generateLines(ClipperLib::Paths& originPloy, ClipperLib::Paths& newPaths, const double& laceGap, const double& laceRadius, bool isskeleton)
+	void generateLines(ClipperLibXYZ::Paths& originPloy, ClipperLibXYZ::Paths& newPaths, const double& laceGap, const double& laceRadius, bool isskeleton)
 	{
 		double smallest_dist = laceGap + laceRadius * 2;
-		for (ClipperLib::Path& path : originPloy)
+		for (ClipperLibXYZ::Path& path : originPloy)
 		{
 			if (!path.size())
 				return;
 			float dist = 0.0f;
 
-			ClipperLib::IntPoint p0 = path.back();
+			ClipperLibXYZ::IntPoint p0 = path.back();
 			if (isskeleton)
 			{
 				p0 = path.at(0);
 			}
 
-			ClipperLib::Path::iterator p1 = path.begin();
+			ClipperLibXYZ::Path::iterator p1 = path.begin();
 
-			newPaths.push_back(ClipperLib::Path());
+			newPaths.push_back(ClipperLibXYZ::Path());
 
 			if (!isskeleton)
 			{
@@ -162,8 +162,8 @@ namespace fmesh
 					double newDist = smallest_dist - (dist - p0p1dist);
 					double ratio = newDist * 1.0 / p0p1dist;
 
-					ClipperLib::IntPoint p;
-					ClipperLib::IntPoint p0p1((*p1).X - p0.X, (*p1).Y - p0.Y);
+					ClipperLibXYZ::IntPoint p;
+					ClipperLibXYZ::IntPoint p0p1((*p1).X - p0.X, (*p1).Y - p0.Y);
 					p0p1.X *= ratio;
 					p0p1.Y *= ratio;
 					p.X = p0p1.X + p0.X;
@@ -186,16 +186,16 @@ namespace fmesh
 		}
 	}
 
-	void generateRounds(const ClipperLib::Paths& originPath, ClipperLib::Paths& newPloy, const double& laceGap, const double& laceRadius)
+	void generateRounds(const ClipperLibXYZ::Paths& originPath, ClipperLibXYZ::Paths& newPloy, const double& laceGap, const double& laceRadius)
 	{
-		for (const ClipperLib::Path& path : originPath)
+		for (const ClipperLibXYZ::Path& path : originPath)
 		{
-			ClipperLib::Paths cpaths;
+			ClipperLibXYZ::Paths cpaths;
 			for (int n = 0; n < path.size(); n++)
 			{
 				//float Rx = 3.0;
 				float Rx = laceRadius;
-				ClipperLib::Path newPath;
+				ClipperLibXYZ::Path newPath;
 				for (unsigned int i = 0; i < 100; i++)//Ë³Ê±ÕëÈ¡µã
 				{
 					float Angle = 2 * M_PIf * (i / 100.0);
@@ -209,7 +209,7 @@ namespace fmesh
 		}
 	}
 
-	float PointTOline(ClipperLib::IntPoint const& a, ClipperLib::IntPoint const& b, ClipperLib::IntPoint const& p) {
+	float PointTOline(ClipperLibXYZ::IntPoint const& a, ClipperLibXYZ::IntPoint const& b, ClipperLibXYZ::IntPoint const& p) {
 		double ap_ab = (b.X - a.X) * (p.X - a.X) + (b.Y - a.Y) * (p.Y - a.Y);//cross( a , p , b );
 		if (ap_ab <= 0)
 			return sqrt((p.X - a.X) * (p.X - a.X) + (p.Y - a.Y) * (p.Y - a.Y));
@@ -223,13 +223,13 @@ namespace fmesh
 		return sqrt((p.X - px) * (p.X - px) + (p.Y - py) * (p.Y - py));
 	}
 
-	float getMinLen(const ClipperLib::Paths& paths, const ClipperLib::IntPoint point)
+	float getMinLen(const ClipperLibXYZ::Paths& paths, const ClipperLibXYZ::IntPoint point)
 	{
 		if (paths.size() < 1 && paths[0].size() < 2)
 			return 0.0;
 
 		float ans1 = PointTOline(paths[0][0], paths[0][1], point);
-		for (ClipperLib::Path path : paths)
+		for (ClipperLibXYZ::Path path : paths)
 		{
 			for (int i = 0; i < path.size() - 1; i++)
 			{
@@ -239,7 +239,7 @@ namespace fmesh
 		return ans1;
 	}
 
-	float optimizePaths(ClipperLib::Paths& paths, ClipperLib::Paths& pathOrigin)
+	float optimizePaths(ClipperLibXYZ::Paths& paths, ClipperLibXYZ::Paths& pathOrigin)
 	{
 		std::vector<std::vector<float>> pathsValue;
 		pathsValue.resize(paths.size());
@@ -293,10 +293,10 @@ namespace fmesh
 		return len;
 	}
 
-	aabb getAABB(ClipperLib::Path* path)
+	aabb getAABB(ClipperLibXYZ::Path* path)
 	{
 		aabb _aabb;
-		for (const ClipperLib::IntPoint& p : *path)
+		for (const ClipperLibXYZ::IntPoint& p : *path)
 		{
 			if (_aabb.pMax.X < p.X)
 				_aabb.pMax.X = p.X;
@@ -313,12 +313,12 @@ namespace fmesh
 		return _aabb;
 	}
 
-	ClipperLib::IntPoint getAABBvalue(ClipperLib::PolyTree* poly, int flag = 0)
+	ClipperLibXYZ::IntPoint getAABBvalue(ClipperLibXYZ::PolyTree* poly, int flag = 0)
 	{
 		aabb _aabb;
-		polyNodeFunc func = [&func, &_aabb, &flag](ClipperLib::PolyNode* node) {
+		polyNodeFunc func = [&func, &_aabb, &flag](ClipperLibXYZ::PolyNode* node) {
 
-			for (ClipperLib::PolyNode* n : node->Childs)
+			for (ClipperLibXYZ::PolyNode* n : node->Childs)
 			{
 				if (n->Contour.size() > 0)
 				{
@@ -327,7 +327,7 @@ namespace fmesh
 						|| box.pMax.Y - box.pMmin.Y > _aabb.pMax.Y - _aabb.pMmin.Y)
 					{
 						_aabb = box;
-						return ClipperLib::IntPoint(_aabb.pMax.X - _aabb.pMmin.X, _aabb.pMax.Y - _aabb.pMmin.Y);
+						return ClipperLibXYZ::IntPoint(_aabb.pMax.X - _aabb.pMmin.X, _aabb.pMax.Y - _aabb.pMmin.Y);
 					}
 				}
 				func(n);
@@ -335,7 +335,7 @@ namespace fmesh
 		};
 
 		func(poly);
-		return ClipperLib::IntPoint(_aabb.pMax.X - _aabb.pMmin.X, _aabb.pMax.Y - _aabb.pMmin.Y);
+		return ClipperLibXYZ::IntPoint(_aabb.pMax.X - _aabb.pMmin.X, _aabb.pMax.Y - _aabb.pMmin.Y);
 	}
 
 

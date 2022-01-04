@@ -1,6 +1,6 @@
 #include "drumgenerator.h"
 #include "fmesh/contour/contour.h"
-#include <clipper/clipper.hpp>
+#include "clipperxyz/clipper.hpp"
 #include "fmesh/clipper/circurlar.h"
 #include "specialpoly.h"
 #include <cmath>
@@ -20,7 +20,7 @@ namespace fmesh
 
 	void DrumGenerator::build()
 	{
-		std::vector<ClipperLib::PolyTree> middlePolys;
+		std::vector<ClipperLibXYZ::PolyTree> middlePolys;
 		buildMiddle(middlePolys);
 		if (middlePolys.size())
 			_buildTopBottomDiff(&middlePolys.front(), nullptr);
@@ -28,22 +28,22 @@ namespace fmesh
 
 	void DrumGenerator::buildShell()
 	{
-		std::vector<ClipperLib::PolyTree> middlePolys;
+		std::vector<ClipperLibXYZ::PolyTree> middlePolys;
 		buildMiddle(middlePolys,true);
 		if (middlePolys.size())
 			_buildTopBottom_onepoly(&middlePolys.front(), nullptr);
 	}
 
-	void DrumGenerator::buildBoard(ClipperLib::PolyTree& topTree, ClipperLib::PolyTree& bottomTree)
+	void DrumGenerator::buildBoard(ClipperLibXYZ::PolyTree& topTree, ClipperLibXYZ::PolyTree& bottomTree)
 	{
-		std::vector<ClipperLib::PolyTree> middlePolys;
+		std::vector<ClipperLibXYZ::PolyTree> middlePolys;
 		buildMiddle(middlePolys, true);
 		//_buildBoardPoly(&bottomTree);
 		if (middlePolys.size())
 			offsetPolyType(middlePolys.front(), m_adParam.exoprtParam.bottom_offset, bottomTree, m_adParam.bluntSharpCorners);
 	}
 
-	void DrumGenerator::buildMiddle(std::vector<ClipperLib::PolyTree>& middlePolys, bool onePloy)
+	void DrumGenerator::buildMiddle(std::vector<ClipperLibXYZ::PolyTree>& middlePolys, bool onePloy)
 	{
 		double thickness = m_adParam.extend_width / 2.0;
 
@@ -71,8 +71,8 @@ namespace fmesh
 			}
 			if (i>1)
 			{
-				ClipperLib::IntPoint P = getAABBvalue(&middlePolys.at(i));
-				ClipperLib::IntPoint P1 = getAABBvalue(&middlePolys.at(i - 1));
+				ClipperLibXYZ::IntPoint P = getAABBvalue(&middlePolys.at(i));
+				ClipperLibXYZ::IntPoint P1 = getAABBvalue(&middlePolys.at(i - 1));
 				int _lastvalueX = std::abs(P.X - P1.X);
 				int _lastvalueY = std::abs(P.Y - P1.Y);
 				if (P.X < P1.X *2/3 || P.Y < P1.Y * 2 / 3)
@@ -156,22 +156,22 @@ namespace fmesh
 	}
 
 /*
-	void DrumGenerator::buildMiddle(std::vector<ClipperLib::PolyTree>& middlePolys, bool onePloy)
+	void DrumGenerator::buildMiddle(std::vector<ClipperLibXYZ::PolyTree>& middlePolys, bool onePloy)
 	{
-		ClipperLib::Path* path = new ClipperLib::Path;
-		ClipperLib::PolyTree pskeleton;
+		ClipperLibXYZ::Path* path = new ClipperLibXYZ::Path;
+		ClipperLibXYZ::PolyTree pskeleton;
 		copy2PolyTree(m_poly, pskeleton);
 		mmesh::skeletonPoints(&pskeleton, path);
-		ClipperLib::Paths paths;
+		ClipperLibXYZ::Paths paths;
 		sortPath(path, &paths,true);
 		//origin
-		ClipperLib::Paths pathOrigin;
-		ClipperLib::PolyTreeToPaths(m_poly, pathOrigin);	
+		ClipperLibXYZ::Paths pathOrigin;
+		ClipperLibXYZ::PolyTreeToPaths(m_poly, pathOrigin);	
 		float len = optimizePaths(paths, pathOrigin)/1000.00f;
 
 		float thickness = m_adParam.extend_width / 2.0;
 
-		ClipperLib::PolyTree poly;
+		ClipperLibXYZ::PolyTree poly;
 		m_poly.Clear();
 		extendPolyTreeOpen(paths, (thickness * 2 + len), m_poly);
 
@@ -212,9 +212,9 @@ namespace fmesh
 	}
 */
 /*
-void DrumGenerator::buildMiddle(std::vector<ClipperLib::PolyTree>& middlePolys, bool onePloy)
+void DrumGenerator::buildMiddle(std::vector<ClipperLibXYZ::PolyTree>& middlePolys, bool onePloy)
 {
-	ClipperLib::PolyTree skeletonpoly;
+	ClipperLibXYZ::PolyTree skeletonpoly;
 	//offsetPolyTreeMiter(m_poly, -1, _skeletonpoly);
 	double thickness = m_adParam.extend_width / 2.0;
 	double len = skeletonPoly(m_poly, skeletonpoly, thickness);

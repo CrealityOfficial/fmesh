@@ -1,13 +1,13 @@
 #ifndef CDRDXF_BUILDER_1605518188021_H
 #define CDRDXF_BUILDER_1605518188021_H
 #include "fmesh/common/point.h"
-#include <clipper/clipper.hpp>
+#include "clipperxyz/clipper.hpp"
 #include <vector>
 
 namespace cdrdxf
 {
 	struct DXFSpline;
-	void convert(DXFSpline* spline, ClipperLib::Path* path);
+	void convert(DXFSpline* spline, ClipperLibXYZ::Path* path);
 	void rbspline(size_t nCtrls, size_t order, size_t n,
 		const std::vector<Point>& ctrlPoints,
 		const std::vector<double>& h,

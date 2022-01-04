@@ -1,6 +1,6 @@
 #ifndef _FONTOUTLINECENTER_1603209926789_H
 #define _FONTOUTLINECENTER_1603209926789_H
-#include <clipper/clipper.hpp>
+#include "clipperxyz/clipper.hpp"
 #include "fmesh/common/export.h"
 
 namespace fmesh
@@ -18,9 +18,9 @@ namespace fmesh
 		bool loadAbs(const std::string& name);
 		void setCurrent(const std::string& name);
 
-		ClipperLib::PolyTree* get(int charCode);
-		ClipperLib::Paths* getPath(int charCode, double expectLen = 50.0,const int simpleRatio = 30);
-		ClipperLib::Paths* getPath(const std::string& font, int charCode, double expectLen = 50);
+		ClipperLibXYZ::PolyTree* get(int charCode);
+		ClipperLibXYZ::Paths* getPath(int charCode, double expectLen = 50.0,const int simpleRatio = 30);
+		ClipperLibXYZ::Paths* getPath(const std::string& font, int charCode, double expectLen = 50);
 
 		void addSearchPath(const std::string& dir);
 	protected:

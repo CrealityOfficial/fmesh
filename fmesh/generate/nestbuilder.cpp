@@ -6,7 +6,7 @@
 
 namespace fmesh
 {
-	trimesh::TriMesh* nestBuild(ClipperLib::Paths* paths)
+	trimesh::TriMesh* nestBuild(ClipperLibXYZ::Paths* paths)
 	{
 		SlotGenerator generator1;
 		SimpleGenerator generator2;
@@ -24,10 +24,10 @@ namespace fmesh
 		param2.bottom_height = 0.2f;
 		param2.bottom_type = ADBottomType::adbt_close;
 		float gap = 0.3f;
-		ClipperLib::Paths outer, inner;
+		ClipperLibXYZ::Paths outer, inner;
 
-		ClipperLib::ClipperOffset offset;
-		offset.AddPaths(*paths, ClipperLib::jtMiter, ClipperLib::EndType::etClosedPolygon);
+		ClipperLibXYZ::ClipperOffset offset;
+		offset.AddPaths(*paths, ClipperLibXYZ::jtMiter, ClipperLibXYZ::EndType::etClosedPolygon);
 		offset.Execute(outer, (param1.extend_width / 2.0f) * 1000.0);
 		offset.Execute(inner, -(param2.extend_width / 2.0f + gap) * 1000.0);
 

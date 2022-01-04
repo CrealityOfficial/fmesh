@@ -14,7 +14,7 @@ namespace fmesh
 
 	void DrumedgeDoubleGenerator::build()
 	{
-		std::vector<ClipperLib::PolyTree> middlePolys;
+		std::vector<ClipperLibXYZ::PolyTree> middlePolys;
 		buildMiddle(middlePolys);
 		if (middlePolys.size())
 			_buildTopBottomDiff(&middlePolys.front(), &middlePolys.back());
@@ -22,15 +22,15 @@ namespace fmesh
 
 	void DrumedgeDoubleGenerator::buildShell()
 	{
-		std::vector<ClipperLib::PolyTree> middlePolys;
+		std::vector<ClipperLibXYZ::PolyTree> middlePolys;
 		buildMiddle(middlePolys, true);
 		if (middlePolys.size())
 			_buildTopBottom_onepoly(&middlePolys.front(), &middlePolys.back());
 	}
 
-	void DrumedgeDoubleGenerator::buildBoard(ClipperLib::PolyTree& topTree, ClipperLib::PolyTree& bottomTree)
+	void DrumedgeDoubleGenerator::buildBoard(ClipperLibXYZ::PolyTree& topTree, ClipperLibXYZ::PolyTree& bottomTree)
 	{
-		std::vector<ClipperLib::PolyTree> middlePolys;
+		std::vector<ClipperLibXYZ::PolyTree> middlePolys;
 		buildMiddle(middlePolys, true);
 
 		if (middlePolys.size())
@@ -40,7 +40,7 @@ namespace fmesh
 		}
 	}
 
-	void DrumedgeDoubleGenerator::buildMiddle(std::vector<ClipperLib::PolyTree>& middlePolys, bool onePloy)
+	void DrumedgeDoubleGenerator::buildMiddle(std::vector<ClipperLibXYZ::PolyTree>& middlePolys, bool onePloy)
 	{
 		//initTestData()
 

@@ -1,8 +1,4 @@
 #include "CDR2externalInterface.h"
-//#include <librevenge/librevenge.h>
-//#include <librevenge-generators/librevenge-generators.h>
-//#include <librevenge-stream/librevenge-stream.h>
-//#include <libcdr/libcdr.h>
 
 #include "rapidjson/stringbuffer.h"
 #include "rapidjson/document.h"     // rapidjson's DOM-style API
@@ -144,13 +140,13 @@ namespace CDRUSERINTERFACE
 
 		return outputObj;
 	}
-	void ArcToPoint(ARC_PARAM arcParam, ClipperLib::Path *pointPath)
+	void ArcToPoint(ARC_PARAM arcParam, ClipperLibXYZ::Path *pointPath)
 	{
 
-		ClipperLib::IntPoint pointValue = { 0,0 };
+		ClipperLibXYZ::IntPoint pointValue = { 0,0 };
 		for (int index = 0; index < 72; index ++ )
 		{
-		ClipperLib::DoublePoint pointValueD = { 0,0 };
+		ClipperLibXYZ::DoublePoint pointValueD = { 0,0 };
 		double anglevalue = 0.0;
 		double deltaAngle = index*(PI / 180) * 5;
 		if ((deltaAngle - (PI / 180) * 5)> std::abs(arcParam.deltaAngle))
@@ -163,7 +159,7 @@ namespace CDRUSERINTERFACE
 			anglevalue = arcParam.startAngle + deltaAngle;
 		//if (anglevalue < arcParam.endAngle)
 		{
-			ClipperLib::DoublePoint pointValueD_Rotation = { 0,0 };
+			ClipperLibXYZ::DoublePoint pointValueD_Rotation = { 0,0 };
 			double XbaseAngle = 0;
 			if(arcParam.clockwise==0)
 				 XbaseAngle = -arcParam.XbaseAngle;
@@ -186,7 +182,7 @@ namespace CDRUSERINTERFACE
 		//const char* file_name = "out_ok.json";
 		RAPIDJSON_NAMESPACE::Document dom;
 		int retvalue = 0;
-		ClipperLib::Paths* m_Pathstemp = new ClipperLib::Paths();
+		ClipperLibXYZ::Paths* m_Pathstemp = new ClipperLibXYZ::Paths();
 
 		if (Jsonbuff == NULL)
 		{
@@ -223,7 +219,7 @@ namespace CDRUSERINTERFACE
 				{
 
 					const rapidjson::Value& objfirst = dom[pathIndexStr];
-					ClipperLib::Path dPath;
+					ClipperLibXYZ::Path dPath;
 
 					if (objfirst.HasMember("LevelTotal") && objfirst["LevelTotal"].IsInt()) {
 						LevelTotal = objfirst["LevelTotal"].GetInt();
@@ -233,12 +229,12 @@ namespace CDRUSERINTERFACE
 					}
 					else
 						return -1;
-					ClipperLib::DoublePoint movePointValue = { 0,0 };
+					ClipperLibXYZ::DoublePoint movePointValue = { 0,0 };
 					for (int levelindex = 0; levelindex < LevelTotal; levelindex++)
 					{
 						char LevelIndexStr[64];
 						bool pointAvalible = false;
-						ClipperLib::IntPoint pointValue = { 0,0 };
+						ClipperLibXYZ::IntPoint pointValue = { 0,0 };
 						memset(LevelIndexStr, sizeof(LevelIndexStr), 0x00);
 						sprintf(LevelIndexStr, "LevelIndex%d", levelindex);
 						#ifdef ENBALE_JSON_DEBUG
@@ -300,7 +296,7 @@ namespace CDRUSERINTERFACE
 									std::cout << "no deal type(Q)=" << arr[i].GetDouble() << std::endl;
 								}
 								
-								ClipperLib::DoublePoint pointValueTmp[3];
+								ClipperLibXYZ::DoublePoint pointValueTmp[3];
 								pointValueTmp[0].X =  movePointValue.X;
 								pointValueTmp[0].Y =  movePointValue.Y;
 								pointValueTmp[1].X =(arr[0].GetDouble());
@@ -324,7 +320,7 @@ namespace CDRUSERINTERFACE
 									std::cout << "type(C)=" << arr[i].GetDouble() << std::endl;
 								}
 								#endif
-								ClipperLib::DoublePoint pointValueTmp[4];
+								ClipperLibXYZ::DoublePoint pointValueTmp[4];
 								pointValueTmp[0].X =  movePointValue.X;
 								pointValueTmp[0].Y =  movePointValue.Y;
 								pointValueTmp[1].X =(arr[0].GetDouble());
@@ -366,8 +362,8 @@ namespace CDRUSERINTERFACE
 								std::cout << "type(Z)=" << objsecond["Z"].GetInt() << std::endl;
 								if (dPath.size() > 1)
 								{
-									ClipperLib::IntPoint startvalue = dPath.at(0);
-									ClipperLib::IntPoint endvalue = dPath.at(dPath.size()-1);
+									ClipperLibXYZ::IntPoint startvalue = dPath.at(0);
+									ClipperLibXYZ::IntPoint endvalue = dPath.at(dPath.size()-1);
 									if(startvalue.X != endvalue.X|| startvalue.Y != endvalue.Y)
 										dPath.push_back(startvalue);
 									m_Pathstemp->push_back(dPath);
@@ -441,12 +437,12 @@ namespace CDRUSERINTERFACE
 	{
 		return 0;
 	}
-	ClipperLib::Path CDR_USER_OBJ::DrawBzier(ClipperLib::DoublePoint *pointValue,int pointsize, ClipperLib::Path & dPath)
+	ClipperLibXYZ::Path CDR_USER_OBJ::DrawBzier(ClipperLibXYZ::DoublePoint *pointValue,int pointsize, ClipperLibXYZ::Path & dPath)
 	{
 		std::cout << "DrawBzier()" << std::endl;
 		if (pointsize == 3)
 		{
-			ClipperLib::DoublePoint tempvalue = { 0.0,0.0 };
+			ClipperLibXYZ::DoublePoint tempvalue = { 0.0,0.0 };
 			int MaxValue = 100.0;
 			double deltValue = 0.01;
 			deltValue = (1.0 / MaxValue);
@@ -460,13 +456,13 @@ namespace CDRUSERINTERFACE
 				//FT_Temp.y = vctCTemp[0].y * pow(1 - t, 3) + vctCTemp[1].y * t * pow(1 - t, 2) * 3 + vctCTemp[2].y * pow(t, 2)*(1 - t) * 3 + vctCTemp[3].y * pow(t, 3);
 
 				//std::cout<<"DrawBzier(x,y)=="<<"("<<tempvalue.X<<","<<tempvalue.Y<<")"<<std::endl;
-				dPath.push_back(ClipperLib::IntPoint(tempvalue.X * SCALE_FACTOR, tempvalue.Y * SCALE_FACTOR));
+				dPath.push_back(ClipperLibXYZ::IntPoint(tempvalue.X * SCALE_FACTOR, tempvalue.Y * SCALE_FACTOR));
 
 			}
 		}
 		else if(pointsize == 4)
 		{
-			ClipperLib::DoublePoint tempvalue = { 0.0,0.0 };
+			ClipperLibXYZ::DoublePoint tempvalue = { 0.0,0.0 };
 			int MaxValue = 10.0;
 			double deltValue = 0.01;
 			deltValue = (1.0 / MaxValue);
@@ -479,7 +475,7 @@ namespace CDRUSERINTERFACE
 				tempvalue.Y = (pointValue + 0)->Y * pow(1 - t, 3) + (pointValue + 1)->Y * t * pow(1 - t, 2) * 3 + (pointValue + 2)->Y * pow(t, 2)*(1 - t) * 3 + (pointValue + 3)->Y * pow(t, 3);
 
 				//std::cout<<"DrawBzier(x,y)=="<<"("<<tempvalue.X<<","<<tempvalue.Y<<")"<<std::endl;
-				dPath.push_back(ClipperLib::IntPoint(tempvalue.X * SCALE_FACTOR, tempvalue.Y * SCALE_FACTOR));
+				dPath.push_back(ClipperLibXYZ::IntPoint(tempvalue.X * SCALE_FACTOR, tempvalue.Y * SCALE_FACTOR));
 
 			}
 		}

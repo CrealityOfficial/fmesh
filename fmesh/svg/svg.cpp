@@ -30,9 +30,9 @@ Type stringToNum(const string& str)
 
 svg::svg()
 {
-	m_paths = new ClipperLib::Paths();
+	m_paths = new ClipperLibXYZ::Paths();
 	m_BezierPoint.first = false;
-	m_BezierPoint.second = ClipperLib::DoublePoint(0, 0);
+	m_BezierPoint.second = ClipperLibXYZ::DoublePoint(0, 0);
 	m_scaleX = 1.0;
 	m_scaleY = 1.0;
 	m_currentMatrix3x3[3][3] = { 0 };
@@ -350,11 +350,11 @@ void svg::pauseSVG(TiXmlElement* root)
 
 void svg::pauseRect(float width, float height, float leftTopX, float leftTopY)
 {
-	vector<ClipperLib::DoublePoint> vctDoublePoint;
-	ClipperLib::DoublePoint PointTopLeft;
-	ClipperLib::DoublePoint PointTopRight;
-	ClipperLib::DoublePoint PointBottomLeft;
-	ClipperLib::DoublePoint PointBottomRight;
+	vector<ClipperLibXYZ::DoublePoint> vctDoublePoint;
+	ClipperLibXYZ::DoublePoint PointTopLeft;
+	ClipperLibXYZ::DoublePoint PointTopRight;
+	ClipperLibXYZ::DoublePoint PointBottomLeft;
+	ClipperLibXYZ::DoublePoint PointBottomRight;
 
 	PointTopLeft.X = leftTopX* m_scaleX;
 	PointTopLeft.Y = leftTopY * m_scaleY;
@@ -377,9 +377,9 @@ void svg::pauseRect(float width, float height, float leftTopX, float leftTopY)
 
 void svg::pauseLine(float x1, float y1, float x2, float y2)
 {
-	vector<ClipperLib::DoublePoint> vctDoublePoint;
-	ClipperLib::DoublePoint startPoint;
-	ClipperLib::DoublePoint endPoint;
+	vector<ClipperLibXYZ::DoublePoint> vctDoublePoint;
+	ClipperLibXYZ::DoublePoint startPoint;
+	ClipperLibXYZ::DoublePoint endPoint;
 	startPoint.X = x1;
 	startPoint.Y = y1;
 	endPoint.X = x2;
@@ -391,7 +391,7 @@ void svg::pauseLine(float x1, float y1, float x2, float y2)
 
 void svg::pauseEllipse(float Cx, float Cy, float Rx, float Ry, float precision)
 {
-	vector<ClipperLib::DoublePoint> vctDoublePoint;
+	vector<ClipperLibXYZ::DoublePoint> vctDoublePoint;
 	for (unsigned int i = 0; i < precision; i++)//Ë³Ê±ÕëÈ¡µã
 	{
 		double Angle = 2*PI * (i / precision);
@@ -405,7 +405,7 @@ void svg::pauseEllipse(float Cx, float Cy, float Rx, float Ry, float precision)
 
 void svg::pausePolyline(string strPoints)
 {
-	vector<ClipperLib::DoublePoint> vctDoublePoint;
+	vector<ClipperLibXYZ::DoublePoint> vctDoublePoint;
 	vector<std::string> VctPoint;
 	vector<std::string> VctS = { " ","," };
 	SplitStringS(strPoints, VctPoint, VctS);
@@ -422,7 +422,7 @@ void svg::pausePolyline(string strPoints)
 
 void svg::pausePolygon(string strPoints)
 {
-	vector<ClipperLib::DoublePoint> vctDoublePoint;
+	vector<ClipperLibXYZ::DoublePoint> vctDoublePoint;
 	std::vector<std::string> Vctdest;
 	SplitString(strPoints, Vctdest," ");
 	for (std::string strTemp : Vctdest)
@@ -442,7 +442,7 @@ void svg::pausePolygon(string strPoints)
 
 void svg::pausePath(string strPath)
 {
-	vector<ClipperLib::DoublePoint> vctDoublePoint;
+	vector<ClipperLibXYZ::DoublePoint> vctDoublePoint;
 	vector<string> vctString;
 	bool flagBegin = false;
 	string strTemp;
@@ -554,7 +554,7 @@ void svg::pausePath(string strPath)
 	}
 }
 
-void svg::pausePathMm(string stringPoint, vector<ClipperLib::DoublePoint>& vctDoublePoint)
+void svg::pausePathMm(string stringPoint, vector<ClipperLibXYZ::DoublePoint>& vctDoublePoint)
 {
 	if (stringPoint.substr(0, 1) == "M")
 	{
@@ -595,7 +595,7 @@ void svg::pausePathMm(string stringPoint, vector<ClipperLib::DoublePoint>& vctDo
 	savePenultPoint();
 }
 
-void svg::pausePathLl(string stringPoint, vector<ClipperLib::DoublePoint>& vctDoublePoint)
+void svg::pausePathLl(string stringPoint, vector<ClipperLibXYZ::DoublePoint>& vctDoublePoint)
 {
 	if (stringPoint.substr(0, 1) == "L")
 	{
@@ -636,7 +636,7 @@ void svg::pausePathLl(string stringPoint, vector<ClipperLib::DoublePoint>& vctDo
 	savePenultPoint();
 }
 
-void svg::pausePathHh(string stringPoint, vector<ClipperLib::DoublePoint>& vctDoublePoint)
+void svg::pausePathHh(string stringPoint, vector<ClipperLibXYZ::DoublePoint>& vctDoublePoint)
 {
 	if (stringPoint.substr(0, 1) == "H")
 	{
@@ -676,7 +676,7 @@ void svg::pausePathHh(string stringPoint, vector<ClipperLib::DoublePoint>& vctDo
 	savePenultPoint();
 }
 
-void svg::pausePathVv(string stringPoint, vector<ClipperLib::DoublePoint>& vctDoublePoint)
+void svg::pausePathVv(string stringPoint, vector<ClipperLibXYZ::DoublePoint>& vctDoublePoint)
 {
 	if (stringPoint.substr(0, 1) == "V")
 	{
@@ -716,7 +716,7 @@ void svg::pausePathVv(string stringPoint, vector<ClipperLib::DoublePoint>& vctDo
 	savePenultPoint();
 }
 
-void svg::pausePathCc(string stringPoint, vector<ClipperLib::DoublePoint>& vctDoublePoint)
+void svg::pausePathCc(string stringPoint, vector<ClipperLibXYZ::DoublePoint>& vctDoublePoint)
 {
 	if (stringPoint.substr(0, 1) == "C")
 	{
@@ -740,10 +740,10 @@ void svg::pausePathCc(string stringPoint, vector<ClipperLib::DoublePoint>& vctDo
 	SplitStringS(stringPoint, VctPoint, VctS);
 	for (int n=5; n < VctPoint.size(); n += 6)
 	{
-		ClipperLib::DoublePoint bezierStart = m_currentPosition;
+		ClipperLibXYZ::DoublePoint bezierStart = m_currentPosition;
 		if (m_isBigchars)
 		{
-			vector<ClipperLib::DoublePoint> vctBasePoint;
+			vector<ClipperLibXYZ::DoublePoint> vctBasePoint;
 			vctBasePoint.push_back(m_currentPosition);
 			m_currentPosition.X = atof(VctPoint[n-5].data()) * m_scaleX;
 			m_currentPosition.Y = -atof(VctPoint[n-4].data()) * m_scaleY;
@@ -756,7 +756,7 @@ void svg::pausePathCc(string stringPoint, vector<ClipperLib::DoublePoint>& vctDo
 			vctBasePoint.push_back(m_currentPosition);
 			for (int tm = 1; tm <= 50; tm++)
 			{
-				ClipperLib::DoublePoint FT_Temp;
+				ClipperLibXYZ::DoublePoint FT_Temp;
 				float t = tm / 50.0;
 				FT_Temp.X = vctBasePoint[0].X * pow(1 - t, 3) + vctBasePoint[1].X * t * pow(1 - t, 2) * 3 + vctBasePoint[2].X * pow(t, 2) * (1 - t) * 3 + vctBasePoint[3].X * pow(t, 3);
 				FT_Temp.Y = vctBasePoint[0].Y * pow(1 - t, 3) + vctBasePoint[1].Y * t * pow(1 - t, 2) * 3 + vctBasePoint[2].Y * pow(t, 2) * (1 - t) * 3 + vctBasePoint[3].Y * pow(t, 3);
@@ -767,7 +767,7 @@ void svg::pausePathCc(string stringPoint, vector<ClipperLib::DoublePoint>& vctDo
 		}
 		else
 		{
-			vector<ClipperLib::DoublePoint> vctBasePoint;
+			vector<ClipperLibXYZ::DoublePoint> vctBasePoint;
 			vctBasePoint.push_back(m_currentPosition);
 			m_currentPosition.X = bezierStart.X + atof(VctPoint[n - 5].data()) * m_scaleX;
 			m_currentPosition.Y = bezierStart.Y -atof(VctPoint[n - 4].data()) * m_scaleY;
@@ -780,7 +780,7 @@ void svg::pausePathCc(string stringPoint, vector<ClipperLib::DoublePoint>& vctDo
 			vctBasePoint.push_back(m_currentPosition);
 			for (int tm = 1; tm <= 50; tm++)
 			{
-				ClipperLib::DoublePoint FT_Temp;
+				ClipperLibXYZ::DoublePoint FT_Temp;
 				float t = tm / 50.0;
 				FT_Temp.X = vctBasePoint[0].X * pow(1 - t, 3) + vctBasePoint[1].X * t * pow(1 - t, 2) * 3 + vctBasePoint[2].X * pow(t, 2) * (1 - t) * 3 + vctBasePoint[3].X * pow(t, 3);
 				FT_Temp.Y = vctBasePoint[0].Y * pow(1 - t, 3) + vctBasePoint[1].Y * t * pow(1 - t, 2) * 3 + vctBasePoint[2].Y * pow(t, 2) * (1 - t) * 3 + vctBasePoint[3].Y * pow(t, 3);
@@ -793,7 +793,7 @@ void svg::pausePathCc(string stringPoint, vector<ClipperLib::DoublePoint>& vctDo
 	}
 }
 
-void svg::pausePathQq(string stringPoint, vector<ClipperLib::DoublePoint>& vctDoublePoint)
+void svg::pausePathQq(string stringPoint, vector<ClipperLibXYZ::DoublePoint>& vctDoublePoint)
 {
 	if (stringPoint.substr(0, 1) == "Q")
 	{
@@ -820,7 +820,7 @@ void svg::pausePathQq(string stringPoint, vector<ClipperLib::DoublePoint>& vctDo
 	{
 		if (m_isBigchars)
 		{
-			vector<ClipperLib::DoublePoint> vctBasePoint;
+			vector<ClipperLibXYZ::DoublePoint> vctBasePoint;
 			vctBasePoint.push_back(m_currentPosition);
 			m_currentPosition.X = atof(VctPoint[n-3].data()) * m_scaleX;
 			m_currentPosition.Y = -atof(VctPoint[n-2].data()) * m_scaleY;
@@ -830,7 +830,7 @@ void svg::pausePathQq(string stringPoint, vector<ClipperLib::DoublePoint>& vctDo
 			vctBasePoint.push_back(m_currentPosition);
 			for (int tm = 1; tm <= 50; tm++)
 			{
-				ClipperLib::DoublePoint FT_Temp;
+				ClipperLibXYZ::DoublePoint FT_Temp;
 				float t = tm / 50.0;
 				FT_Temp.X = vctBasePoint[0].X * pow(1 - t, 2) + 2 * t * (1 - t) * vctBasePoint[1].X + pow(t, 2) * vctBasePoint[2].X;
 				FT_Temp.Y = vctBasePoint[0].Y * pow(1 - t, 2) + 2 * t * (1 - t) * vctBasePoint[1].Y + pow(t, 2) * vctBasePoint[2].Y;
@@ -841,8 +841,8 @@ void svg::pausePathQq(string stringPoint, vector<ClipperLib::DoublePoint>& vctDo
 		}
 		else
 		{
-			ClipperLib::DoublePoint bezierStart = m_currentPosition;
-			vector<ClipperLib::DoublePoint> vctBasePoint;
+			ClipperLibXYZ::DoublePoint bezierStart = m_currentPosition;
+			vector<ClipperLibXYZ::DoublePoint> vctBasePoint;
 			vctBasePoint.push_back(m_currentPosition);
 			m_currentPosition.X = bezierStart.X + atof(VctPoint[n - 3].data()) * m_scaleX;
 			m_currentPosition.Y = bezierStart.Y -atof(VctPoint[n - 2].data()) * m_scaleY;
@@ -852,7 +852,7 @@ void svg::pausePathQq(string stringPoint, vector<ClipperLib::DoublePoint>& vctDo
 			vctBasePoint.push_back(m_currentPosition);
 			for (int tm = 1; tm <= 50; tm++)
 			{
-				ClipperLib::DoublePoint FT_Temp;
+				ClipperLibXYZ::DoublePoint FT_Temp;
 				float t = tm / 50.0;
 				FT_Temp.X = vctBasePoint[0].X * pow(1 - t, 2) + 2 * t * (1 - t) * vctBasePoint[1].X + pow(t, 2) * vctBasePoint[2].X;
 				FT_Temp.Y = vctBasePoint[0].Y * pow(1 - t, 2) + 2 * t * (1 - t) * vctBasePoint[1].Y + pow(t, 2) * vctBasePoint[2].Y;
@@ -865,7 +865,7 @@ void svg::pausePathQq(string stringPoint, vector<ClipperLib::DoublePoint>& vctDo
 	}
 }
 
-void svg::pausePathTt(string stringPoint, vector<ClipperLib::DoublePoint>& vctDoublePoint)
+void svg::pausePathTt(string stringPoint, vector<ClipperLibXYZ::DoublePoint>& vctDoublePoint)
 {
 	if (stringPoint.substr(0, 1) == "T")
 	{
@@ -889,10 +889,10 @@ void svg::pausePathTt(string stringPoint, vector<ClipperLib::DoublePoint>& vctDo
 	SplitStringS(stringPoint, VctPoint, VctS);
 	for (int n = 1; n < VctPoint.size(); n += 2)
 	{
-		ClipperLib::DoublePoint bezierStart = m_currentPosition;
+		ClipperLibXYZ::DoublePoint bezierStart = m_currentPosition;
 		if (m_isBigchars)
 		{
-			vector<ClipperLib::DoublePoint> vctBasePoint;
+			vector<ClipperLibXYZ::DoublePoint> vctBasePoint;
 			if (m_BezierPoint.first)
 			{
 				vctBasePoint.push_back(m_currentPosition);
@@ -911,7 +911,7 @@ void svg::pausePathTt(string stringPoint, vector<ClipperLib::DoublePoint>& vctDo
 			}
 			for (int tm = 1; tm <= 50; tm++)
 			{
-				ClipperLib::DoublePoint FT_Temp;
+				ClipperLibXYZ::DoublePoint FT_Temp;
 				float t = tm / 50.0;
 				FT_Temp.X = vctBasePoint[0].X * pow(1 - t, 2) + 2 * t * (1 - t) * vctBasePoint[1].X + pow(t, 2) * vctBasePoint[2].X;
 				FT_Temp.Y = vctBasePoint[0].Y * pow(1 - t, 2) + 2 * t * (1 - t) * vctBasePoint[1].Y + pow(t, 2) * vctBasePoint[2].Y;
@@ -922,8 +922,8 @@ void svg::pausePathTt(string stringPoint, vector<ClipperLib::DoublePoint>& vctDo
 		}
 		else
 		{
-			ClipperLib::DoublePoint bezierStart = m_currentPosition;
-			vector<ClipperLib::DoublePoint> vctBasePoint;
+			ClipperLibXYZ::DoublePoint bezierStart = m_currentPosition;
+			vector<ClipperLibXYZ::DoublePoint> vctBasePoint;
 			if (m_BezierPoint.first)
 			{
 				vctBasePoint.push_back(m_currentPosition);
@@ -942,7 +942,7 @@ void svg::pausePathTt(string stringPoint, vector<ClipperLib::DoublePoint>& vctDo
 			}
 			for (int tm = 1; tm <= 50; tm++)
 			{
-				ClipperLib::DoublePoint FT_Temp;
+				ClipperLibXYZ::DoublePoint FT_Temp;
 				float t = tm / 50.0;
 				FT_Temp.X = vctBasePoint[0].X * pow(1 - t, 2) + 2 * t * (1 - t) * vctBasePoint[1].X + pow(t, 2) * vctBasePoint[2].X;
 				FT_Temp.Y = vctBasePoint[0].Y * pow(1 - t, 2) + 2 * t * (1 - t) * vctBasePoint[1].Y + pow(t, 2) * vctBasePoint[2].Y;
@@ -955,7 +955,7 @@ void svg::pausePathTt(string stringPoint, vector<ClipperLib::DoublePoint>& vctDo
 	}
 }
 
-void svg::pausePathSs(string stringPoint, vector<ClipperLib::DoublePoint>& vctDoublePoint)
+void svg::pausePathSs(string stringPoint, vector<ClipperLibXYZ::DoublePoint>& vctDoublePoint)
 {
 	if (stringPoint.substr(0, 1) == "S")
 	{
@@ -979,10 +979,10 @@ void svg::pausePathSs(string stringPoint, vector<ClipperLib::DoublePoint>& vctDo
 	SplitStringS(stringPoint, VctPoint, VctS);
 	for (int n = 3; n < VctPoint.size(); n += 4)
 	{
-		ClipperLib::DoublePoint bezierStart = m_currentPosition;
+		ClipperLibXYZ::DoublePoint bezierStart = m_currentPosition;
 		if (m_isBigchars)
 		{
-			vector<ClipperLib::DoublePoint> vctBasePoint;
+			vector<ClipperLibXYZ::DoublePoint> vctBasePoint;
 			if (m_BezierPoint.first)
 			{
 				vctBasePoint.push_back(m_currentPosition);
@@ -1008,7 +1008,7 @@ void svg::pausePathSs(string stringPoint, vector<ClipperLib::DoublePoint>& vctDo
 			}
 			for (int tm = 1; tm <= 50; tm++)
 			{
-				ClipperLib::DoublePoint FT_Temp;
+				ClipperLibXYZ::DoublePoint FT_Temp;
 				float t = tm / 50.0;
 				FT_Temp.X = vctBasePoint[0].X * pow(1 - t, 3) + vctBasePoint[1].X * t * pow(1 - t, 2) * 3 + vctBasePoint[2].X * pow(t, 2) * (1 - t) * 3 + vctBasePoint[3].X * pow(t, 3);
 				FT_Temp.Y = vctBasePoint[0].Y * pow(1 - t, 3) + vctBasePoint[1].Y * t * pow(1 - t, 2) * 3 + vctBasePoint[2].Y * pow(t, 2) * (1 - t) * 3 + vctBasePoint[3].Y * pow(t, 3);
@@ -1019,8 +1019,8 @@ void svg::pausePathSs(string stringPoint, vector<ClipperLib::DoublePoint>& vctDo
 		}
 		else
 		{
-			ClipperLib::DoublePoint bezierStart = m_currentPosition;
-			vector<ClipperLib::DoublePoint> vctBasePoint;
+			ClipperLibXYZ::DoublePoint bezierStart = m_currentPosition;
+			vector<ClipperLibXYZ::DoublePoint> vctBasePoint;
 			if (m_BezierPoint.first)
 			{
 				vctBasePoint.push_back(m_currentPosition);
@@ -1046,7 +1046,7 @@ void svg::pausePathSs(string stringPoint, vector<ClipperLib::DoublePoint>& vctDo
 			}
 			for (int tm = 1; tm <= 50; tm++)
 			{
-				ClipperLib::DoublePoint FT_Temp;
+				ClipperLibXYZ::DoublePoint FT_Temp;
 				float t = tm / 50.0;
 				FT_Temp.X = vctBasePoint[0].X * pow(1 - t, 3) + vctBasePoint[1].X * t * pow(1 - t, 2) * 3 + vctBasePoint[2].X * pow(t, 2) * (1 - t) * 3 + vctBasePoint[3].X * pow(t, 3);
 				FT_Temp.Y = vctBasePoint[0].Y * pow(1 - t, 3) + vctBasePoint[1].Y * t * pow(1 - t, 2) * 3 + vctBasePoint[2].Y * pow(t, 2) * (1 - t) * 3 + vctBasePoint[3].Y * pow(t, 3);
@@ -1059,21 +1059,21 @@ void svg::pausePathSs(string stringPoint, vector<ClipperLib::DoublePoint>& vctDo
 	}
 }
 
-void svg::pausePathAa(string stringPoint, vector<ClipperLib::DoublePoint>& vctDoublePoint)
+void svg::pausePathAa(string stringPoint, vector<ClipperLibXYZ::DoublePoint>& vctDoublePoint)
 {
 	savePenultPoint();
 }
 
-ClipperLib::Path svg::DoublePoint2IntPoint(vector<ClipperLib::DoublePoint>& vctDoublePoint)
+ClipperLibXYZ::Path svg::DoublePoint2IntPoint(vector<ClipperLibXYZ::DoublePoint>& vctDoublePoint)
 {
-	ClipperLib::Path polygon;
+	ClipperLibXYZ::Path polygon;
 	for (int i = 0; i < vctDoublePoint.size(); i++)
 	{
 		size_t nSize = polygon.size();
 		polygon.emplace_back();
 
 		//m_currentMatrix3x3 ¾ØÕóÆ«ÒÆ
-		ClipperLib::DoublePoint dPoint;
+		ClipperLibXYZ::DoublePoint dPoint;
 		dPoint.X = m_currentMatrix3x3[0][0] * vctDoublePoint[i].X + m_currentMatrix3x3[0][1] * vctDoublePoint[i].Y + m_currentMatrix3x3[0][2];
 		dPoint.Y = m_currentMatrix3x3[1][0] * vctDoublePoint[i].X + m_currentMatrix3x3[1][1] * vctDoublePoint[i].Y + m_currentMatrix3x3[1][2];
 
@@ -1084,16 +1084,16 @@ ClipperLib::Path svg::DoublePoint2IntPoint(vector<ClipperLib::DoublePoint>& vctD
 	return polygon;
 }
 
-ClipperLib::Path svg::DoublePoint2IntPointEX(vector<ClipperLib::DoublePoint>& vctDoublePoint)
+ClipperLibXYZ::Path svg::DoublePoint2IntPointEX(vector<ClipperLibXYZ::DoublePoint>& vctDoublePoint)
 {
-	ClipperLib::Path polygon;
+	ClipperLibXYZ::Path polygon;
 	for (int i = 0; i < vctDoublePoint.size(); i++)
 	{
 		size_t nSize = polygon.size();
 		polygon.emplace_back();
 
 		//m_currentMatrix3x3 ¾ØÕóÆ«ÒÆ
-		ClipperLib::DoublePoint dPoint;
+		ClipperLibXYZ::DoublePoint dPoint;
 		dPoint.X = m_currentMatrix3x3[0][0] * vctDoublePoint[i].X + m_currentMatrix3x3[0][1] * vctDoublePoint[i].Y + m_currentMatrix3x3[0][2];
 		dPoint.Y = -m_currentMatrix3x3[1][0] * vctDoublePoint[i].X - m_currentMatrix3x3[1][1] * vctDoublePoint[i].Y - m_currentMatrix3x3[1][2];
 
@@ -1117,7 +1117,7 @@ bool svg::isSpechars(char chars)
 	}
 }
 
-void svg::savePenultPoint(ClipperLib::DoublePoint penultPoint, ClipperLib::DoublePoint endPoint, bool isBezier)
+void svg::savePenultPoint(ClipperLibXYZ::DoublePoint penultPoint, ClipperLibXYZ::DoublePoint endPoint, bool isBezier)
 {
 	m_BezierPoint.first = isBezier;
 	m_BezierPoint.second.X = endPoint.X * 2 - penultPoint.X;
@@ -1190,7 +1190,7 @@ void svg::SplitStringS(const std::string& Src, std::vector<std::string>& Vctdest
 	}
 }
 
-ClipperLib::Paths* svg::outputPaths()
+ClipperLibXYZ::Paths* svg::outputPaths()
 {
 	return m_paths;
 }

@@ -2,39 +2,39 @@
 
 namespace fmesh
 {
-	void loopPolyTree(polyNodeFunc func, ClipperLib::PolyNode* polyNode)
+	void loopPolyTree(polyNodeFunc func, ClipperLibXYZ::PolyNode* polyNode)
 	{
 		if (!polyNode) return;
 
-		polyNodeFunc cFunc = [&cFunc, &func](ClipperLib::PolyNode* node) {
+		polyNodeFunc cFunc = [&cFunc, &func](ClipperLibXYZ::PolyNode* node) {
 			func(node);
 
-			for (ClipperLib::PolyNode* n : node->Childs)
+			for (ClipperLibXYZ::PolyNode* n : node->Childs)
 				cFunc(n);
 		};
 
 		cFunc(polyNode);
 	}
 
-	void level2PolyNode(polyNodeFunc func, ClipperLib::PolyNode* polyNode)
+	void level2PolyNode(polyNodeFunc func, ClipperLibXYZ::PolyNode* polyNode)
 	{
 		if (!polyNode) return;
 
 		int index = 0;
-		polyNodeFunc cFunc = [&cFunc, &func](ClipperLib::PolyNode* node) {
+		polyNodeFunc cFunc = [&cFunc, &func](ClipperLibXYZ::PolyNode* node) {
 			func(node);
 
-			for (ClipperLib::PolyNode* n : node->Childs)
+			for (ClipperLibXYZ::PolyNode* n : node->Childs)
 				cFunc(n);
 		};
 
 		cFunc(polyNode);
 	}
 
-	void seperatePolyTree(ClipperLib::PolyTree* polyTree,
-		std::vector<ClipperLib::Path*>& exterior, std::vector<ClipperLib::Path*>& interior)
+	void seperatePolyTree(ClipperLibXYZ::PolyTree* polyTree,
+		std::vector<ClipperLibXYZ::Path*>& exterior, std::vector<ClipperLibXYZ::Path*>& interior)
 	{
-		polyNodeFunc func = [&func, &exterior, &interior](ClipperLib::PolyNode* node) {
+		polyNodeFunc func = [&func, &exterior, &interior](ClipperLibXYZ::PolyNode* node) {
 			if (!node->IsHole())
 				exterior.push_back(&node->Contour);
 			if (node->IsHole() && node->Parent)
@@ -44,9 +44,9 @@ namespace fmesh
 		fmesh::loopPolyTree(func, polyTree);
 	}
 
-	void seperatePolyTree(ClipperLib::PolyTree* polyTree, std::vector<ClipperLib::Path*>& exterior, std::vector<ClipperLib::Path*>& interior, std::vector<int>& iexterior, std::vector<int>& iinterior)
+	void seperatePolyTree(ClipperLibXYZ::PolyTree* polyTree, std::vector<ClipperLibXYZ::Path*>& exterior, std::vector<ClipperLibXYZ::Path*>& interior, std::vector<int>& iexterior, std::vector<int>& iinterior)
 	{
-		polyNodeFunc func = [&func, &exterior, &interior, &iexterior,&iinterior](ClipperLib::PolyNode* node) {
+		polyNodeFunc func = [&func, &exterior, &interior, &iexterior,&iinterior](ClipperLibXYZ::PolyNode* node) {
 			if (!node->IsHole())
 			{
 				exterior.push_back(&node->Contour);

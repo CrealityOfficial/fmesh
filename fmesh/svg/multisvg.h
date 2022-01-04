@@ -1,17 +1,17 @@
 #ifndef FMESH_MULTISVG_1609985536284_H
 #define FMESH_MULTISVG_1609985536284_H
-#include <clipper/clipper.hpp>
+#include "clipperxyz/clipper.hpp"
 //#include <limits>
 
-#define CLIPPERPOINT(x, y) ClipperLib::IntPoint((int)(1000.0f * x), (int)(1000.0f * y))
+#define CLIPPERPOINT(x, y) ClipperLibXYZ::IntPoint((int)(1000.0f * x), (int)(1000.0f * y))
 namespace fmesh
 {
 	typedef struct SAABB
 	{
-		ClipperLib::IntPoint pMmin;
-		ClipperLib::IntPoint pMax;
-		SAABB():pMmin(std::numeric_limits<ClipperLib::cInt>::max(), std::numeric_limits<ClipperLib::cInt>::max())
-			,pMax(std::numeric_limits<ClipperLib::cInt>::min(), std::numeric_limits<ClipperLib::cInt>::min())
+		ClipperLibXYZ::IntPoint pMmin;
+		ClipperLibXYZ::IntPoint pMax;
+		SAABB():pMmin(std::numeric_limits<ClipperLibXYZ::cInt>::max(), std::numeric_limits<ClipperLibXYZ::cInt>::max())
+			,pMax(std::numeric_limits<ClipperLibXYZ::cInt>::min(), std::numeric_limits<ClipperLibXYZ::cInt>::min())
 		{}
 	}aabb;
 
@@ -28,13 +28,13 @@ namespace fmesh
 		void addLine(float start_x, float start_y, float end_x, float end_y);
 		void addPolyLine(const std::string& polygon);
 
-		std::vector<ClipperLib::Paths*> take();
+		std::vector<ClipperLibXYZ::Paths*> take();
 	protected:
 		void SplitString(const std::string& Src, std::vector<std::string>& Vctdest, const std::string& c);
 		void SplitStringS(const std::string& Src, std::vector<std::string>& Vctdest, std::vector<std::string>& VctS);
 		bool isSpechars(char chars);
 
-		aabb getAABB(ClipperLib::Path* path);
+		aabb getAABB(ClipperLibXYZ::Path* path);
 		bool intersectAABB(const aabb& a, const aabb& b);
 
 		void pausePathMm(std::string stringPoint);
@@ -46,16 +46,16 @@ namespace fmesh
 		void pausePathTt(std::string stringPoint);
 		void pausePathSs(std::string stringPoint);
 		void pausePathAa(std::string stringPoint);
-		void savePenultPoint(ClipperLib::DoublePoint penultPoint, ClipperLib::DoublePoint endPoint, bool isBezier = true);
+		void savePenultPoint(ClipperLibXYZ::DoublePoint penultPoint, ClipperLibXYZ::DoublePoint endPoint, bool isBezier = true);
 		void savePenultPoint(bool isBezier = false);
 	protected:
-		std::vector<ClipperLib::Paths*> m_pathses;
-		std::vector<ClipperLib::Path*> m_path;
+		std::vector<ClipperLibXYZ::Paths*> m_pathses;
+		std::vector<ClipperLibXYZ::Path*> m_path;
 
-		ClipperLib::DoublePoint m_currentPosition;
+		ClipperLibXYZ::DoublePoint m_currentPosition;
 		bool m_isBigchars;
-		std::pair<bool, ClipperLib::DoublePoint> m_BezierPoint;
-		ClipperLib::Path m_curPath;
+		std::pair<bool, ClipperLibXYZ::DoublePoint> m_BezierPoint;
+		ClipperLibXYZ::Path m_curPath;
 	};
 }
 

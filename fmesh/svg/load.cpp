@@ -5,7 +5,7 @@
 
 namespace cdrdxf
 {
-	ClipperLib::Paths* loadSVGFile(const char* fileName)
+	ClipperLibXYZ::Paths* loadSVGFile(const char* fileName)
 	{
 		TiXmlDocument doc;
 		if (!doc.LoadFile(fileName))
@@ -124,7 +124,7 @@ namespace cdrdxf
 		parseSVG(root, t);
 	}
 
-	std::vector<ClipperLib::Paths*> loadMultiSVGFile(const char* fileName)
+	std::vector<ClipperLibXYZ::Paths*> loadMultiSVGFile(const char* fileName)
 	{
 		fmesh::MultiSVG svg;
 		parseSVGFile(fileName, &svg);

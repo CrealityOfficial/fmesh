@@ -5,7 +5,7 @@
 #include <iostream>
 #include <map>
 #include <vector>
-#include <clipper/clipper.hpp>
+#include "clipperxyz/clipper.hpp"
 namespace CDRUSERINTERFACE
 {
 
@@ -17,12 +17,12 @@ class CDR_USER_OBJ
 		CDR_USER_OBJ();
 		~CDR_USER_OBJ();
 	public:
-		 ClipperLib::Paths  *m_Paths;
+		 ClipperLibXYZ::Paths  *m_Paths;
 	public:	
 	int loadCDR(char* filename);
 	int extractCDRData();
 	int jsonParseBaseCdr(char *Jsonbuff);
-	ClipperLib::Path DrawBzier(ClipperLib::DoublePoint *pointValue, int pointsize, ClipperLib::Path& dPath);
+	ClipperLibXYZ::Path DrawBzier(ClipperLibXYZ::DoublePoint *pointValue, int pointsize, ClipperLibXYZ::Path& dPath);
 };
 
 }

@@ -1,6 +1,6 @@
 #ifndef FMESH_EARPOLYGON_1604488905381_H
 #define FMESH_EARPOLYGON_1604488905381_H
-#include <clipper/clipper.hpp>
+#include "clipperxyz/clipper.hpp"
 #include "fmesh/common/export.h"
 #include "fmesh/generate/patch.h"
 
@@ -17,13 +17,13 @@
 
 namespace fmesh
 {
-	typedef std::vector<ClipperLib::IntPoint*> SimplePoly;
+	typedef std::vector<ClipperLibXYZ::IntPoint*> SimplePoly;
 	struct ENode
 	{
 		ENode* prev;
 		ENode* next;
 
-		ClipperLib::IntPoint* vertex;
+		ClipperLibXYZ::IntPoint* vertex;
 		int type;  // 0 colliear 1 concave 2 convex 3 ear
 		double dot;
 	};
@@ -36,7 +36,7 @@ namespace fmesh
 
 		void load(const std::string& file);
 
-		std::vector<ClipperLib::IntPoint> source;
+		std::vector<ClipperLibXYZ::IntPoint> source;
 		SimplePoly poly;
 	};
 
@@ -49,15 +49,15 @@ namespace fmesh
 		~EarPolygon();
 
 		void setup(SimplePoly* poly);
-		void setup(ClipperLib::Path* path);
-		void setup(ClipperLib::PolyNode* poly);
+		void setup(ClipperLibXYZ::Path* path);
+		void setup(ClipperLibXYZ::PolyNode* poly);
 
 		Patch* earClipping();
 		Patch* earClippingNewType();
 		Patch* earClippingFromRefPoly(SimplePoly* poly);
-		Patch* earClippingFromPath(ClipperLib::Path* path);
+		Patch* earClippingFromPath(ClipperLibXYZ::Path* path);
 
-		Patch* earClippingFromRefPoly(ClipperLib::PolyNode* poly);
+		Patch* earClippingFromRefPoly(ClipperLibXYZ::PolyNode* poly);
 	protected:
 		void calType(ENode* node, bool testContainEdge = true);
 		void releaseNode();

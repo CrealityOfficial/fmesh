@@ -18,8 +18,8 @@ namespace fmesh
 	{
 		m_adParam.bottom_type = fmesh::ADBottomType::adbt_close;
 
-		std::vector<ClipperLib::PolyTree> middlePolysOuter;
-		std::vector<ClipperLib::PolyTree> middlePolysInner;
+		std::vector<ClipperLibXYZ::PolyTree> middlePolysOuter;
+		std::vector<ClipperLibXYZ::PolyTree> middlePolysInner;
 		buildOuter(middlePolysOuter);
 		_buildFromSamePolyTree(&middlePolysOuter.front(), &middlePolysOuter.back());
 
@@ -31,30 +31,30 @@ namespace fmesh
 	{
 		m_adParam.bottom_type = fmesh::ADBottomType::adbt_close;
 
-		std::vector<ClipperLib::PolyTree> middlePolysOuter;
-		std::vector<ClipperLib::PolyTree> middlePolysInner;
+		std::vector<ClipperLibXYZ::PolyTree> middlePolysOuter;
+		std::vector<ClipperLibXYZ::PolyTree> middlePolysInner;
 		buildOuter(middlePolysOuter,true);
 		_buildFromSamePolyTree(&middlePolysOuter.front(), &middlePolysOuter.back());
 
 		buildInner(middlePolysInner,true);
 	}
 
-	void NestedGenerator::buildBoard(ClipperLib::PolyTree& topTree, ClipperLib::PolyTree& bottomTree)
+	void NestedGenerator::buildBoard(ClipperLibXYZ::PolyTree& topTree, ClipperLibXYZ::PolyTree& bottomTree)
 	{
-		std::vector<ClipperLib::PolyTree> middlePolysOuter;
+		std::vector<ClipperLibXYZ::PolyTree> middlePolysOuter;
 		buildOuter(middlePolysOuter, true);
 		copy2PolyTree(middlePolysOuter.front(), bottomTree);
 
 		offsetPolyType(middlePolysOuter.front(), m_adParam.exoprtParam.bottom_offset, bottomTree, m_adParam.bluntSharpCorners);
 	}
 
-	ClipperLib::cInt NestedGenerator::getAABB(ClipperLib::PolyTree& poly)
+	ClipperLibXYZ::cInt NestedGenerator::getAABB(ClipperLibXYZ::PolyTree& poly)
 	{
-		ClipperLib::IntPoint pointMax(-999999, -999999);
-		ClipperLib::IntPoint pointMin(999999, 999999);
+		ClipperLibXYZ::IntPoint pointMax(-999999, -999999);
+		ClipperLibXYZ::IntPoint pointMin(999999, 999999);
 
-		polyNodeFunc func = [&pointMax, &pointMin](ClipperLib::PolyNode* node) {
-			for (ClipperLib::IntPoint& p : node->Contour)
+		polyNodeFunc func = [&pointMax, &pointMin](ClipperLibXYZ::PolyNode* node) {
+			for (ClipperLibXYZ::IntPoint& p : node->Contour)
 			{
 				if (pointMax.X < p.X)
 					pointMax = p;
@@ -69,7 +69,7 @@ namespace fmesh
 		return pointMax.X - pointMin.X;
 	}
 
-	void NestedGenerator::buildOuter(std::vector<ClipperLib::PolyTree>& middlePolys,bool onePoly)
+	void NestedGenerator::buildOuter(std::vector<ClipperLibXYZ::PolyTree>& middlePolys,bool onePoly)
 	{
 		middlePolys.resize(2);
 		double hTop, hBottom;
@@ -86,20 +86,20 @@ namespace fmesh
 		}
 	}
 
-	void NestedGenerator::buildInner(std::vector<ClipperLib::PolyTree>& middlePolys,bool onePoly)
+	void NestedGenerator::buildInner(std::vector<ClipperLibXYZ::PolyTree>& middlePolys,bool onePoly)
 	{
 		float thickness = m_adParam.extend_width / 2.0 ;
-		ClipperLib::PolyTree inner;
+		ClipperLibXYZ::PolyTree inner;
 
 		middlePolys.resize(3);
 
-		ClipperLib::cInt len = getAABB(m_poly);
+		ClipperLibXYZ::cInt len = getAABB(m_poly);
 		len += m_adParam.bottom_extend_width * 10000;
 
 		offsetPolyType(m_poly, -(thickness + m_adParam.top_extend_width), inner, m_adParam.bluntSharpCorners);
 
-		polyNodeFunc func1 = [&len](ClipperLib::PolyNode* node) {
-			for (ClipperLib::IntPoint& p : node->Contour)
+		polyNodeFunc func1 = [&len](ClipperLibXYZ::PolyNode* node) {
+			for (ClipperLibXYZ::IntPoint& p : node->Contour)
 			{
 				p.X += len;
 			}

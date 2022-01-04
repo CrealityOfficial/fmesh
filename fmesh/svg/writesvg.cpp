@@ -9,13 +9,13 @@
 
 namespace cdrdxf
 {
-// 	void writesvg(ClipperLib::PolyTree* tree, const std::string& file)
+// 	void writesvg(ClipperLibXYZ::PolyTree* tree, const std::string& file)
 // 	{
 // 		if (tree == nullptr)
 // 			return;
 // 
-// 		std::vector<ClipperLib::Path*> paths;
-// 		auto func = [&paths](ClipperLib::PolyNode* node) {
+// 		std::vector<ClipperLibXYZ::Path*> paths;
+// 		auto func = [&paths](ClipperLibXYZ::PolyNode* node) {
 // 			int depth = fmesh::testPolyNodeDepth(node);
 // 			if (depth == 2 || depth == 3)
 // 				paths.push_back(&node->Contour);
@@ -81,10 +81,10 @@ namespace cdrdxf
 // 		doc1.SaveFile();
 // 	}
 
-	FMESH_API void writesvg(std::vector<ClipperLib::PolyTree*>& trees, const std::string& file)
+	FMESH_API void writesvg(std::vector<ClipperLibXYZ::PolyTree*>& trees, const std::string& file)
 	{
 
-		std::vector<std::vector<ClipperLib::Path*>> vecPaths;
+		std::vector<std::vector<ClipperLibXYZ::Path*>> vecPaths;
 		getSVGAllPolyPaths(trees, vecPaths);
 		if (!vecPaths.size())
 			return;
@@ -92,12 +92,12 @@ namespace cdrdxf
 		processSVGData(vecPaths,file);
 	}
 
-	void getSVGAllPolyPaths(std::vector<ClipperLib::PolyTree*>& trees, std::vector<std::vector<ClipperLib::Path*>>& vecPaths)
+	void getSVGAllPolyPaths(std::vector<ClipperLibXYZ::PolyTree*>& trees, std::vector<std::vector<ClipperLibXYZ::Path*>>& vecPaths)
 	{
 		if (!trees.size())
 			return;
-		std::vector<ClipperLib::Path*> paths;
-		auto func = [&paths](ClipperLib::PolyNode* node) {
+		std::vector<ClipperLibXYZ::Path*> paths;
+		auto func = [&paths](ClipperLibXYZ::PolyNode* node) {
  			if(node->Contour.size())
 				paths.push_back(&node->Contour);
 		};
@@ -109,7 +109,7 @@ namespace cdrdxf
 		}
 	}
 
-	void processSVGData(std::vector<std::vector<ClipperLib::Path*>>& vecPaths,const std::string& file)
+	void processSVGData(std::vector<std::vector<ClipperLibXYZ::Path*>>& vecPaths,const std::string& file)
 	{
 		const char* HEADSVG = "<?xml version=\"1.0\"  standalone='no' > \r\n<!-- IBoard SVG File -->\r\n<svg height=\"1\" width=\"1\">\r\n<!-- SVG File --> \r\n</svg>";
 

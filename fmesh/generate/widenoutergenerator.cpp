@@ -16,7 +16,7 @@ namespace fmesh
 	void WidenOuterGenerator::build()
 	{
 		m_adParam.bottom_type = ADBottomType::adbt_extend_outter;
-		ClipperLib::PolyTree treeTop, treeBottom;
+		ClipperLibXYZ::PolyTree treeTop, treeBottom;
 		double hTop, hBottom;
 
 		_buildTop(treeTop, hTop);
@@ -28,7 +28,7 @@ namespace fmesh
 	void WidenOuterGenerator::buildShell()
 	{
 		m_adParam.bottom_type = ADBottomType::adbt_extend_outter;
-		ClipperLib::PolyTree treeTop, treeBottom;
+		ClipperLibXYZ::PolyTree treeTop, treeBottom;
 		double hTop, hBottom;
 
 		_buildTop_onepoly(treeTop, hTop);
@@ -37,12 +37,12 @@ namespace fmesh
 		_buildFromSamePolyTree(&treeBottom, &treeTop);
 	}
 
-	void WidenOuterGenerator::buildBoard(ClipperLib::PolyTree& topTree, ClipperLib::PolyTree& bottomTree)
+	void WidenOuterGenerator::buildBoard(ClipperLibXYZ::PolyTree& topTree, ClipperLibXYZ::PolyTree& bottomTree)
 	{
 		m_adParam.bottom_type = ADBottomType::adbt_extend_outter;
 		double hTop, hBottom;
 
-		ClipperLib::PolyTree _treeTop, _treeBottom;
+		ClipperLibXYZ::PolyTree _treeTop, _treeBottom;
 
 		_buildTop_onepoly(_treeTop, hTop);
 		_buildBottom_onepoly(_treeBottom, hBottom);

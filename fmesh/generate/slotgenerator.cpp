@@ -14,14 +14,14 @@ namespace fmesh
 
 	void SlotGenerator::build()
 	{
-		ClipperLib::PolyTree treeTop, treeBottom,treeMiddle;
+		ClipperLibXYZ::PolyTree treeTop, treeBottom,treeMiddle;
 		double hTop, hBottom,hMiddle;
 
 		_buildTop(treeTop, hTop);
 		_buildBottom(treeBottom, hBottom);
 		
 		//step start
-		std::vector<ClipperLib::PolyTree> Steppolys(4);
+		std::vector<ClipperLibXYZ::PolyTree> Steppolys(4);
 		offsetAndExtendpolyType(m_poly, 0, m_adParam.extend_width / 2.0, m_adParam.shape_bottom_height, Steppolys.at(0),m_adParam.bluntSharpCorners);
 		offsetAndExtendpolyType(m_poly, 0, m_adParam.extend_width / 2.0, m_adParam.shape_bottom_height, Steppolys.at(1), m_adParam.bluntSharpCorners);
 		offsetAndExtendpolyType(m_poly, 0, m_adParam.extend_width / 2.0, m_adParam.total_height - m_adParam.shape_top_height, Steppolys.at(2), m_adParam.bluntSharpCorners);

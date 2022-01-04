@@ -74,17 +74,17 @@ namespace fmesh
 		destroyBuildImpls(m_generateImpls);
 	}
 
-	ClipperLib::Paths* Generator::paths()
+	ClipperLibXYZ::Paths* Generator::paths()
 	{
 		return m_paths.get();
 	}
 
-	void Generator::setPaths(ClipperLib::Paths* paths)
+	void Generator::setPaths(ClipperLibXYZ::Paths* paths)
 	{
 		m_paths.reset(paths);
 
-		ClipperLib::IntPoint bmin;
-		ClipperLib::IntPoint bmax;
+		ClipperLibXYZ::IntPoint bmin;
+		ClipperLibXYZ::IntPoint bmax;
 		fmesh::calculatePathBox(paths, bmin, bmax);
 		//scale
 		trimesh::vec3 bMin = trimesh::vec3(INT2MM(bmin.X), INT2MM(bmin.Y), INT2MM(bmin.Z));
@@ -93,7 +93,7 @@ namespace fmesh
 		m_polyTree.reset();
 	} 
 
-	ClipperLib::PolyTree* Generator::polyTree()
+	ClipperLibXYZ::PolyTree* Generator::polyTree()
 	{
 		if (!m_polyTree)
 		{
@@ -114,7 +114,7 @@ namespace fmesh
 
 	trimesh::TriMesh* Generator::build(const std::string& method, std::vector<std::string>& args)
 	{
-		ClipperLib::Paths* paths = m_paths.get();
+		ClipperLibXYZ::Paths* paths = m_paths.get();
 		if (!paths)
 			return nullptr;
 		
@@ -201,8 +201,8 @@ namespace fmesh
 
 	}
 
-	trimesh::TriMesh* GeneratorProxy::build(const ADParam& param, ClipperLib::Paths* paths,
-		ExportParam* exportParam, ClipperLib::PolyTree* topTree, ClipperLib::PolyTree* bottomTree, bool buildShell)
+	trimesh::TriMesh* GeneratorProxy::build(const ADParam& param, ClipperLibXYZ::Paths* paths,
+		ExportParam* exportParam, ClipperLibXYZ::PolyTree* topTree, ClipperLibXYZ::PolyTree* bottomTree, bool buildShell)
 	{
 		if (!paths)
 			return nullptr;
@@ -217,7 +217,7 @@ namespace fmesh
 		return mesh;
 	}
 
-	void GeneratorProxy::setup(const ADParam& param, ClipperLib::Paths* paths, mmesh::StatusTracer* tracer)
+	void GeneratorProxy::setup(const ADParam& param, ClipperLibXYZ::Paths* paths, mmesh::StatusTracer* tracer)
 	{
 		if (!paths)
 			return;
@@ -237,22 +237,22 @@ namespace fmesh
 		return m_impl ? m_impl->generateShell() : nullptr;
 	}
 
-	void GeneratorProxy::buildBoard(const ExportParam& param, ClipperLib::PolyTree& topTree, ClipperLib::PolyTree& bottomTree)
+	void GeneratorProxy::buildBoard(const ExportParam& param, ClipperLibXYZ::PolyTree& topTree, ClipperLibXYZ::PolyTree& bottomTree)
 	{
 		if (m_impl)
 			m_impl->generateBoard(param, topTree, bottomTree);
 	}
 
-	trimesh::TriMesh* GeneratorProxy::buildOmp(const ADParam& param, ClipperLib::Paths* paths,
-		ExportParam* exportParam, ClipperLib::PolyTree* topTree, ClipperLib::PolyTree* bottomTree)
+	trimesh::TriMesh* GeneratorProxy::buildOmp(const ADParam& param, ClipperLibXYZ::Paths* paths,
+		ExportParam* exportParam, ClipperLibXYZ::PolyTree* topTree, ClipperLibXYZ::PolyTree* bottomTree)
 	{
 		if (!paths)
 			return nullptr;
 
-		ClipperLib::PolyTree tree;
+		ClipperLibXYZ::PolyTree tree;
 		fmesh::convertPaths2PolyTree(paths, tree);
 
-		std::vector<ClipperLib::Paths> children;
+		std::vector<ClipperLibXYZ::Paths> children;
 		fmesh::split(tree, children);
 
 		size_t size = children.size();

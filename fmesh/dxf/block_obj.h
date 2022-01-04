@@ -1,6 +1,6 @@
 #pragma once
 #include <vector>//包含头文件  
-#include "clipper/clipper.hpp"
+#include "clipperxyz/clipper.hpp"
 #include "fmesh/dxf/spline.h"
 
 using namespace std;  
@@ -9,14 +9,14 @@ using namespace std;
 class DXFLine
 {
 public: 
-	ClipperLib::IntPoint beginpoint;
-	ClipperLib::IntPoint endpoint;
+	ClipperLibXYZ::IntPoint beginpoint;
+	ClipperLibXYZ::IntPoint endpoint;
 };
 //圆对象
 class DXFCircle
 {
 public:
-	ClipperLib::IntPoint centerpoint;
+	ClipperLibXYZ::IntPoint centerpoint;
 	double radius;
 };
 //椭圆及一段圆弧对象
@@ -49,7 +49,7 @@ public:
 class DXFPolyLineEntities
 {
 public:
-	vector<ClipperLib::IntPoint> vertex;//顶点
+	vector<ClipperLibXYZ::IntPoint> vertex;//顶点
 	bool isclose;//闭合标志位
 };
 
@@ -57,7 +57,7 @@ public:
 class DXFArc
 {
 public:
-	ClipperLib::IntPoint centerpoint;
+	ClipperLibXYZ::IntPoint centerpoint;
 	double radius;
 	double bangle;//起点角度
 	double eangle;//终点角度

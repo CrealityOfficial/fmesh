@@ -14,7 +14,7 @@ namespace fmesh
 
 	void ReItalicsGenerator::build()
 	{
-		std::vector<ClipperLib::PolyTree> middlePolys;
+		std::vector<ClipperLibXYZ::PolyTree> middlePolys;
 		double middleoffset = 0;
 
 		buildMiddle(middlePolys, middleoffset);
@@ -31,7 +31,7 @@ namespace fmesh
 
 	void ReItalicsGenerator::buildShell()
 	{
-		std::vector<ClipperLib::PolyTree> middlePolys;
+		std::vector<ClipperLibXYZ::PolyTree> middlePolys;
 		double middleoffset = 0;
 		buildMiddle(middlePolys, middleoffset,true);
 		if (middlePolys.size() == 0)
@@ -39,10 +39,10 @@ namespace fmesh
 		_buildTopBottom_onepoly(&middlePolys.front(), &middlePolys.back(), 0, middleoffset);
 	}
 
-	void ReItalicsGenerator::buildBoard(ClipperLib::PolyTree& topTree, ClipperLib::PolyTree& bottomTree)
+	void ReItalicsGenerator::buildBoard(ClipperLibXYZ::PolyTree& topTree, ClipperLibXYZ::PolyTree& bottomTree)
 	{
 		double middleoffset = 0;
-		std::vector<ClipperLib::PolyTree> middlePolys;
+		std::vector<ClipperLibXYZ::PolyTree> middlePolys;
 		buildMiddle(middlePolys, middleoffset, true);
 		if (middlePolys.size() == 0)
 			return;
@@ -50,7 +50,7 @@ namespace fmesh
 		offsetPolyType(middlePolys.front(), m_adParam.exoprtParam.bottom_offset, bottomTree, m_adParam.bluntSharpCorners);
 	}
 
-	void ReItalicsGenerator::buildMiddle(std::vector<ClipperLib::PolyTree>& middlePolys, double& middleoffset,bool onePoly)
+	void ReItalicsGenerator::buildMiddle(std::vector<ClipperLibXYZ::PolyTree>& middlePolys, double& middleoffset,bool onePoly)
 	{
 		//initTestData();
 
@@ -88,7 +88,7 @@ namespace fmesh
 		float offset =m_adParam.shape_angle /2.0 / (float)count;
 		float h = middleHeight / (float)count;
 
-		std::vector<ClipperLib::PolyTree> Steppolys(1);
+		std::vector<ClipperLibXYZ::PolyTree> Steppolys(1);
 		size_t num = (h > 0) ? (count - topHeight / h) : 0;
 		//middle
 		middlePolys.resize(count + 1);

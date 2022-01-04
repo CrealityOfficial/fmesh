@@ -9,7 +9,7 @@ namespace cdrdxf
 {
     static CDRUSERINTERFACE::CDR_USER_OBJ *cdrUserObjPtr;
 
-	ClipperLib::Paths* loadCDRFile(const char* fileName)
+	ClipperLibXYZ::Paths* loadCDRFile(const char* fileName)
 	{
         //CDRUSERINTERFACE::CDR_USER_OBJ testhyt;
         //testhyt.loadCDR("tst");

@@ -76,26 +76,26 @@ namespace fmesh
 		m_searchDirs.push_back(resourceDir);
 	}
 
-	ClipperLib::PolyTree* FontOutlineCenter::get(int charCode)
+	ClipperLibXYZ::PolyTree* FontOutlineCenter::get(int charCode)
 	{
 		if (!font) return nullptr;
 		Outline* outline = font->get((FT_ULong)charCode);
 		return fmesh::convertOutline2PolyTree(outline);
 	}
 
-	ClipperLib::Paths* FontOutlineCenter::getPath(int charCode, double expectLen, const int simpleRatio)
+	ClipperLibXYZ::Paths* FontOutlineCenter::getPath(int charCode, double expectLen, const int simpleRatio)
 	{
 		if (!font) return nullptr;
 		Outline* outline = font->get((FT_ULong)charCode, simpleRatio);
 
-		ClipperLib::Paths* paths = new ClipperLib::Paths();
+		ClipperLibXYZ::Paths* paths = new ClipperLibXYZ::Paths();
 		*paths = outline->pathes();
 		scalePath2ExpectLen(paths, expectLen);
 
 		return paths;
 	}
 
-	ClipperLib::Paths* FontOutlineCenter::getPath(const std::string& fontFile, int charCode, double expectLen)
+	ClipperLibXYZ::Paths* FontOutlineCenter::getPath(const std::string& fontFile, int charCode, double expectLen)
 	{
 		load(fontFile);
 		return getPath(charCode, expectLen);

@@ -10,7 +10,7 @@ namespace fmesh
 		virtual ~LayerGeneratorTracer() {}
 
 		virtual int index() = 0;
-		virtual void impl(ClipperLib::PolyTree& poly1, ClipperLib::PolyTree& poly2) = 0;
+		virtual void impl(ClipperLibXYZ::PolyTree& poly1, ClipperLibXYZ::PolyTree& poly2) = 0;
 	};
 
 	class FMESH_API LayerGenerator : public GeneratorImpl
@@ -22,7 +22,7 @@ namespace fmesh
 		void build() override;
 
 		void setLayerGeneratorTracer(LayerGeneratorTracer* tracer);
-		void saveXOR(ClipperLib::PolyTree& tree, const ADParam& param);
+		void saveXOR(ClipperLibXYZ::PolyTree& tree, const ADParam& param);
 	protected:
 		LayerGeneratorTracer* m_tracer;
 	};

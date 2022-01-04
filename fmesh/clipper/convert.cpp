@@ -2,13 +2,13 @@
 
 namespace fmesh
 {
-	void clipperConvert(const ClipperLib::Path& path, std::vector<trimesh::vec3>& vpath)
+	void clipperConvert(const ClipperLibXYZ::Path& path, std::vector<trimesh::vec3>& vpath)
 	{
 		int size = (int)path.size();
 		if (size < 3)
 			return;
 
-		auto f = [](const ClipperLib::IntPoint& p)->trimesh::vec3 {
+		auto f = [](const ClipperLibXYZ::IntPoint& p)->trimesh::vec3 {
 			return trimesh::vec3(INT2MM(p.X), INT2MM(p.Y), 0.0f);
 		};
 		for (int i = 0; i < size; ++i)
@@ -43,17 +43,17 @@ namespace fmesh
 		//}
 	}
 
-	void clipperConvert(const ClipperLib::Paths& paths, std::vector<trimesh::vec3>& vpath)
+	void clipperConvert(const ClipperLibXYZ::Paths& paths, std::vector<trimesh::vec3>& vpath)
 	{
-		for (const ClipperLib::Path& apath : paths)
+		for (const ClipperLibXYZ::Path& apath : paths)
 		{
 			clipperConvert(apath, vpath);
 		}
 	}
 
-	void clipperConvert(const std::vector<ClipperLib::Paths*>& pathses, std::vector<trimesh::vec3>& vpath)
+	void clipperConvert(const std::vector<ClipperLibXYZ::Paths*>& pathses, std::vector<trimesh::vec3>& vpath)
 	{
-		for (const ClipperLib::Paths* apaths : pathses)
+		for (const ClipperLibXYZ::Paths* apaths : pathses)
 		{
 			clipperConvert(*apaths, vpath);
 		}

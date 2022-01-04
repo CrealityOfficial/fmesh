@@ -12,20 +12,19 @@
 
 namespace cdrdxf
 {
-
-	void writedxf(std::vector<ClipperLib::PolyTree*>& trees, const std::string& file)
+	void writedxf(std::vector<ClipperLibXYZ::PolyTree*>& trees, const std::string& file)
 	{
-		std::vector<std::vector<ClipperLib::Path*>> paths;
+		std::vector<std::vector<ClipperLibXYZ::Path*>> paths;
 		getDXFAllPolyPaths(trees, paths);
 		processDXFData(paths,file);
 	}
 
-	void getDXFAllPolyPaths(std::vector<ClipperLib::PolyTree*>& trees, std::vector<std::vector<ClipperLib::Path*>>& paths)
+	void getDXFAllPolyPaths(std::vector<ClipperLibXYZ::PolyTree*>& trees, std::vector<std::vector<ClipperLibXYZ::Path*>>& paths)
 	{
 		if (!trees.size())
 			return;
-		std::vector<ClipperLib::Path*> path;
-		auto func = [&path](ClipperLib::PolyNode* node) {
+		std::vector<ClipperLibXYZ::Path*> path;
+		auto func = [&path](ClipperLibXYZ::PolyNode* node) {
 			if (node->Contour.size())
 				path.push_back(&node->Contour);
 		};
@@ -37,7 +36,7 @@ namespace cdrdxf
 		}
 	}
 
-	void processDXFData(std::vector<std::vector<ClipperLib::Path*>>& paths, const std::string& file)
+	void processDXFData(std::vector<std::vector<ClipperLibXYZ::Path*>>& paths, const std::string& file)
 	{
 		DL_Dxf dxf;
 		DL_WriterA* dw = dxf.out(file.c_str(), DL_Codes::AC1009);
@@ -104,7 +103,7 @@ namespace cdrdxf
 				std::string str = "model_" + std::to_string(num) + std::to_string(i);
 				DL_Attributes attributes(str, 256, -1, -1, "BYLAYER");
 
-				ClipperLib::Path*& path = paths.at(num).at(i);
+				ClipperLibXYZ::Path*& path = paths.at(num).at(i);
 				if (!path->size())
 					continue;
 

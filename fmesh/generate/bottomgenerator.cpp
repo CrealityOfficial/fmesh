@@ -14,7 +14,7 @@ namespace fmesh
 
 	void BottomGenerator::build()
 	{
-		ClipperLib::PolyTree treeTop, treeBottom;
+		ClipperLibXYZ::PolyTree treeTop, treeBottom;
 		double hTop, hBottom;
 
 		_buildTop(treeTop, hTop);

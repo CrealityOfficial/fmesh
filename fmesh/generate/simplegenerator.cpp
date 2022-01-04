@@ -15,7 +15,7 @@ namespace fmesh
 
 	void SimpleGenerator::build()
 	{
-		ClipperLib::PolyTree treeTop, treeBottom;
+		ClipperLibXYZ::PolyTree treeTop, treeBottom;
 		double hTop, hBottom;
 
 		_buildTop(treeTop, hTop);
@@ -43,7 +43,7 @@ namespace fmesh
 
 	void SimpleGenerator::buildShell()
 	{
-		ClipperLib::PolyTree treeTop, treeBottom;
+		ClipperLibXYZ::PolyTree treeTop, treeBottom;
 		double hTop, hBottom;
 
 		_buildTop_onepoly(treeTop, hTop,-m_adParam.extend_width/2.0);
@@ -52,10 +52,10 @@ namespace fmesh
 		_buildFromSamePolyTree(&treeBottom, &treeTop);
 	}
 
-	void SimpleGenerator::buildBoard(ClipperLib::PolyTree& topTree, ClipperLib::PolyTree& bottomTree)
+	void SimpleGenerator::buildBoard(ClipperLibXYZ::PolyTree& topTree, ClipperLibXYZ::PolyTree& bottomTree)
 	{
 		double hTop, hBottom;
-		ClipperLib::PolyTree _treeTop, _treeBottom;
+		ClipperLibXYZ::PolyTree _treeTop, _treeBottom;
 
 		_buildTop_onepoly(_treeTop, hTop);
 		_buildBottom_onepoly(_treeBottom, hBottom);

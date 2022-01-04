@@ -7,7 +7,7 @@
 #include "fmesh/generate/simplegenerator.h"
 namespace fmesh
 {
-	typedef std::function<trimesh::TriMesh* (const ADParam&, ClipperLib::Paths*)> buildFunc;
+	typedef std::function<trimesh::TriMesh* (const ADParam&, ClipperLibXYZ::Paths*)> buildFunc;
 
 		//adst_none,
 		//adst_xiebian_top,
@@ -20,7 +20,7 @@ namespace fmesh
 		//adst_xiemian_back,
 		//adst_dingmianjieti,
 
-	trimesh::TriMesh* build_adst_none(const ADParam& param, ClipperLib::Paths* paths)
+	trimesh::TriMesh* build_adst_none(const ADParam& param, ClipperLibXYZ::Paths* paths)
 	{
 		SimpleGenerator generator;
 		return generator.generate(paths, param);
@@ -39,7 +39,7 @@ namespace fmesh
 		build_adst_none
 	};
 
-	trimesh::TriMesh* buildOptimize(const ADParam& param, ClipperLib::Paths* paths, OptTracer* tracer)
+	trimesh::TriMesh* buildOptimize(const ADParam& param, ClipperLibXYZ::Paths* paths, OptTracer* tracer)
 	{
 		if (!paths)
 			return nullptr;
@@ -47,10 +47,10 @@ namespace fmesh
 		if (tracer)
 			tracer->start();
 
-		ClipperLib::PolyTree tree;
+		ClipperLibXYZ::PolyTree tree;
 		fmesh::convertPaths2PolyTree(paths, tree);
 
-		std::vector<ClipperLib::Paths> children;
+		std::vector<ClipperLibXYZ::Paths> children;
 		fmesh::split_omp(tree, children);
 
 		size_t size = children.size();

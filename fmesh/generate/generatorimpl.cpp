@@ -20,13 +20,13 @@ namespace fmesh
 	{
 	}
 
-	trimesh::TriMesh* GeneratorImpl::generate(ClipperLib::Paths* paths, const ADParam& param)
+	trimesh::TriMesh* GeneratorImpl::generate(ClipperLibXYZ::Paths* paths, const ADParam& param)
 	{
 		m_paths = paths;
 		m_adParam = param;
 
-		ClipperLib::IntPoint bmin;
-		ClipperLib::IntPoint bmax;
+		ClipperLibXYZ::IntPoint bmin;
+		ClipperLibXYZ::IntPoint bmax;
 		fmesh::calculatePathBox(paths, bmin, bmax);
 		//scale
 		trimesh::vec3 bMin = trimesh::vec3(INT2MM(bmin.X), INT2MM(bmin.Y), INT2MM(bmin.Z));
@@ -46,8 +46,8 @@ namespace fmesh
 		return mesh;
 	}
 
-	trimesh::TriMesh* GeneratorImpl::generateShell(ClipperLib::Paths* paths, const ADParam& param,
-		ExportParam* exportParam, ClipperLib::PolyTree* topTree, ClipperLib::PolyTree* bottomTree)
+	trimesh::TriMesh* GeneratorImpl::generateShell(ClipperLibXYZ::Paths* paths, const ADParam& param,
+		ExportParam* exportParam, ClipperLibXYZ::PolyTree* topTree, ClipperLibXYZ::PolyTree* bottomTree)
 	{
 		m_paths = paths;
 		m_adParam = param;
@@ -57,8 +57,8 @@ namespace fmesh
 		m_topTree = topTree;
 		m_bottomTree = bottomTree;
 
-		ClipperLib::IntPoint bmin;
-		ClipperLib::IntPoint bmax;
+		ClipperLibXYZ::IntPoint bmin;
+		ClipperLibXYZ::IntPoint bmax;
 		fmesh::calculatePathBox(paths, bmin, bmax);
 		//scale
 		trimesh::vec3 bMin = trimesh::vec3(INT2MM(bmin.X), INT2MM(bmin.Y), INT2MM(bmin.Z));
@@ -77,15 +77,15 @@ namespace fmesh
 		return mesh;
 	}
 
-	void GeneratorImpl::setup(const ADParam& param, ClipperLib::Paths* paths, mmesh::StatusTracer* tracer)
+	void GeneratorImpl::setup(const ADParam& param, ClipperLibXYZ::Paths* paths, mmesh::StatusTracer* tracer)
 	{
 		m_tracer = tracer;
 
 		m_paths = paths;
 		m_adParam = param;
 
-		ClipperLib::IntPoint bmin;
-		ClipperLib::IntPoint bmax;
+		ClipperLibXYZ::IntPoint bmin;
+		ClipperLibXYZ::IntPoint bmax;
 		fmesh::calculatePathBox(paths, bmin, bmax);
 		//scale
 		trimesh::vec3 bMin = trimesh::vec3(INT2MM(bmin.X), INT2MM(bmin.Y), INT2MM(bmin.Z));
@@ -119,7 +119,7 @@ namespace fmesh
 		return mesh;
 	}
 
-	void GeneratorImpl::generateBoard(const ExportParam& param, ClipperLib::PolyTree& topTree, ClipperLib::PolyTree& bottomTree)
+	void GeneratorImpl::generateBoard(const ExportParam& param, ClipperLibXYZ::PolyTree& topTree, ClipperLibXYZ::PolyTree& bottomTree)
 	{
 		m_exportParam = param;
 		topTree.Clear();
@@ -127,8 +127,8 @@ namespace fmesh
 		buildBoard(topTree, bottomTree);
 	}
 
-	trimesh::TriMesh* GeneratorImpl::generate(ClipperLib::PolyTree* tree, const ADParam& param,
-		ExportParam* exportParam, ClipperLib::PolyTree* topTree, ClipperLib::PolyTree* bottomTree)
+	trimesh::TriMesh* GeneratorImpl::generate(ClipperLibXYZ::PolyTree* tree, const ADParam& param,
+		ExportParam* exportParam, ClipperLibXYZ::PolyTree* topTree, ClipperLibXYZ::PolyTree* bottomTree)
 	{
 		return nullptr;
 		//m_adParam = param;
@@ -139,8 +139,8 @@ namespace fmesh
 		//m_bottomTree = bottomTree;
 		//
 		//m_poly = tree;
-		//ClipperLib::IntPoint bmin;
-		//ClipperLib::IntPoint bmax;
+		//ClipperLibXYZ::IntPoint bmin;
+		//ClipperLibXYZ::IntPoint bmax;
 		//fmesh::calculatePathBox(paths, bmin, bmax);
 		////scale
 		//trimesh::vec3 bMin = trimesh::vec3(INT2MM(bmin.X), INT2MM(bmin.Y), INT2MM(bmin.Z));
@@ -192,7 +192,7 @@ namespace fmesh
 		m_patches.clear();
 	}
 
-	void GeneratorImpl::_fillPolyTree(ClipperLib::PolyTree* tree, bool invert)
+	void GeneratorImpl::_fillPolyTree(ClipperLibXYZ::PolyTree* tree, bool invert)
 	{
 		std::vector<Patch*> patches;
 		fillComplexPolyTree(tree, patches);
@@ -200,7 +200,7 @@ namespace fmesh
 		addPatches(patches, invert);
 	}
 
-	void GeneratorImpl::_fillPolyTreeDepth14(ClipperLib::PolyTree* tree, bool invert)
+	void GeneratorImpl::_fillPolyTreeDepth14(ClipperLibXYZ::PolyTree* tree, bool invert)
 	{
 		std::vector<Patch*> patches;
 
@@ -208,7 +208,7 @@ namespace fmesh
 		addPatches(patches, invert);
 	}
 
-	void GeneratorImpl::_fillPolyTreeOnePloy(ClipperLib::PolyTree* tree, bool invert)
+	void GeneratorImpl::_fillPolyTreeOnePloy(ClipperLibXYZ::PolyTree* tree, bool invert)
 	{
 		std::vector<Patch*> patches;
 
@@ -216,7 +216,7 @@ namespace fmesh
 		addPatches(patches, invert);
 	}
 
-	void GeneratorImpl::_fillPolyTreeDepth23(ClipperLib::PolyTree* tree, bool invert)
+	void GeneratorImpl::_fillPolyTreeDepth23(ClipperLibXYZ::PolyTree* tree, bool invert)
 	{
 		std::vector<Patch*> patches;
 
@@ -224,7 +224,7 @@ namespace fmesh
 		addPatches(patches, invert);
 	}
 
-	void GeneratorImpl::_fillPolyTreeInner(ClipperLib::PolyTree* tree, bool invert)
+	void GeneratorImpl::_fillPolyTreeInner(ClipperLibXYZ::PolyTree* tree, bool invert)
 	{
 		std::vector<Patch*> patches;
 		fillPolyNodeInner(tree, patches);
@@ -232,21 +232,21 @@ namespace fmesh
 		addPatches(patches, invert);
 	}
 
-	void GeneratorImpl::_buildFromSamePolyTree(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp, int flag)
+	void GeneratorImpl::_buildFromSamePolyTree(ClipperLibXYZ::PolyTree* treeLower, ClipperLibXYZ::PolyTree* treeUp, int flag)
 	{
 		addPatch(buildFromSamePolyTree(treeLower, treeUp, flag));
 	}
 
-	void GeneratorImpl::_buildFromDiffPolyTree(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp, int flag)
+	void GeneratorImpl::_buildFromDiffPolyTree(ClipperLibXYZ::PolyTree* treeLower, ClipperLibXYZ::PolyTree* treeUp, int flag)
 	{
 		std::vector<Patch*> patches;
 		buildFromDiffPolyTreeSafty(treeLower, treeUp, patches, 1.0, flag);
 		addPatches(patches);
 	}
 
-	void GeneratorImpl::_buildFromDiffPolyTree_diffSafty(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp, double delta, int flag, bool invert, bool invertXor)
+	void GeneratorImpl::_buildFromDiffPolyTree_diffSafty(ClipperLibXYZ::PolyTree* treeLower, ClipperLibXYZ::PolyTree* treeUp, double delta, int flag, bool invert, bool invertXor)
 	{
-		ClipperLib::PolyTree out;
+		ClipperLibXYZ::PolyTree out;
 
 		std::vector<Patch*> patches;
 		buildFromDiffPolyTree_SameAndDiffSafty(treeLower, treeUp, patches, flag, out, delta);
@@ -261,9 +261,9 @@ namespace fmesh
 		}
 	}
 
-	void GeneratorImpl::_buildFromDiffPolyTree_diff(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp, double delta, int flag, bool invert)
+	void GeneratorImpl::_buildFromDiffPolyTree_diff(ClipperLibXYZ::PolyTree* treeLower, ClipperLibXYZ::PolyTree* treeUp, double delta, int flag, bool invert)
 	{
-		ClipperLib::PolyTree out;
+		ClipperLibXYZ::PolyTree out;
 		std::vector<Patch*> patches;
 
 		xor2PolyTrees(treeLower, treeUp, out);
@@ -275,10 +275,10 @@ namespace fmesh
 		}
 	}
 
-	void GeneratorImpl::_buildFromDiffPolyTree_all(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp, double delta, int flag,bool invertInner, bool invertOuter)
+	void GeneratorImpl::_buildFromDiffPolyTree_all(ClipperLibXYZ::PolyTree* treeLower, ClipperLibXYZ::PolyTree* treeUp, double delta, int flag,bool invertInner, bool invertOuter)
 	{
-		ClipperLib::PolyTree treeLowerInner;
-		ClipperLib::PolyTree treeUpInner;
+		ClipperLibXYZ::PolyTree treeLowerInner;
+		ClipperLibXYZ::PolyTree treeUpInner;
 		;//2: Inner
 		if (GetPolyCount(treeLower, 2) == GetPolyCount(treeUp, 2))
 		{
@@ -288,7 +288,7 @@ namespace fmesh
 		}
 		else
 		{
-			ClipperLib::PolyTree outInner;
+			ClipperLibXYZ::PolyTree outInner;
 			fmesh::xor2PolyTrees(treeLower, treeUp, outInner, 2);//inner
 			_fillPolyTreeReverseInnerNew(&outInner, invertInner);
 		}
@@ -296,8 +296,8 @@ namespace fmesh
 		//3:outer
 		if (GetPolyCount(treeLower, 3) == GetPolyCount(treeUp, 3))
 		{
-			ClipperLib::PolyTree treeLowerOuter;
-			ClipperLib::PolyTree treeUpOuter;
+			ClipperLibXYZ::PolyTree treeLowerOuter;
+			ClipperLibXYZ::PolyTree treeUpOuter;
 
 			_buileDetachPloyTree(treeLower, treeLowerOuter, delta,3);
 			_buileDetachPloyTree(treeUp, treeUpOuter, delta,3);
@@ -305,7 +305,7 @@ namespace fmesh
 		}
 		else
 		{
-			ClipperLib::PolyTree outOuter;
+			ClipperLibXYZ::PolyTree outOuter;
 			fmesh::xor2PolyTrees(treeLower, treeUp, outOuter, 3);
 			_fillPolyTreeReverseInnerNew(&outOuter, invertOuter);
 		}
@@ -316,16 +316,16 @@ namespace fmesh
 		//	_buildFromDiffPolyTree_all_diff(treeUp, treeLower, flag);
 	}
 
-	void GeneratorImpl::_buildFromDiffPolyTree_all_same(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp, double delta, int flag, bool invert)
+	void GeneratorImpl::_buildFromDiffPolyTree_all_same(ClipperLibXYZ::PolyTree* treeLower, ClipperLibXYZ::PolyTree* treeUp, double delta, int flag, bool invert)
 	{
 		std::vector<Patch*> patches;
 		buildFromDiffPolyTreeSafty(treeLower, treeUp, patches, delta, flag);
 		addPatches(patches, invert);
 	}
 
-	void GeneratorImpl::_buildFromDiffPolyTree_xor(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp, double delta, int flag, bool invert)
+	void GeneratorImpl::_buildFromDiffPolyTree_xor(ClipperLibXYZ::PolyTree* treeLower, ClipperLibXYZ::PolyTree* treeUp, double delta, int flag, bool invert)
 	{
-		ClipperLib::PolyTree out;
+		ClipperLibXYZ::PolyTree out;
 		//fmesh::xor2PolyTrees(treeUp, treeLower, out, flag);
 		std::vector<Patch*> patches;
 		xor2PolyTrees(treeUp, treeLower, out, flag);
@@ -336,9 +336,9 @@ namespace fmesh
 		}
 	}
 
-	void GeneratorImpl::_buildFromDiffPolyTree_Inner(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp, double delta /*= 1.0*/, int flag /*= 0*/, bool invert /*= false*/)
+	void GeneratorImpl::_buildFromDiffPolyTree_Inner(ClipperLibXYZ::PolyTree* treeLower, ClipperLibXYZ::PolyTree* treeUp, double delta /*= 1.0*/, int flag /*= 0*/, bool invert /*= false*/)
 	{
-		ClipperLib::PolyTree out;
+		ClipperLibXYZ::PolyTree out;
 		//fmesh::xor2PolyTrees(treeUp, treeLower, out, flag);
 		std::vector<Patch*> patches;
 		buildFromDiffPolyTree_SameAndDiffSafty(treeLower, treeUp, patches, flag, out, delta);
@@ -350,9 +350,9 @@ namespace fmesh
 		}
 	}
 
-	void GeneratorImpl::_buildFromDiffPolyTree_onePoly(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp, double delta /*= 1.0*/, int flag /*= 0*/, bool invert /*= false*/)
+	void GeneratorImpl::_buildFromDiffPolyTree_onePoly(ClipperLibXYZ::PolyTree* treeLower, ClipperLibXYZ::PolyTree* treeUp, double delta /*= 1.0*/, int flag /*= 0*/, bool invert /*= false*/)
 	{
-		ClipperLib::PolyTree out;
+		ClipperLibXYZ::PolyTree out;
 		//fmesh::xor2PolyTrees(treeUp, treeLower, out, flag);
 		std::vector<Patch*> patches;
 		buildFromDiffPolyTree_SameAndDiffSafty(treeLower, treeUp, patches, flag, out, delta);
@@ -366,7 +366,7 @@ namespace fmesh
 		}
 	}
 
-	void GeneratorImpl::_fillPolyTreeReverseInner(ClipperLib::PolyTree* tree, bool invert /*= false*/)
+	void GeneratorImpl::_fillPolyTreeReverseInner(ClipperLibXYZ::PolyTree* tree, bool invert /*= false*/)
 	{
 		std::vector<Patch*> patches;
 
@@ -379,14 +379,14 @@ namespace fmesh
 		addPatches(patches);
 	}
 
-	void GeneratorImpl::_fillPolyTreeReverse(ClipperLib::PolyTree* tree, bool invert)
+	void GeneratorImpl::_fillPolyTreeReverse(ClipperLibXYZ::PolyTree* tree, bool invert)
 	{
 		std::vector<Patch*> patches;
 		fillComplexPolyTreeReverse(tree, patches, invert);
 		addPatches(patches);
 	}
 
-	void GeneratorImpl::_fillPolyTreeReverseInnerNew(ClipperLib::PolyTree* tree, bool invert)
+	void GeneratorImpl::_fillPolyTreeReverseInnerNew(ClipperLibXYZ::PolyTree* tree, bool invert)
 	{
 		std::vector<Patch*> patches;
 
@@ -397,7 +397,7 @@ namespace fmesh
 		addPatches(patches);
 	}
 
-	void GeneratorImpl::_fillPolyTreeSameZ(ClipperLib::PolyTree* tree, bool invert /*= false*/)
+	void GeneratorImpl::_fillPolyTreeSameZ(ClipperLibXYZ::PolyTree* tree, bool invert /*= false*/)
 	{
 		std::vector<Patch*> patches;
 		//fillComplexPolyTreeReverseInner(tree, patches);
@@ -406,28 +406,28 @@ namespace fmesh
 		addPatches(patches, invert);
 	}
 
-	void GeneratorImpl::_dealPolyTreeAxisZ(ClipperLib::PolyTree* tree, double slope, double min, double height)
+	void GeneratorImpl::_dealPolyTreeAxisZ(ClipperLibXYZ::PolyTree* tree, double slope, double min, double height)
 	{
 		dealPolyTreeAxisZ(tree, slope, min, height);
 	}
 
-	void GeneratorImpl::_buildFromDiffPolyTree_firstLayer(ClipperLib::PolyTree* treeLower, int flag /*= 0*/)
+	void GeneratorImpl::_buildFromDiffPolyTree_firstLayer(ClipperLibXYZ::PolyTree* treeLower, int flag /*= 0*/)
 	{
 		std::vector<Patch*> patches;
 		fillComplexPolyTree(treeLower, patches);
 		addPatches(patches, flag);
 	}
 
-	void GeneratorImpl::_buileMergePloyTree(ClipperLib::PolyTree* treeOuter, ClipperLib::PolyTree* treeInner, ClipperLib::PolyTree& treeNew)
+	void GeneratorImpl::_buileMergePloyTree(ClipperLibXYZ::PolyTree* treeOuter, ClipperLibXYZ::PolyTree* treeInner, ClipperLibXYZ::PolyTree& treeNew)
 	{
-		ClipperLib::ClipperOffset offset;
+		ClipperLibXYZ::ClipperOffset offset;
 		bool bReverse = false;
-		polyNodeFunc func = [&func, &offset, &bReverse](ClipperLib::PolyNode* node) {
+		polyNodeFunc func = [&func, &offset, &bReverse](ClipperLibXYZ::PolyNode* node) {
 			if (bReverse)
-				;// ClipperLib::ReversePath(node->Contour);
-			offset.AddPath(node->Contour, ClipperLib::jtRound, ClipperLib::EndType::etClosedPolygon);
+				;// ClipperLibXYZ::ReversePath(node->Contour);
+			offset.AddPath(node->Contour, ClipperLibXYZ::jtRound, ClipperLibXYZ::EndType::etClosedPolygon);
 
-			for (ClipperLib::PolyNode* n : node->Childs)
+			for (ClipperLibXYZ::PolyNode* n : node->Childs)
 				func(n);
 		};
 		func(treeOuter);
@@ -436,35 +436,35 @@ namespace fmesh
 		offset.Execute(treeNew, 0);
 	}
 
-	void GeneratorImpl::_buileDetachPloyTree(ClipperLib::PolyTree* tree, ClipperLib::PolyTree& treeNew,double delta,int flag)//0 all 2 inner 3 outer
+	void GeneratorImpl::_buileDetachPloyTree(ClipperLibXYZ::PolyTree* tree, ClipperLibXYZ::PolyTree& treeNew,double delta,int flag)//0 all 2 inner 3 outer
 	{
-		ClipperLib::ClipperOffset offset;
+		ClipperLibXYZ::ClipperOffset offset;
 		double z=0;
 		int _flag = flag;
-		polyNodeFunc func = [&func, &offset, &_flag, &z](ClipperLib::PolyNode* node) {
+		polyNodeFunc func = [&func, &offset, &_flag, &z](ClipperLibXYZ::PolyNode* node) {
 			int depth = testPolyNodeDepth(node);
 			if ((_flag == 2 && (depth == 2 || depth == 3 || depth == 6 || depth == 7))
 				|| (_flag == 3 && (depth == 1 || depth == 4 || depth == 5 || depth == 8))
 				|| _flag == 0)
 			{
-				offset.AddPath(node->Contour, ClipperLib::jtRound, ClipperLib::EndType::etClosedPolygon);
+				offset.AddPath(node->Contour, ClipperLibXYZ::jtRound, ClipperLibXYZ::EndType::etClosedPolygon);
 				if (!z && node->Contour.size())
 				{
 					z = node->Contour.at(0).Z;
 				}
 			}
-			for (ClipperLib::PolyNode* n : node->Childs)
+			for (ClipperLibXYZ::PolyNode* n : node->Childs)
 				func(n);
 		};
 		func(tree);
 		offset.Execute(treeNew, 0);
 
-		polyNodeFunc func1 = [&func1, &z,&flag](ClipperLib::PolyNode* node) {
+		polyNodeFunc func1 = [&func1, &z,&flag](ClipperLibXYZ::PolyNode* node) {
 			if (flag == 2)
 			{
-				ClipperLib::ReversePath(node->Contour);
+				ClipperLibXYZ::ReversePath(node->Contour);
 			}		
-			for (ClipperLib::IntPoint& point : node->Contour)
+			for (ClipperLibXYZ::IntPoint& point : node->Contour)
 				point.Z = (int)(z);
 		};
 
@@ -472,7 +472,7 @@ namespace fmesh
 		adjustPolyTreeZ(treeNew);
 	}
 
-	void GeneratorImpl::_buildTop(ClipperLib::PolyTree& treeTop, double& hTop, double offset)
+	void GeneratorImpl::_buildTop(ClipperLibXYZ::PolyTree& treeTop, double& hTop, double offset)
 	{
 		hTop = m_adParam.total_height;
 		double thickness = m_adParam.extend_width / 2.0f;
@@ -489,7 +489,7 @@ namespace fmesh
 			_fillPolyTree(&treeTop);
 		else if (m_adParam.top_type == ADTopType::adtt_close)
 		{
-			ClipperLib::PolyTree closeTop;
+			ClipperLibXYZ::PolyTree closeTop;
 			double hCloseTop = m_adParam.total_height;
 			offsetAndExtendpolyType(m_poly, offset, thickness, hCloseTop, closeTop,m_adParam.bluntSharpCorners);
 			_fillPolyTreeDepth14(&closeTop);
@@ -503,7 +503,7 @@ namespace fmesh
 			{
 				offsetH = 0.5;
 			}
-			std::vector<ClipperLib::PolyTree> botomSteppolys(3);
+			std::vector<ClipperLibXYZ::PolyTree> botomSteppolys(3);
 			offsetAndExtendpolyType(m_poly, offset, thickness, m_adParam.total_height - m_adParam.top_height, treeTop, m_adParam.bluntSharpCorners);
 			offsetAndExtendpolyType(m_poly, offset, thickness, m_adParam.total_height - m_adParam.top_height + offsetH, botomSteppolys.at(0), m_adParam.bluntSharpCorners);
 			offsetAndExtendpolyType(m_poly, offset, thickness, m_adParam.total_height - m_adParam.top_height + offsetH, botomSteppolys.at(1), m_adParam.bluntSharpCorners);
@@ -532,7 +532,7 @@ namespace fmesh
 		}
 	}
 
-	void GeneratorImpl::_buildBottom(ClipperLib::PolyTree& treeBottom, double& hBottom, double offset)
+	void GeneratorImpl::_buildBottom(ClipperLibXYZ::PolyTree& treeBottom, double& hBottom, double offset)
 	{
 		hBottom = m_adParam.bottom_offset;
 		double thickness = m_adParam.extend_width / 2.0f;
@@ -550,7 +550,7 @@ namespace fmesh
 			_fillPolyTree(&treeBottom, true);
 		else if (m_adParam.bottom_type == ADBottomType::adbt_close)
 		{
-			ClipperLib::PolyTree closeBottom;
+			ClipperLibXYZ::PolyTree closeBottom;
 			double hCloseBottom = m_adParam.bottom_offset;
 			offsetAndExtendpolyType(m_poly, offset, thickness, hCloseBottom, closeBottom,m_adParam.bluntSharpCorners);
 
@@ -560,7 +560,7 @@ namespace fmesh
 		}
 		else if (m_adParam.bottom_type == ADBottomType::adbt_step)
 		{
-			std::vector<ClipperLib::PolyTree> botomSteppolys(3);
+			std::vector<ClipperLibXYZ::PolyTree> botomSteppolys(3);
 			double h = (m_adParam.bottom_height - m_adParam.extend_width) > 0 ? (m_adParam.bottom_height - m_adParam.extend_width) : 0;
 			offsetAndExtendpolyType(m_poly, offset, thickness, 0, botomSteppolys.at(0),m_adParam.bluntSharpCorners);
 			offsetAndExtendpolyType(m_poly, offset, thickness, h, botomSteppolys.at(1), m_adParam.bluntSharpCorners);
@@ -577,7 +577,7 @@ namespace fmesh
 		}
 		else if (m_adParam.bottom_type == ADBottomType::adbt_extend_inner)
 		{
-			std::vector<ClipperLib::PolyTree> polys(2);
+			std::vector<ClipperLibXYZ::PolyTree> polys(2);
 			offsetAndExtendpolyType(m_poly, offset, thickness, 0, polys.at(0), m_adParam.bluntSharpCorners);
 			offsetAndExtendpolyType(m_poly, offset, thickness, thickness, polys.at(1), m_adParam.bluntSharpCorners);
 			offsetAndExtendpolyType(m_poly, offset, thickness, thickness, treeBottom, m_adParam.bluntSharpCorners);
@@ -585,14 +585,14 @@ namespace fmesh
 			offsetExteriorInner(polys.at(1), m_adParam.bottom_extend_width, m_adParam.extend_width);
 
 			_fillPolyTree(&polys.at(0), true);
-			ClipperLib::PolyTree out;
+			ClipperLibXYZ::PolyTree out;
 			fmesh::xor2PolyTrees(&polys.at(1), &treeBottom, out);
 			_buildFromSamePolyTree(&polys.at(0), &polys.at(1));
 			_buildFromDiffPolyTree_firstLayer(&out);
 		}
 		else if (m_adParam.bottom_type == ADBottomType::adbt_extend_outter)
 		{
-			std::vector<ClipperLib::PolyTree> polys(2);
+			std::vector<ClipperLibXYZ::PolyTree> polys(2);
 			offsetAndExtendpolyType(m_poly, offset, thickness, 0, polys.at(0), m_adParam.bluntSharpCorners);
 			offsetAndExtendpolyType(m_poly, offset, thickness, thickness, polys.at(1), m_adParam.bluntSharpCorners);
 			offsetAndExtendpolyType(m_poly, offset, thickness, thickness, treeBottom, m_adParam.bluntSharpCorners);
@@ -600,7 +600,7 @@ namespace fmesh
 			offsetExterior(polys.at(1), m_adParam.bottom_extend_width / 2.0f, m_adParam.extend_width);
 
 			_fillPolyTree(&polys.at(0), true);
-			ClipperLib::PolyTree out;
+			ClipperLibXYZ::PolyTree out;
 			fmesh::xor2PolyTrees(&polys.at(1), &treeBottom, out);
 			_buildFromSamePolyTree(&polys.at(0), &polys.at(1));
 			_buildFromDiffPolyTree_firstLayer(&out);
@@ -615,7 +615,7 @@ namespace fmesh
 		}
 	}
 
-	void GeneratorImpl::_buildTopDiff(ClipperLib::PolyTree& treeTop, ClipperLib::PolyTree* top)
+	void GeneratorImpl::_buildTopDiff(ClipperLibXYZ::PolyTree& treeTop, ClipperLibXYZ::PolyTree* top)
 	{
 		double hTop = m_adParam.total_height;
 		double thickness = m_adParam.extend_width / 2.0f;
@@ -634,7 +634,7 @@ namespace fmesh
 			_fillPolyTree(&treeTop);
 		else if (m_adParam.top_type == ADTopType::adtt_close)
 		{
-			ClipperLib::PolyTree closeTop;
+			ClipperLibXYZ::PolyTree closeTop;
 			double hCloseTop = m_adParam.total_height;
 
 			copy2PolyTree(*top, closeTop);
@@ -652,7 +652,7 @@ namespace fmesh
 			{
 				offsetH = 0.5;
 			}
-			std::vector<ClipperLib::PolyTree> botomSteppolys(3);
+			std::vector<ClipperLibXYZ::PolyTree> botomSteppolys(3);
 
 			copy2PolyTree(*top, treeTop);
 			setPolyTreeZ(treeTop, m_adParam.total_height - m_adParam.top_height);
@@ -689,7 +689,7 @@ namespace fmesh
 		//	}
 		//}
 	}
-	void GeneratorImpl::_buildBottomDiff(ClipperLib::PolyTree& treeBottom, ClipperLib::PolyTree* bottom)
+	void GeneratorImpl::_buildBottomDiff(ClipperLibXYZ::PolyTree& treeBottom, ClipperLibXYZ::PolyTree* bottom)
 	{
 		double hBottom = m_adParam.bottom_offset;
 		double thickness = m_adParam.extend_width / 2.0f;
@@ -709,7 +709,7 @@ namespace fmesh
 			_fillPolyTree(&treeBottom, true);
 		else if (m_adParam.bottom_type == ADBottomType::adbt_close)
 		{
-			ClipperLib::PolyTree closeBottom;
+			ClipperLibXYZ::PolyTree closeBottom;
 			double hCloseBottom = m_adParam.bottom_offset;
 
 			copy2PolyTree(*bottom, closeBottom);
@@ -722,7 +722,7 @@ namespace fmesh
 		}
 		else if (m_adParam.bottom_type == ADBottomType::adbt_step)
 		{
-			std::vector<ClipperLib::PolyTree> botomSteppolys(3);
+			std::vector<ClipperLibXYZ::PolyTree> botomSteppolys(3);
 			double h = (m_adParam.bottom_height - m_adParam.extend_width) > 0 ? (m_adParam.bottom_height - m_adParam.extend_width) : 0;
 			
 			copy2PolyTree(*bottom, botomSteppolys.at(0));
@@ -748,7 +748,7 @@ namespace fmesh
 		}
 		else if (m_adParam.bottom_type == ADBottomType::adbt_extend_inner)
 		{
-			std::vector<ClipperLib::PolyTree> polys(2);
+			std::vector<ClipperLibXYZ::PolyTree> polys(2);
 
 			copy2PolyTree(*bottom, polys.at(0));
 			setPolyTreeZ(polys.at(0), 0.0);
@@ -763,14 +763,14 @@ namespace fmesh
 			offsetExteriorInner(polys.at(1), m_adParam.bottom_extend_width, m_adParam.extend_width);
 
 			_fillPolyTree(&polys.at(0), true);
-			ClipperLib::PolyTree out;
+			ClipperLibXYZ::PolyTree out;
 			fmesh::xor2PolyTrees(&polys.at(1), &treeBottom, out);
 			_buildFromSamePolyTree(&polys.at(0), &polys.at(1));
 			_buildFromDiffPolyTree_firstLayer(&out);
 		}
 		else if (m_adParam.bottom_type == ADBottomType::adbt_extend_outter)
 		{
-			std::vector<ClipperLib::PolyTree> polys(2);
+			std::vector<ClipperLibXYZ::PolyTree> polys(2);
 
 			copy2PolyTree(*bottom, polys.at(0));
 			setPolyTreeZ(polys.at(0), 0.0);
@@ -785,7 +785,7 @@ namespace fmesh
 			offsetExterior(polys.at(1), m_adParam.bottom_extend_width / 2.0f, m_adParam.extend_width);
 
 			_fillPolyTree(&polys.at(0), true);
-			ClipperLib::PolyTree out;
+			ClipperLibXYZ::PolyTree out;
 			fmesh::xor2PolyTrees(&polys.at(1), &treeBottom, out);
 			_buildFromSamePolyTree(&polys.at(0), &polys.at(1));
 			_buildFromDiffPolyTree_firstLayer(&out);
@@ -800,9 +800,9 @@ namespace fmesh
 		//}
 	}
 
-	void GeneratorImpl::_buildTopBottom(ClipperLib::PolyTree* treeBottom, ClipperLib::PolyTree* treeTop, double offsetB, double offsetT)
+	void GeneratorImpl::_buildTopBottom(ClipperLibXYZ::PolyTree* treeBottom, ClipperLibXYZ::PolyTree* treeTop, double offsetB, double offsetT)
 	{
-		ClipperLib::PolyTree _treeTop, _treeBottom;
+		ClipperLibXYZ::PolyTree _treeTop, _treeBottom;
 		double hTop, hBottom;
 
 		if (treeBottom != nullptr)
@@ -817,9 +817,9 @@ namespace fmesh
 		}
 	}
 
-	void GeneratorImpl::_buildTopBottomDiff(ClipperLib::PolyTree* treeBottom, ClipperLib::PolyTree* treeTop, double offsetB, double offsetT)
+	void GeneratorImpl::_buildTopBottomDiff(ClipperLibXYZ::PolyTree* treeBottom, ClipperLibXYZ::PolyTree* treeTop, double offsetB, double offsetT)
 	{
-		ClipperLib::PolyTree _treeTop, _treeBottom;
+		ClipperLibXYZ::PolyTree _treeTop, _treeBottom;
 		double hTop, hBottom;
 
 		if (treeBottom != nullptr)
@@ -834,9 +834,9 @@ namespace fmesh
 		}
 	}
 
-	void GeneratorImpl::_buildTopBottom_onepoly(ClipperLib::PolyTree* treeBottom, ClipperLib::PolyTree* treeTop, double offsetB /*= 0*/, double offsetT /*= 0*/)
+	void GeneratorImpl::_buildTopBottom_onepoly(ClipperLibXYZ::PolyTree* treeBottom, ClipperLibXYZ::PolyTree* treeTop, double offsetB /*= 0*/, double offsetT /*= 0*/)
 	{
-		ClipperLib::PolyTree _treeTop, _treeBottom;
+		ClipperLibXYZ::PolyTree _treeTop, _treeBottom;
 		double hTop, hBottom;
 
 		if (treeBottom != nullptr)
@@ -851,7 +851,7 @@ namespace fmesh
 		}
 	}
 
-	void GeneratorImpl::_buildTop_onepoly(ClipperLib::PolyTree& treeTop, double& hTop, double offset /*= 0*/)
+	void GeneratorImpl::_buildTop_onepoly(ClipperLibXYZ::PolyTree& treeTop, double& hTop, double offset /*= 0*/)
 	{
 		hTop = m_adParam.total_height;
 		double thickness = m_adParam.extend_width / 2.0f;
@@ -875,7 +875,7 @@ namespace fmesh
 			;//_fillPolyTree(&treeTop);
 		else if (m_adParam.top_type == ADTopType::adtt_close)
 		{
-			//std::vector<ClipperLib::PolyTree> poly(1);
+			//std::vector<ClipperLibXYZ::PolyTree> poly(1);
 			//copy2PolyTree(m_poly, poly.at(0));
 			//setPolyTreeZ(poly.at(0), m_adParam.total_height);
 			//_buildFromSamePolyTree(&treeTop, &poly.at(0));
@@ -887,7 +887,7 @@ namespace fmesh
 		{
 			//double h = (m_adParam.total_height - m_adParam.top_height) > 0 ? (m_adParam.total_height - m_adParam.top_height) : 0;
 			//int count = m_adParam.extend_width > 0 ? (0.5 + 1.0 * m_adParam.top_extend_width / m_adParam.extend_width) : 1;
-			//std::vector<ClipperLib::PolyTree> botomSteppolys(4);
+			//std::vector<ClipperLibXYZ::PolyTree> botomSteppolys(4);
 			//offsetPolyTree(m_poly, -count* m_adParam.extend_width, botomSteppolys.at(0));
 			//setPolyTreeZ(botomSteppolys.at(0), h);
 
@@ -904,7 +904,7 @@ namespace fmesh
 			//_buildFromSamePolyTree(&botomSteppolys.at(1), &botomSteppolys.at(2));
 			//_buildFromSamePolyTree(&botomSteppolys.at(0), &botomSteppolys.at(3));
 
-			//std::vector<ClipperLib::PolyTree> offsetPolys(2);
+			//std::vector<ClipperLibXYZ::PolyTree> offsetPolys(2);
 			//offsetPolyTree(m_poly, -count * m_adParam.extend_width - 0.2, offsetPolys.at(0));
 			//setPolyTreeZ(offsetPolys.at(0), h);
 
@@ -927,7 +927,7 @@ namespace fmesh
 		}
 	}
 
-	void GeneratorImpl::_buildBottom_onepoly(ClipperLib::PolyTree& treeBottom, double& hBottom, double offset /*= 0*/)
+	void GeneratorImpl::_buildBottom_onepoly(ClipperLibXYZ::PolyTree& treeBottom, double& hBottom, double offset /*= 0*/)
 	{
 		hBottom = m_adParam.bottom_offset;
 		double thickness = m_adParam.extend_width / 2.0f;
@@ -958,7 +958,7 @@ namespace fmesh
 		{
 			//double h = (m_adParam.bottom_height - m_adParam.extend_width / 4.0f - m_adParam.bottom_extend_width / 4.0) ? (m_adParam.bottom_height - m_adParam.extend_width / 4.0 - m_adParam.bottom_extend_width / 4.0) : 0.5;
 			//int count = m_adParam.extend_width > 0 ? (0.5 + 1.0 * m_adParam.bottom_extend_width / m_adParam.extend_width) : 1;
-			//std::vector<ClipperLib::PolyTree> botomSteppolys(4);
+			//std::vector<ClipperLibXYZ::PolyTree> botomSteppolys(4);
 			//offsetPolyTree(m_poly, -count* m_adParam.extend_width, botomSteppolys.at(0));
 			//setPolyTreeZ(botomSteppolys.at(0), hBottom);
 
@@ -975,7 +975,7 @@ namespace fmesh
 			//_buildFromSamePolyTree(&botomSteppolys.at(1), &treeBottom);
 			//_buildFromSamePolyTree(&botomSteppolys.at(0), &botomSteppolys.at(2));
 
-			//std::vector<ClipperLib::PolyTree> offsetPolys(2);
+			//std::vector<ClipperLibXYZ::PolyTree> offsetPolys(2);
 			//offsetPolyTree(m_poly, -count * m_adParam.extend_width - 0.2, offsetPolys.at(0));
 			//setPolyTreeZ(offsetPolys.at(0), hBottom);
 
@@ -988,8 +988,8 @@ namespace fmesh
 		else if (m_adParam.bottom_type == ADBottomType::adbt_extend_inner)
 		{
 			int count = m_adParam.extend_width > 0 ? (0.5 + 1.0 * m_adParam.bottom_extend_width / m_adParam.extend_width) : 1;
-			std::vector<ClipperLib::PolyTree> polysTop(count);
-			std::vector<ClipperLib::PolyTree> polysBom(count);
+			std::vector<ClipperLibXYZ::PolyTree> polysTop(count);
+			std::vector<ClipperLibXYZ::PolyTree> polysBom(count);
 			float offset = 0.0;
 			for (size_t i = 0; i < count; i++)
 			{		
@@ -1016,8 +1016,8 @@ namespace fmesh
 		else if (m_adParam.bottom_type == ADBottomType::adbt_extend_outter)
 		{
 			int count = m_adParam.extend_width > 0 ? (0.5 + 1.0 * m_adParam.bottom_extend_width / m_adParam.extend_width) : 1;
-			std::vector<ClipperLib::PolyTree> polysTop(count);
-			std::vector<ClipperLib::PolyTree> polysBom(count);
+			std::vector<ClipperLibXYZ::PolyTree> polysTop(count);
+			std::vector<ClipperLibXYZ::PolyTree> polysBom(count);
 			float offset = 0.0;
 			for (size_t i = 0; i < count; i++)
 			{		
@@ -1054,7 +1054,7 @@ namespace fmesh
 		}
 	}
 
-	void GeneratorImpl::_simplifyPoly(ClipperLib::PolyTree* poly, double distance/*=0*/)
+	void GeneratorImpl::_simplifyPoly(ClipperLibXYZ::PolyTree* poly, double distance/*=0*/)
 	{
 		double x = dmax.x - dmin.x;
 		double y = dmax.y - dmin.y;
@@ -1062,13 +1062,13 @@ namespace fmesh
 		if (!distance)
 			 distance = ((x * y / 10000) / childcount) > 1 ? (x * y / 10000) / childcount : 1.415;
 
-		polyNodeFunc func = [&distance](ClipperLib::PolyNode* node) {
-			ClipperLib::CleanPolygon(node->Contour, distance);
+		polyNodeFunc func = [&distance](ClipperLibXYZ::PolyNode* node) {
+			ClipperLibXYZ::CleanPolygon(node->Contour, distance);
 		};
 		fmesh::loopPolyTree(func, poly);
 	}
 
-	void GeneratorImpl::_simplifyPolyOneploy(ClipperLib::PolyTree* poly, bool outer, double distance)
+	void GeneratorImpl::_simplifyPolyOneploy(ClipperLibXYZ::PolyTree* poly, bool outer, double distance)
 	{
 		double x = dmax.x - dmin.x;
 		double y = dmax.y - dmin.y;
@@ -1080,24 +1080,24 @@ namespace fmesh
 		{
 			flag = 2;
 		}
-		polyNodeFunc func = [&distance,&flag](ClipperLib::PolyNode* node) {
+		polyNodeFunc func = [&distance,&flag](ClipperLibXYZ::PolyNode* node) {
 			if (checkFlag(node, flag))
-				ClipperLib::CleanPolygon(node->Contour, distance);
+				ClipperLibXYZ::CleanPolygon(node->Contour, distance);
 		};
 		fmesh::loopPolyTree(func, poly);
 	}
 
-	void GeneratorImpl::areaPoly(ClipperLib::PolyTree& poly, std::vector<double>& area)
+	void GeneratorImpl::areaPoly(ClipperLibXYZ::PolyTree& poly, std::vector<double>& area)
 	{
 		double _area = 0.0;
-		polyNodeFunc func1 = [&func1, &_area](ClipperLib::PolyNode* node) {
-			_area += ClipperLib::Area(node->Contour);
+		polyNodeFunc func1 = [&func1, &_area](ClipperLibXYZ::PolyNode* node) {
+			_area += ClipperLibXYZ::Area(node->Contour);
 
-			for (ClipperLib::PolyNode* n : node->Childs)
+			for (ClipperLibXYZ::PolyNode* n : node->Childs)
 				func1(n);
 		};
 
-		for (ClipperLib::PolyNode* n : poly.Childs)
+		for (ClipperLibXYZ::PolyNode* n : poly.Childs)
 		{
 			_area = 0.0;
 			func1(n);

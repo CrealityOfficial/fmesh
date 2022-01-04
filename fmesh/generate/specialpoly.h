@@ -1,6 +1,6 @@
 #ifndef FMESH_SPECIALPOLY_1604475054469_H
 #define FMESH_SPECIALPOLY_1604475054469_H
-#include <clipper/clipper.hpp>
+#include "clipperxyz/clipper.hpp"
 #include "fmesh/common/export.h"
 #include "trimesh2/Vec.h"
 
@@ -8,34 +8,34 @@ namespace fmesh
 {
 	typedef struct SAABB
 	{
-		ClipperLib::IntPoint pMmin;
-		ClipperLib::IntPoint pMax;
+		ClipperLibXYZ::IntPoint pMmin;
+		ClipperLibXYZ::IntPoint pMax;
 		SAABB()
-			:pMmin((std::numeric_limits<ClipperLib::cInt>::max(), std::numeric_limits<ClipperLib::cInt>::max()))
-			, pMax((std::numeric_limits<ClipperLib::cInt>::min(), std::numeric_limits<ClipperLib::cInt>::min()))
+			:pMmin((std::numeric_limits<ClipperLibXYZ::cInt>::max(), std::numeric_limits<ClipperLibXYZ::cInt>::max()))
+			, pMax((std::numeric_limits<ClipperLibXYZ::cInt>::min(), std::numeric_limits<ClipperLibXYZ::cInt>::min()))
 		{}
 	}aabb;
 
-	void generateLines(ClipperLib::Paths& originPloy, ClipperLib::Paths& newPaths, const double& laceGap, const double& laceRadius, bool isskeleton = false);
-	void generateRounds(const ClipperLib::Paths& originPath, ClipperLib::Paths& newPloy, const double& laceGap, const double& laceRadius);
+	void generateLines(ClipperLibXYZ::Paths& originPloy, ClipperLibXYZ::Paths& newPaths, const double& laceGap, const double& laceRadius, bool isskeleton = false);
+	void generateRounds(const ClipperLibXYZ::Paths& originPath, ClipperLibXYZ::Paths& newPloy, const double& laceGap, const double& laceRadius);
 
-	bool isCollision(const ClipperLib::Paths& paths, const ClipperLib::IntPoint& point, const double& smallest_dist);
+	bool isCollision(const ClipperLibXYZ::Paths& paths, const ClipperLibXYZ::IntPoint& point, const double& smallest_dist);
 
-	inline double vSize2f(const ClipperLib::IntPoint& p0, const ClipperLib::IntPoint& p1)
+	inline double vSize2f(const ClipperLibXYZ::IntPoint& p0, const ClipperLibXYZ::IntPoint& p1)
 	{
 		return sqrt(pow((p1.X - p0.X), 2) + pow((p1.Y - p0.Y), 2)) / 1000.0;
 	}
 
-	int pathCount(ClipperLib::Path* path, const ClipperLib::IntPoint& p);
-	bool deletePoint(ClipperLib::Path* path, int index);
-	int findNext(ClipperLib::Path* path, ClipperLib::IntPoint point);
-	void sortPath(ClipperLib::Path* path, ClipperLib::Paths* paths,bool getPerLine = false);
+	int pathCount(ClipperLibXYZ::Path* path, const ClipperLibXYZ::IntPoint& p);
+	bool deletePoint(ClipperLibXYZ::Path* path, int index);
+	int findNext(ClipperLibXYZ::Path* path, ClipperLibXYZ::IntPoint point);
+	void sortPath(ClipperLibXYZ::Path* path, ClipperLibXYZ::Paths* paths,bool getPerLine = false);
 
-	float PointTOline(ClipperLib::IntPoint const& a, ClipperLib::IntPoint const& b, ClipperLib::IntPoint const& p);
-	float getMinLen(const ClipperLib::Paths& paths, const ClipperLib::IntPoint point);
-	float optimizePaths(ClipperLib::Paths& paths, ClipperLib::Paths& pathOrigin);
+	float PointTOline(ClipperLibXYZ::IntPoint const& a, ClipperLibXYZ::IntPoint const& b, ClipperLibXYZ::IntPoint const& p);
+	float getMinLen(const ClipperLibXYZ::Paths& paths, const ClipperLibXYZ::IntPoint point);
+	float optimizePaths(ClipperLibXYZ::Paths& paths, ClipperLibXYZ::Paths& pathOrigin);
 
-	aabb getAABB(ClipperLib::Path* path);
+	aabb getAABB(ClipperLibXYZ::Path* path);
 }
 
 #endif // FMESH_SPECIALPOLY_1604475054469_H

@@ -1,6 +1,6 @@
 #ifndef FMESH_GENERATOR_1604462758368_H
 #define FMESH_GENERATOR_1604462758368_H
-#include <clipper/clipper.hpp>
+#include "clipperxyz/clipper.hpp"
 #include "trimesh2/TriMesh.h"
 #include "fmesh/common/export.h"
 #include "fmesh/common/param.h"
@@ -29,16 +29,16 @@ namespace fmesh
 		Generator();
 		virtual ~Generator();
 
-		void setPaths(ClipperLib::Paths* paths);
-		ClipperLib::Paths* paths();
+		void setPaths(ClipperLibXYZ::Paths* paths);
+		ClipperLibXYZ::Paths* paths();
 
-		ClipperLib::PolyTree* polyTree();
+		ClipperLibXYZ::PolyTree* polyTree();
 		trimesh::TriMesh* build(const std::string& method, std::vector<std::string>& args);
 	protected:
 		GeneratorImpl* findImpl(const std::string& method);
 	protected:
-		std::unique_ptr<ClipperLib::Paths> m_paths;
-		std::unique_ptr<ClipperLib::PolyTree> m_polyTree;
+		std::unique_ptr<ClipperLibXYZ::Paths> m_paths;
+		std::unique_ptr<ClipperLibXYZ::PolyTree> m_polyTree;
 		
 		std::map<std::string, GeneratorImpl*> m_generateImpls;
 	};
@@ -50,17 +50,17 @@ namespace fmesh
 		GeneratorProxy();
 		virtual ~GeneratorProxy();
 
-		trimesh::TriMesh* build(const ADParam& param, ClipperLib::Paths* paths, 
-			ExportParam* exportParam = nullptr, ClipperLib::PolyTree* topTree = nullptr, ClipperLib::PolyTree* bottomTree = nullptr, bool buildShell = false);
+		trimesh::TriMesh* build(const ADParam& param, ClipperLibXYZ::Paths* paths, 
+			ExportParam* exportParam = nullptr, ClipperLibXYZ::PolyTree* topTree = nullptr, ClipperLibXYZ::PolyTree* bottomTree = nullptr, bool buildShell = false);
 
-		trimesh::TriMesh* buildOmp(const ADParam& param, ClipperLib::Paths* paths,
-			ExportParam* exportParam = nullptr, ClipperLib::PolyTree* topTree = nullptr, ClipperLib::PolyTree* bottomTree = nullptr);
+		trimesh::TriMesh* buildOmp(const ADParam& param, ClipperLibXYZ::Paths* paths,
+			ExportParam* exportParam = nullptr, ClipperLibXYZ::PolyTree* topTree = nullptr, ClipperLibXYZ::PolyTree* bottomTree = nullptr);
 
 		//seperate
-		void setup(const ADParam& param, ClipperLib::Paths* paths, mmesh::StatusTracer* tracer = nullptr);
+		void setup(const ADParam& param, ClipperLibXYZ::Paths* paths, mmesh::StatusTracer* tracer = nullptr);
 		trimesh::TriMesh* build();
 		trimesh::TriMesh* buildShell();
-		void buildBoard(const ExportParam& param, ClipperLib::PolyTree& topTree, ClipperLib::PolyTree& bottomTree);
+		void buildBoard(const ExportParam& param, ClipperLibXYZ::PolyTree& topTree, ClipperLibXYZ::PolyTree& bottomTree);
 	protected:
 		std::unique_ptr<GeneratorImpl> m_impl;
 	};

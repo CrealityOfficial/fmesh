@@ -15,7 +15,7 @@ namespace fmesh
 
 	void Outline::push(double x, double y)
 	{
-		ClipperLib::IntPoint point((int)1000.0 * x, (int)1000.0 * y, 0);
+		ClipperLibXYZ::IntPoint point((int)1000.0 * x, (int)1000.0 * y, 0);
 		m_path.push_back(point);
 	}
 
@@ -23,22 +23,22 @@ namespace fmesh
 	{
 		if (m_path.size() > 0)
 		{
-			ClipperLib::Path path;
+			ClipperLibXYZ::Path path;
 			m_pathes.push_back(path);
 			m_pathes.back().swap(m_path);
 		}
 
 		m_count = 0;
-		for (ClipperLib::Path& path : m_pathes)
+		for (ClipperLibXYZ::Path& path : m_pathes)
 			m_count += (int)path.size();
 	}
 
-	const ClipperLib::Paths& Outline::pathes() const
+	const ClipperLibXYZ::Paths& Outline::pathes() const
 	{
 		return m_pathes;
 	}
 
-	ClipperLib::Paths& Outline::pathes()
+	ClipperLibXYZ::Paths& Outline::pathes()
 	{
 		return m_pathes;
 	}

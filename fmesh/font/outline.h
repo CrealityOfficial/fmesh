@@ -1,6 +1,6 @@
 #ifndef FMESH_OUTLINE_1603206058654_H
 #define FMESH_OUTLINE_1603206058654_H
-#include <clipper/clipper.hpp>
+#include "clipperxyz/clipper.hpp"
 
 namespace fmesh
 {
@@ -12,13 +12,13 @@ namespace fmesh
 
 		void push(double x, double y);
 		void end();
-		const ClipperLib::Paths& pathes() const;
-		ClipperLib::Paths& pathes();
+		const ClipperLibXYZ::Paths& pathes() const;
+		ClipperLibXYZ::Paths& pathes();
 
 		int count();
 	protected:
-		ClipperLib::Paths m_pathes;
-		ClipperLib::Path m_path;
+		ClipperLibXYZ::Paths m_pathes;
+		ClipperLibXYZ::Path m_path;
 
 		int m_count;
 	};

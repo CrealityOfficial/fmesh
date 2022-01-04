@@ -33,7 +33,7 @@ namespace fmesh
 				poly.resize(size);
 				for (int i = 0; i < size; ++i)
 				{
-					in.read((char*)&source.at(i), sizeof(ClipperLib::IntPoint));
+					in.read((char*)&source.at(i), sizeof(ClipperLibXYZ::IntPoint));
 					poly.at(i) = &source.at(i);
 				}
 			}
@@ -48,9 +48,9 @@ namespace fmesh
 		{
 			int size = (int)poly.size();
 			out.write((const char*)&size, sizeof(int));
-			for (ClipperLib::IntPoint* point : poly)
+			for (ClipperLibXYZ::IntPoint* point : poly)
 			{
-				out.write((const char*)point, sizeof(ClipperLib::IntPoint));
+				out.write((const char*)point, sizeof(ClipperLibXYZ::IntPoint));
 			}
 		}
 		out.close();
@@ -126,7 +126,7 @@ namespace fmesh
 		} while (cur != m_root);
 	}
 
-	void EarPolygon::setup(ClipperLib::Path* path)
+	void EarPolygon::setup(ClipperLibXYZ::Path* path)
 	{
 		if (!path || path->size() < 3)
 			return;
@@ -183,7 +183,7 @@ namespace fmesh
 		} while (cur != m_root);
 	}
 
-	void EarPolygon::setup(ClipperLib::PolyNode* poly)
+	void EarPolygon::setup(ClipperLibXYZ::PolyNode* poly)
 	{
 		if (!poly)
 			return;
@@ -193,10 +193,10 @@ namespace fmesh
 		int count = 0;
 		int index = 0;
 
-		//polyNodeFunc func = [&func, &earspolygons, &earspoints,&earspointsZ,&count](ClipperLib::PolyNode* node) {
+		//polyNodeFunc func = [&func, &earspolygons, &earspoints,&earspointsZ,&count](ClipperLibXYZ::PolyNode* node) {
 		//	std::vector<int> polygon;
 		//	std::vector<trimesh::dvec2> points;
-		//	for (ClipperLib::IntPoint& point : node->Contour)
+		//	for (ClipperLibXYZ::IntPoint& point : node->Contour)
 		//	{
 		//		polygon.push_back(earspoints.size());
 		//		earspoints.push_back(trimesh::dvec2(point.X/1000.0, point.Y / 1000.0));
@@ -207,10 +207,10 @@ namespace fmesh
 		//mmesh::loopPolyTree(func, poly);
 
 
-		polyNodeFunc func = [&func, &earspolygons, &earspoints, &earspointsZ, &count](ClipperLib::PolyNode* node) {
+		polyNodeFunc func = [&func, &earspolygons, &earspoints, &earspointsZ, &count](ClipperLibXYZ::PolyNode* node) {
 			std::vector<int> polygon;
 			std::vector<trimesh::dvec2> points;
-			for (ClipperLib::IntPoint& point : node->Contour)
+			for (ClipperLibXYZ::IntPoint& point : node->Contour)
 			{
 				polygon.push_back(earspoints.size());
 				earspoints.push_back(trimesh::dvec2(point.X / 1000.0, point.Y / 1000.0));
@@ -220,7 +220,7 @@ namespace fmesh
 		};
 
 		func(poly);
-		for (ClipperLib::PolyNode* n : poly->Childs)
+		for (ClipperLibXYZ::PolyNode* n : poly->Childs)
 			func(n);
 
 		m_earspolygons.swap(earspolygons);
@@ -264,13 +264,13 @@ namespace fmesh
 		return earClipping();
 	}
 
-	Patch* EarPolygon::earClippingFromRefPoly(ClipperLib::PolyNode* poly)
+	Patch* EarPolygon::earClippingFromRefPoly(ClipperLibXYZ::PolyNode* poly)
 	{
 		setup(poly);
 		return earClippingNewType();
 	}
 
-	Patch* EarPolygon::earClippingFromPath(ClipperLib::Path* path)
+	Patch* EarPolygon::earClippingFromPath(ClipperLibXYZ::Path* path)
 	{
 		setup(path);
 		return earClipping();

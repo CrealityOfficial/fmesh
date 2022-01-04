@@ -2,7 +2,7 @@
 
 namespace fmesh
 {
-	void convert(const ClipperLib::Paths& inPaths, ContourPaths& outPaths)
+	void convert(const ClipperLibXYZ::Paths& inPaths, ContourPaths& outPaths)
 	{
 		size_t size = inPaths.size();
 		if (size > 0)
@@ -13,7 +13,7 @@ namespace fmesh
 		}
 	}
 
-	void convert(const ClipperLib::Path& inPath, ContourPath& outPath)
+	void convert(const ClipperLibXYZ::Path& inPath, ContourPath& outPath)
 	{
 		size_t size = inPath.size();
 		if (size > 0)
@@ -21,7 +21,7 @@ namespace fmesh
 			outPath.resize(size);
 			for (size_t i = 0; i < size; ++i)
 			{
-				const ClipperLib::IntPoint& point = inPath.at(i);
+				const ClipperLibXYZ::IntPoint& point = inPath.at(i);
 				trimesh::dvec2& v = outPath.at(i);
 				v.x = (double)point.X / 1000.0;
 				v.y = (double)point.Y / 1000.0;
@@ -29,7 +29,7 @@ namespace fmesh
 		}
 	}
 
-	void convert(const ContourPaths& inPaths, ClipperLib::Paths& outPaths)
+	void convert(const ContourPaths& inPaths, ClipperLibXYZ::Paths& outPaths)
 	{
 		size_t size = inPaths.size();
 		if (size > 0)
@@ -40,7 +40,7 @@ namespace fmesh
 		}
 	}
 
-	void convert(const ContourPath& inPath, ClipperLib::Path& outPath)
+	void convert(const ContourPath& inPath, ClipperLibXYZ::Path& outPath)
 	{
 		size_t size = inPath.size();
 		if (size > 0)
@@ -49,7 +49,7 @@ namespace fmesh
 			for (size_t i = 0; i < size; ++i)
 			{
 				const trimesh::dvec2& v = inPath.at(i);
-				ClipperLib::IntPoint& point = outPath.at(i);
+				ClipperLibXYZ::IntPoint& point = outPath.at(i);
 				point.X = (int)(v.x * 1000.0);
 				point.Y = (int)(v.y * 1000.0);
 			}

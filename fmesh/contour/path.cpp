@@ -2,13 +2,13 @@
 
 namespace fmesh
 {
-	void pathBox(const ClipperLib::Path& path, ClipperLib::IntPoint& bmin, ClipperLib::IntPoint& bmax)
+	void pathBox(const ClipperLibXYZ::Path& path, ClipperLibXYZ::IntPoint& bmin, ClipperLibXYZ::IntPoint& bmax)
 	{
 		bmin.X = 99999999999;
 		bmin.Y = 99999999999;
 		bmax.X = -99999999999;
 		bmax.Y = -99999999999;
-		for (const ClipperLib::IntPoint& point : path)
+		for (const ClipperLibXYZ::IntPoint& point : path)
 		{
 			if (point.X < bmin.X)
 				bmin.X = point.X;
@@ -21,40 +21,40 @@ namespace fmesh
 		}
 	}
 
-	void offsetPaths(ClipperLib::Paths& paths, ClipperLib::IntPoint offset)
+	void offsetPaths(ClipperLibXYZ::Paths& paths, ClipperLibXYZ::IntPoint offset)
 	{
-		for (ClipperLib::Path& path : paths)
+		for (ClipperLibXYZ::Path& path : paths)
 			offsetPath(path, offset);
 	}
 
-	void offsetPath(ClipperLib::Path& path, ClipperLib::IntPoint offset)
+	void offsetPath(ClipperLibXYZ::Path& path, ClipperLibXYZ::IntPoint offset)
 	{
-		for (ClipperLib::IntPoint& p : path)
+		for (ClipperLibXYZ::IntPoint& p : path)
 		{
 			p.X += offset.X;
 			p.Y += offset.Y;
 		}
 	}
 
-	void scalePath2ExpectLen(ClipperLib::Paths* paths, double expectLen) //mm
+	void scalePath2ExpectLen(ClipperLibXYZ::Paths* paths, double expectLen) //mm
 	{
 		if (expectLen <= 0.0)
 			return;
 
-		ClipperLib::IntPoint bmin;
-		ClipperLib::IntPoint bmax;
+		ClipperLibXYZ::IntPoint bmin;
+		ClipperLibXYZ::IntPoint bmax;
 		calculatePathBox(paths, bmin, bmax);
 		//scale
-		ClipperLib::cInt val = std::max((bmax.X - bmin.X), (bmax.Y - bmin.Y));
+		ClipperLibXYZ::cInt val = std::max((bmax.X - bmin.X), (bmax.Y - bmin.Y));
 		val = (val == 0 ? 1 : val);
 		double scale = 1000.0 * expectLen / val;
 		//double scaleX = 1000.0 * expectLen / xLen;
 		//double scaleY = 1000.0 * expectLen / yLen;
-		for (ClipperLib::Path& path : *paths)
+		for (ClipperLibXYZ::Path& path : *paths)
 		{
-			for (ClipperLib::IntPoint& p : path)
+			for (ClipperLibXYZ::IntPoint& p : path)
 			{
-				ClipperLib::IntPoint ep;
+				ClipperLibXYZ::IntPoint ep;
 				ep.X = (int)(scale * ((double)p.X - (double)bmin.X) + (double)bmin.X);
 				ep.Y = (int)(scale * ((double)p.Y - (double)bmin.Y) + (double)bmin.Y);
 
@@ -63,13 +63,13 @@ namespace fmesh
 		}
 	}
 
-	void calculatePathBox(ClipperLib::Paths* paths, ClipperLib::IntPoint& outMin, ClipperLib::IntPoint& outMax)
+	void calculatePathBox(ClipperLibXYZ::Paths* paths, ClipperLibXYZ::IntPoint& outMin, ClipperLibXYZ::IntPoint& outMax)
 	{
-		outMin = ClipperLib::IntPoint(99999999, 99999999, 99999999);
-		outMax = ClipperLib::IntPoint(-99999999, -99999999, -99999999);
-		for (ClipperLib::Path& path : *paths)
+		outMin = ClipperLibXYZ::IntPoint(99999999, 99999999, 99999999);
+		outMax = ClipperLibXYZ::IntPoint(-99999999, -99999999, -99999999);
+		for (ClipperLibXYZ::Path& path : *paths)
 		{
-			for (ClipperLib::IntPoint& p : path)
+			for (ClipperLibXYZ::IntPoint& p : path)
 			{
 				outMin.X = std::min(outMin.X, p.X);
 				outMin.Y = std::min(outMin.Y, p.Y);
@@ -81,13 +81,13 @@ namespace fmesh
 		}
 	}
 
-	void fixOrientation(std::vector<ClipperLib::Paths*>& pathses)
+	void fixOrientation(std::vector<ClipperLibXYZ::Paths*>& pathses)
 	{
-		for (ClipperLib::Paths* paths : pathses)
+		for (ClipperLibXYZ::Paths* paths : pathses)
 			fixOrientation(paths);
 	}
 
-	void fixOrientation(ClipperLib::Paths* paths)
+	void fixOrientation(ClipperLibXYZ::Paths* paths)
 	{
 		if (!paths)
 			return;
@@ -98,10 +98,10 @@ namespace fmesh
 
 		struct FixInfo
 		{
-			ClipperLib::Path* path;
+			ClipperLibXYZ::Path* path;
 			double area;
-			ClipperLib::IntPoint pMin;
-			ClipperLib::IntPoint pMax;
+			ClipperLibXYZ::IntPoint pMin;
+			ClipperLibXYZ::IntPoint pMax;
 		};
 
 		std::vector<FixInfo*> infos(size, nullptr);
@@ -112,7 +112,7 @@ namespace fmesh
 			info = new FixInfo();
 
 			info->path = &paths->at(i);
-			info->area = ClipperLib::Area(paths->at(i));
+			info->area = ClipperLibXYZ::Area(paths->at(i));
 			pathBox(paths->at(i), info->pMin, info->pMax);
 
 			candidates.push_back((int)i);
@@ -152,8 +152,8 @@ namespace fmesh
 			if (infot->path->size() < 2)
 				return false;
 
-			ClipperLib::IntPoint p1 = infot->path->at(0);
-			return ClipperLib::PointInPolygon(p1, *infoc->path);
+			ClipperLibXYZ::IntPoint p1 = infot->path->at(0);
+			return ClipperLibXYZ::PointInPolygon(p1, *infoc->path);
 		};
 
 		split = [&split, &testin, &infos](TreeNode& node) {

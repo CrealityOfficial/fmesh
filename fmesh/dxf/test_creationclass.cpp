@@ -67,8 +67,8 @@ void Test_CreationClass::addLine(const DL_LineData& data)
 	DXFLine myline;
 	int scaleX = myblock[myblock.size() - 1].sx;
 	int scaleY = myblock[myblock.size() - 1].sy;
-	myline.beginpoint = ClipperLib::IntPoint(data.x1 * scaleX, data.y1 * scaleY);
-	myline.endpoint = ClipperLib::IntPoint(data.x2 * scaleX, data.y2 * scaleY);
+	myline.beginpoint = ClipperLibXYZ::IntPoint(data.x1 * scaleX, data.y1 * scaleY);
+	myline.endpoint = ClipperLibXYZ::IntPoint(data.x2 * scaleX, data.y2 * scaleY);
 	myblock[myblock.size() - 1].line.push_back(myline);
 }
 
@@ -80,7 +80,7 @@ void Test_CreationClass::addArc(const DL_ArcData& data)
 	DXFArc myarc;
 	int scaleX = myblock[myblock.size() - 1].sx;
 	int scaleY = myblock[myblock.size() - 1].sy;
-	myarc.centerpoint = ClipperLib::IntPoint(data.cx* scaleX, data.cy* scaleY);
+	myarc.centerpoint = ClipperLibXYZ::IntPoint(data.cx* scaleX, data.cy* scaleY);
 	myarc.radius = data.radius* scaleY;
 	myarc.bangle = data.angle1;
 	myarc.eangle = data.angle2;
@@ -99,7 +99,7 @@ void Test_CreationClass::addCircle(const DL_CircleData& data)
 	DXFCircle mycircle;
 	int scaleX = myblock[myblock.size() - 1].sx;
 	int scaleY = myblock[myblock.size() - 1].sy;
-	mycircle.centerpoint = ClipperLib::IntPoint(data.cx* scaleX, data.cy* scaleY);
+	mycircle.centerpoint = ClipperLibXYZ::IntPoint(data.cx* scaleX, data.cy* scaleY);
 	mycircle.radius = data.radius* scaleX;
 	myblock[myblock.size() - 1].circle.push_back(mycircle);
 }
@@ -146,7 +146,7 @@ void Test_CreationClass::addVertex(const DL_VertexData& data)
 {
     int scaleX = myblock[myblock.size() - 1].sx;
     int scaleY = myblock[myblock.size() - 1].sy;
-    ClipperLib::IntPoint myvertex= ClipperLib::IntPoint(data.x * scaleX, data.y * scaleY);
+    ClipperLibXYZ::IntPoint myvertex= ClipperLibXYZ::IntPoint(data.x * scaleX, data.y * scaleY);
 	myblock[myblock.size() - 1].polylineentities[myblock[myblock.size() - 1].polylineentities.size() - 1].vertex.push_back(myvertex);
 }
 
@@ -267,14 +267,14 @@ void Test_CreationClass::printAttributes()
     printf(" Type: %s\n", attributes.getLinetype().c_str());
 }
 
-void Test_CreationClass::myblock2Paths(ClipperLib::Paths* paths)
+void Test_CreationClass::myblock2Paths(ClipperLibXYZ::Paths* paths)
 {
 	for (BlockObj block : myblock)
 	{
 		//如果line 是闭合的则添加，否则不添加
 		if (block.line.size() /*&& block.line[0].beginpoint == block.line[block.line.size() - 1].endpoint*/)
 		{
-			ClipperLib::Path linePath;
+			ClipperLibXYZ::Path linePath;
 			for (DXFLine line : block.line)
 			{
 				linePath.push_back(line.beginpoint);
@@ -286,11 +286,11 @@ void Test_CreationClass::myblock2Paths(ClipperLib::Paths* paths)
 
 		for (DXFCircle circle : block.circle)
 		{
-			ClipperLib::Path circlePath;
+			ClipperLibXYZ::Path circlePath;
 			for (unsigned int i = 0; i < 200; i++)
 			{
 				float Angle = 2*pi * (i / 200.0);
-				ClipperLib::IntPoint Point;
+				ClipperLibXYZ::IntPoint Point;
 				Point.X = (circle.centerpoint.X + circle.radius * std::cos(Angle));
 				Point.Y = (circle.centerpoint.Y - circle.radius * std::sin(Angle));
 				circlePath.push_back(Point);
@@ -300,13 +300,13 @@ void Test_CreationClass::myblock2Paths(ClipperLib::Paths* paths)
 
 		for (DXFEllipse ellipse : block.ellipse)
 		{
-			ClipperLib::Path ellipsePath;
+			ClipperLibXYZ::Path ellipsePath;
 			double valueB = sqrt(pow(ellipse.mx, 2) + pow(ellipse.my, 2));
 		    double valueA = ellipse.ratio * valueB;
 			for (unsigned int i = 0; i < 200; i++)
 			{
 				float Angle = ellipse.angle1 + (ellipse.angle2 - ellipse.angle1) * (i / 200.00);
-				ClipperLib::IntPoint Point;
+				ClipperLibXYZ::IntPoint Point;
 				Point.X = 1000 * (ellipse.cx + valueB * std::cos(Angle));
 				Point.Y = 1000 * (ellipse.cy - valueA * std::sin(Angle));
 				ellipsePath.push_back(Point);
@@ -316,11 +316,11 @@ void Test_CreationClass::myblock2Paths(ClipperLib::Paths* paths)
 
 		for (DXFArc arc: block.arc)
 		{
-			ClipperLib::Path arcPath;
+			ClipperLibXYZ::Path arcPath;
 			for (unsigned int i = 0; i < 200; i++)
 			{
 				float Angle = arc.bangle + (arc.bangle - arc.eangle) * (i / 200.00);
-				ClipperLib::IntPoint Point;
+				ClipperLibXYZ::IntPoint Point;
 				Point.X = (arc.centerpoint.X + arc.radius * std::cos(Angle));
 				Point.Y = (arc.centerpoint.Y - arc.radius * std::sin(Angle));
 				arcPath.push_back(Point);
@@ -335,28 +335,28 @@ void Test_CreationClass::myblock2Paths(ClipperLib::Paths* paths)
 
 		for (cdrdxf::DXFSpline DXFSpine : block.splines)
 		{
-			ClipperLib::Path path;
+			ClipperLibXYZ::Path path;
 			convert(&DXFSpine, &path);
 			paths->push_back(path);
 		}
 	}
 }
 
-void Test_CreationClass::myblock2MultiPaths(std::vector<ClipperLib::Paths*>& vctPaths)
+void Test_CreationClass::myblock2MultiPaths(std::vector<ClipperLibXYZ::Paths*>& vctPaths)
 {
 	std::string name = "";
-	ClipperLib::Paths* paths = nullptr;
-	std::map<std::string, ClipperLib::Paths*> meshPath;
+	ClipperLibXYZ::Paths* paths = nullptr;
+	std::map<std::string, ClipperLibXYZ::Paths*> meshPath;
 	for (BlockObj block : myblock)
 	{	
-		std::map<std::string, ClipperLib::Paths*>::iterator iter = meshPath.find(block.name);
+		std::map<std::string, ClipperLibXYZ::Paths*>::iterator iter = meshPath.find(block.name);
 		if (iter == meshPath.end())
 		{
 			//not empty
 			if (block.line.size() || block.circle.size() || block.ellipse.size() || block.polylineentities.size() || block.arc.size() || block.splines.size())
 			{
-				paths = new ClipperLib::Paths;
-				meshPath.insert(std::pair<std::string, ClipperLib::Paths*>(block.name, paths));
+				paths = new ClipperLibXYZ::Paths;
+				meshPath.insert(std::pair<std::string, ClipperLibXYZ::Paths*>(block.name, paths));
 			}
 			else
 				continue;
@@ -393,16 +393,16 @@ void Test_CreationClass::myblock2MultiPaths(std::vector<ClipperLib::Paths*>& vct
 		}
 	}
 
-	std::map<std::string, ClipperLib::Paths*>::iterator iter;
+	std::map<std::string, ClipperLibXYZ::Paths*>::iterator iter;
 	for (iter = meshPath.begin(); iter != meshPath.end(); iter++)
 	{
 		vctPaths.push_back(iter->second);
 	}
 }
 
-void Test_CreationClass::dealLine(vector<DXFLine>& lines, ClipperLib::Paths* paths)
+void Test_CreationClass::dealLine(vector<DXFLine>& lines, ClipperLibXYZ::Paths* paths)
 {
-	ClipperLib::Path linePath;
+	ClipperLibXYZ::Path linePath;
 	for (DXFLine line : lines)
 	{
 		linePath.push_back(line.beginpoint);
@@ -412,15 +412,15 @@ void Test_CreationClass::dealLine(vector<DXFLine>& lines, ClipperLib::Paths* pat
 	paths->push_back(linePath);
 }
 
-void Test_CreationClass::dealCircle(vector<DXFCircle>& circles, ClipperLib::Paths* paths)
+void Test_CreationClass::dealCircle(vector<DXFCircle>& circles, ClipperLibXYZ::Paths* paths)
 {
 	for (DXFCircle circle : circles)
 	{
-		ClipperLib::Path circlePath;
+		ClipperLibXYZ::Path circlePath;
 		for (unsigned int i = 0; i < 200; i++)
 		{
 			float Angle = 2 * pi * (i / 200.0);
-			ClipperLib::IntPoint Point;
+			ClipperLibXYZ::IntPoint Point;
 			Point.X = (circle.centerpoint.X + circle.radius * std::cos(Angle));
 			Point.Y = (circle.centerpoint.Y - circle.radius * std::sin(Angle));
 			circlePath.push_back(Point);
@@ -429,17 +429,17 @@ void Test_CreationClass::dealCircle(vector<DXFCircle>& circles, ClipperLib::Path
 	}
 }
 
-void Test_CreationClass::dealEllipse(vector<DXFEllipse>& ellipses, ClipperLib::Paths* paths)
+void Test_CreationClass::dealEllipse(vector<DXFEllipse>& ellipses, ClipperLibXYZ::Paths* paths)
 {
 	for (DXFEllipse ellipse : ellipses)
 	{
-		ClipperLib::Path ellipsePath;
+		ClipperLibXYZ::Path ellipsePath;
 		double valueB = sqrt(pow(ellipse.mx, 2) + pow(ellipse.my, 2));
 		double valueA = ellipse.ratio * valueB;
 		for (unsigned int i = 0; i < 200; i++)
 		{
 			float Angle = ellipse.angle1 + (ellipse.angle2 - ellipse.angle1) * (i / 200.00);
-			ClipperLib::IntPoint Point;
+			ClipperLibXYZ::IntPoint Point;
 			Point.X = 1000 * (ellipse.cx + valueB * std::cos(Angle));
 			Point.Y = 1000 * (ellipse.cy - valueA * std::sin(Angle));
 			ellipsePath.push_back(Point);
@@ -448,7 +448,7 @@ void Test_CreationClass::dealEllipse(vector<DXFEllipse>& ellipses, ClipperLib::P
 	}
 }
 
-void Test_CreationClass::dealPolylineentities(vector<DXFPolyLineEntities>& polylineentitiess, ClipperLib::Paths* paths)
+void Test_CreationClass::dealPolylineentities(vector<DXFPolyLineEntities>& polylineentitiess, ClipperLibXYZ::Paths* paths)
 {
 	for (DXFPolyLineEntities PolyLineEntities : polylineentitiess)
 	{
@@ -456,15 +456,15 @@ void Test_CreationClass::dealPolylineentities(vector<DXFPolyLineEntities>& polyl
 	}
 }
 
-void Test_CreationClass::dealArc(vector<DXFArc>& arcs, ClipperLib::Paths* paths)
+void Test_CreationClass::dealArc(vector<DXFArc>& arcs, ClipperLibXYZ::Paths* paths)
 {
 	for (DXFArc arc : arcs)
 	{
-		ClipperLib::Path arcPath;
+		ClipperLibXYZ::Path arcPath;
 		for (unsigned int i = 0; i < 200; i++)
 		{
 			float Angle = arc.bangle + (arc.bangle - arc.eangle) * (i / 200.00);
-			ClipperLib::IntPoint Point;
+			ClipperLibXYZ::IntPoint Point;
 			Point.X = (arc.centerpoint.X + arc.radius * std::cos(Angle));
 			Point.Y = (arc.centerpoint.Y - arc.radius * std::sin(Angle));
 			arcPath.push_back(Point);
@@ -473,11 +473,11 @@ void Test_CreationClass::dealArc(vector<DXFArc>& arcs, ClipperLib::Paths* paths)
 	}
 }
 
-void Test_CreationClass::dealSplines(vector<cdrdxf::DXFSpline>& spliness, ClipperLib::Paths* paths)
+void Test_CreationClass::dealSplines(vector<cdrdxf::DXFSpline>& spliness, ClipperLibXYZ::Paths* paths)
 {
 	for (cdrdxf::DXFSpline DXFSpine : spliness)
 	{
-		ClipperLib::Path path;
+		ClipperLibXYZ::Path path;
 		convert(&DXFSpine, &path);
 		paths->push_back(path);
 	}

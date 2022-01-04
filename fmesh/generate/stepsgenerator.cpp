@@ -15,7 +15,7 @@ namespace fmesh
 
 	void StepsGenerator::build()
 	{
-		std::vector<ClipperLib::PolyTree> middlePolys;
+		std::vector<ClipperLibXYZ::PolyTree> middlePolys;
 		buildMiddle(middlePolys);
 		if (middlePolys.size() == 0)
 			return;
@@ -24,16 +24,16 @@ namespace fmesh
 
 	void StepsGenerator::buildShell()
 	{
-		std::vector<ClipperLib::PolyTree> middlePolys;
+		std::vector<ClipperLibXYZ::PolyTree> middlePolys;
 		buildMiddle(middlePolys, true);
 		if (middlePolys.size() == 0)
 			return;
 		_buildTopBottom_onepoly(&middlePolys.front(), nullptr);
 	}
 
-	void StepsGenerator::buildBoard(ClipperLib::PolyTree& topTree, ClipperLib::PolyTree& bottomTree)
+	void StepsGenerator::buildBoard(ClipperLibXYZ::PolyTree& topTree, ClipperLibXYZ::PolyTree& bottomTree)
 	{
-		std::vector<ClipperLib::PolyTree> middlePolys;
+		std::vector<ClipperLibXYZ::PolyTree> middlePolys;
 		buildMiddle(middlePolys, true);
 		if (middlePolys.size() == 0)
 			return;
@@ -41,7 +41,7 @@ namespace fmesh
 		offsetPolyType(middlePolys.front(), m_adParam.exoprtParam.bottom_offset, bottomTree, m_adParam.bluntSharpCorners);
 	}
 
-	void StepsGenerator::buildMiddle(std::vector<ClipperLib::PolyTree>& middlePolys, bool onePoly)
+	void StepsGenerator::buildMiddle(std::vector<ClipperLibXYZ::PolyTree>& middlePolys, bool onePoly)
 	{
 		double thickness = m_adParam.extend_width / 2.0f;
 		double topHeight = m_adParam.shape_top_height;

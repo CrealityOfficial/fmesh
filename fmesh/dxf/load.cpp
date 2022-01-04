@@ -21,7 +21,7 @@ namespace cdrdxf
 		return creationClass;
 	}
 
-	ClipperLib::Paths* loadDXFFile(const char* fileName)
+	ClipperLibXYZ::Paths* loadDXFFile(const char* fileName)
 	{
 		Test_CreationClass* creationClass = new Test_CreationClass();
 		std::unique_ptr<DL_Dxf> dxf(new DL_Dxf());
@@ -31,22 +31,22 @@ namespace cdrdxf
 			return nullptr;
 		}
 
-		ClipperLib::Paths* paths = new ClipperLib::Paths();
+		ClipperLibXYZ::Paths* paths = new ClipperLibXYZ::Paths();
 		creationClass->myblock2Paths(paths);
 		return paths;
 	}
 
-	ClipperLib::Paths* loadSplineFromDXFFile(const char* fileName)
+	ClipperLibXYZ::Paths* loadSplineFromDXFFile(const char* fileName)
 	{
 		std::unique_ptr<Test_CreationClass> creation(_loadDXF(fileName));
-		ClipperLib::Paths* paths = nullptr;
+		ClipperLibXYZ::Paths* paths = nullptr;
 		if (creation.get())
 		{
 			std::vector<DXFSpline*> splines = creation->splines();
 			size_t size = splines.size();
 			if (size > 0)
 			{
-				paths = new ClipperLib::Paths(size);
+				paths = new ClipperLibXYZ::Paths(size);
 				for (size_t i = 0; i < size; ++i)
 					convert(splines.at(i), &paths->at(i));
 			}
@@ -55,9 +55,9 @@ namespace cdrdxf
 		return paths;
 	}
 
-	std::vector<ClipperLib::Paths*> loadMultiDXFFile(const char* fileName)
+	std::vector<ClipperLibXYZ::Paths*> loadMultiDXFFile(const char* fileName)
 	{
-		std::vector<ClipperLib::Paths*> tmp;
+		std::vector<ClipperLibXYZ::Paths*> tmp;
 
 		Test_CreationClass* creationClass = new Test_CreationClass();
 		std::unique_ptr<DL_Dxf> dxf(new DL_Dxf());

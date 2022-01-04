@@ -7,7 +7,7 @@
 #include "fmesh/contour/contour.h"
 namespace fmesh
 {
-	bool checkFlag(ClipperLib::PolyNode* node, int flag)
+	bool checkFlag(ClipperLibXYZ::PolyNode* node, int flag)
 	{
 		int depth = testPolyNodeDepth(node);
 		if (flag == 1 && node->IsHole())
@@ -24,16 +24,16 @@ namespace fmesh
 		return true;
 	}
 
-	Patch* buildFromSamePolyTree(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp, int flag)
+	Patch* buildFromSamePolyTree(ClipperLibXYZ::PolyTree* treeLower, ClipperLibXYZ::PolyTree* treeUp, int flag)
 	{
 		if (!treeUp || !treeLower)
 			return nullptr;
 
-		std::vector<ClipperLib::Path*> pathsUp;
-		std::vector<ClipperLib::Path*> pathsLower;
+		std::vector<ClipperLibXYZ::Path*> pathsUp;
+		std::vector<ClipperLibXYZ::Path*> pathsLower;
 		size_t count = 0;
 
-		auto f = [&count, &pathsUp, &flag](ClipperLib::PolyNode* node) {
+		auto f = [&count, &pathsUp, &flag](ClipperLibXYZ::PolyNode* node) {
 			if (!checkFlag(node, flag))
 			{
 				return;
@@ -44,7 +44,7 @@ namespace fmesh
 			pathsUp.push_back(&node->Contour);
 		};
 
-		auto f1 = [&pathsLower, &flag](ClipperLib::PolyNode* node) {
+		auto f1 = [&pathsLower, &flag](ClipperLibXYZ::PolyNode* node) {
 			if (!checkFlag(node, flag))
 			{
 				return;
@@ -64,18 +64,18 @@ namespace fmesh
 		return patch;
 	}
 
-	void buildFromDiffPolyTree(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp,
+	void buildFromDiffPolyTree(ClipperLibXYZ::PolyTree* treeLower, ClipperLibXYZ::PolyTree* treeUp,
 		std::vector<Patch*>& patches, int flag)
 	{
-		std::vector<ClipperLib::Path*> pathsUp;
-		std::vector<ClipperLib::Path*> pathsLower;
+		std::vector<ClipperLibXYZ::Path*> pathsUp;
+		std::vector<ClipperLibXYZ::Path*> pathsLower;
 		size_t count = 0;
-		auto f = [&count, &pathsUp, &flag](ClipperLib::PolyNode* node) {
+		auto f = [&count, &pathsUp, &flag](ClipperLibXYZ::PolyNode* node) {
 			if (!checkFlag(node, flag))
 				return;
 			pathsUp.push_back(&node->Contour);
 		};
-		auto f1 = [&pathsLower, &flag](ClipperLib::PolyNode* node) {
+		auto f1 = [&pathsLower, &flag](ClipperLibXYZ::PolyNode* node) {
 			if (!checkFlag(node, flag))
 				return;
 			pathsLower.push_back(&node->Contour);
@@ -97,8 +97,8 @@ namespace fmesh
 				patches.push_back(patch);
 	}
 
-	void buildFromDiffPolyTree_SameAndDiffSafty(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp,
-		std::vector<Patch*>& patches, int flag, ClipperLib::PolyTree& out, double delta)
+	void buildFromDiffPolyTree_SameAndDiffSafty(ClipperLibXYZ::PolyTree* treeLower, ClipperLibXYZ::PolyTree* treeUp,
+		std::vector<Patch*>& patches, int flag, ClipperLibXYZ::PolyTree& out, double delta)
 	{		
 		if (GetPolyCount(treeLower) == GetPolyCount(treeUp))
 			buildFromDiffPolyTreeSafty(treeLower, treeUp, patches, delta, flag);
@@ -106,8 +106,8 @@ namespace fmesh
 			fmesh::xor2PolyTrees(treeUp, treeLower, out, flag);			
 	}
 
-	void buildFromSameAndDiff(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp,
-		std::vector<Patch*>& patches, int flag, double delta, ClipperLib::PolyTree& out, ClipperLib::PolyTree& Inner)
+	void buildFromSameAndDiff(ClipperLibXYZ::PolyTree* treeLower, ClipperLibXYZ::PolyTree* treeUp,
+		std::vector<Patch*>& patches, int flag, double delta, ClipperLibXYZ::PolyTree& out, ClipperLibXYZ::PolyTree& Inner)
 	{
 //#ifdef 1
 		////save path
@@ -130,7 +130,7 @@ namespace fmesh
 		}
 	}
 
-	void buildFromDiffPolyTreeSafty(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp,
+	void buildFromDiffPolyTreeSafty(ClipperLibXYZ::PolyTree* treeLower, ClipperLibXYZ::PolyTree* treeUp,
 		std::vector<Patch*>& patches, double delta, int flag)
 	{
 		std::vector<PolyTreeOppoPair> sources;
@@ -173,18 +173,18 @@ namespace fmesh
 
 	struct CompInfo
 	{
-		ClipperLib::IntPoint bmin;
-		ClipperLib::IntPoint bmax;
+		ClipperLibXYZ::IntPoint bmin;
+		ClipperLibXYZ::IntPoint bmax;
 		float area;
 	};
 	typedef std::function<bool(CompInfo& info1, CompInfo& info2)> sortFunc;
-	void findPolyTreePairFromNode(ClipperLib::PolyNode* nodeLower, ClipperLib::PolyNode* nodeUp,
+	void findPolyTreePairFromNode(ClipperLibXYZ::PolyNode* nodeLower, ClipperLibXYZ::PolyNode* nodeUp,
 		std::vector<PolyTreeOppoPair>& pairs, double delta)
 	{
-		ClipperLib::PolyNodes inner = nodeLower->Childs;
-		ClipperLib::PolyNodes outer = nodeUp->Childs;
+		ClipperLibXYZ::PolyNodes inner = nodeLower->Childs;
+		ClipperLibXYZ::PolyNodes outer = nodeUp->Childs;
 
-		ClipperLib::cInt iDelta = (int)(1000.0 * delta);
+		ClipperLibXYZ::cInt iDelta = (int)(1000.0 * delta);
 		if (inner.size() > 0 && inner.size() == outer.size())
 		{
 			size_t size = inner.size();
@@ -194,8 +194,8 @@ namespace fmesh
 			{
 				pathBox(inner.at(i)->Contour, iInfos.at(i).bmin, iInfos.at(i).bmax);
 				pathBox(outer.at(i)->Contour, oInfos.at(i).bmin, oInfos.at(i).bmax);
-				//iInfos.at(i).area = ClipperLib::Area(inner.at(i)->Contour);
-				//oInfos.at(i).area = ClipperLib::Area(outer.at(i)->Contour);
+				//iInfos.at(i).area = ClipperLibXYZ::Area(inner.at(i)->Contour);
+				//oInfos.at(i).area = ClipperLibXYZ::Area(outer.at(i)->Contour);
 			}
 			std::vector<int> imapIndex;
 			for (size_t i = 0; i < size; ++i)
@@ -243,8 +243,8 @@ namespace fmesh
 				int index1 = imapIndex.at(i);
 				int index2 = omapIndex.at(i);
 
-				ClipperLib::PolyNode* inode = inner.at(index1);
-				ClipperLib::PolyNode* onode = outer.at(index2);
+				ClipperLibXYZ::PolyNode* inode = inner.at(index1);
+				ClipperLibXYZ::PolyNode* onode = outer.at(index2);
 				CompInfo& iinfo = iInfos.at(index1);
 				CompInfo& oinfo = oInfos.at(index2);
 
@@ -307,8 +307,8 @@ namespace fmesh
 					int index1 = secondI.at(i);
 					int index2 = secondO.at(i);
 
-					ClipperLib::PolyNode* inode = inner.at(index1);
-					ClipperLib::PolyNode* onode = outer.at(index2);
+					ClipperLibXYZ::PolyNode* inode = inner.at(index1);
+					ClipperLibXYZ::PolyNode* onode = outer.at(index2);
 
 					if (onode && onode->ChildCount() == inode->ChildCount())
 					{
@@ -322,13 +322,13 @@ namespace fmesh
 		}
 	}
 
-	Patch* buildFromDiffPath(ClipperLib::Path* pathLower, ClipperLib::Path* pathUp)
+	Patch* buildFromDiffPath(ClipperLibXYZ::Path* pathLower, ClipperLibXYZ::Path* pathUp)
 	{
 		Wovener wovener;
 		return wovener.woven(pathLower, pathUp);
 	}
 
-	void buildFromPathes(std::vector<ClipperLib::Path*>& pathsLower, std::vector<ClipperLib::Path*>& pathsUp, Patch& patch)
+	void buildFromPathes(std::vector<ClipperLibXYZ::Path*>& pathsLower, std::vector<ClipperLibXYZ::Path*>& pathsUp, Patch& patch)
 	{
 		size_t size = pathsUp.size();
 		if (size == pathsLower.size())
@@ -338,7 +338,7 @@ namespace fmesh
 		}
 	}
 
-	void buildFromPath(ClipperLib::Path* pathLower, ClipperLib::Path* pathUp, Patch& patch)
+	void buildFromPath(ClipperLibXYZ::Path* pathLower, ClipperLibXYZ::Path* pathUp, Patch& patch)
 	{
 		size_t size = pathUp->size();
 		if (size == pathLower->size() && size > 2)
@@ -366,17 +366,17 @@ namespace fmesh
 		}
 	}
 
-	void buildXORFrom2PolyTree(ClipperLib::PolyTree* treeLower, ClipperLib::PolyTree* treeUp, ClipperLib::PolyTree& out, int flag)
+	void buildXORFrom2PolyTree(ClipperLibXYZ::PolyTree* treeLower, ClipperLibXYZ::PolyTree* treeUp, ClipperLibXYZ::PolyTree& out, int flag)
 	{
-		std::vector<ClipperLib::Path*> pathsUp;
-		std::vector<ClipperLib::Path*> pathsLower;
+		std::vector<ClipperLibXYZ::Path*> pathsUp;
+		std::vector<ClipperLibXYZ::Path*> pathsLower;
 		size_t count = 0;
-		auto f = [&count, &pathsUp, &flag](ClipperLib::PolyNode* node) {
+		auto f = [&count, &pathsUp, &flag](ClipperLibXYZ::PolyNode* node) {
 			if (!checkFlag(node, flag))
 				return;
 			pathsUp.push_back(&node->Contour);
 		};
-		auto f1 = [&pathsLower, &flag](ClipperLib::PolyNode* node) {
+		auto f1 = [&pathsLower, &flag](ClipperLibXYZ::PolyNode* node) {
 			if (!checkFlag(node, flag))
 				return;
 			pathsLower.push_back(&node->Contour);

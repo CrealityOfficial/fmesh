@@ -2,10 +2,10 @@
 
 namespace fmesh
 {
-	void dealSkeleton(ClipperLib::PolyTree& roofLine, ClipperLib::Paths* paths)
+	void dealSkeleton(ClipperLibXYZ::PolyTree& roofLine, ClipperLibXYZ::Paths* paths)
 	{
-		std::vector<ClipperLib::IntPoint> listPointF;
-		std::vector<ClipperLib::IntPoint> listPointE;
+		std::vector<ClipperLibXYZ::IntPoint> listPointF;
+		std::vector<ClipperLibXYZ::IntPoint> listPointE;
 		for (int i = 0; i < roofLine.Contour.size(); ++i, ++i)
 		{
 			listPointF.push_back(roofLine.Contour[i]);
@@ -16,10 +16,10 @@ namespace fmesh
 
 		int count = 0;
 		int optimalPos = findOptimalPos(listPointF, listPointE);
-		ClipperLib::IntPoint pointF = listPointF[optimalPos];
-		ClipperLib::IntPoint pointE = listPointE[optimalPos];
-		std::vector<ClipperLib::IntPoint> optimalPoint;
-		ClipperLib::Path path;
+		ClipperLibXYZ::IntPoint pointF = listPointF[optimalPos];
+		ClipperLibXYZ::IntPoint pointE = listPointE[optimalPos];
+		std::vector<ClipperLibXYZ::IntPoint> optimalPoint;
+		ClipperLibXYZ::Path path;
 		while (listPointF.size() > 0)
 		{
 			path.push_back(pointF);
@@ -88,9 +88,9 @@ namespace fmesh
 		int i = 0;
 		int j = 0;
 		bool bdelete = false;
-		for (std::vector<ClipperLib::IntPoint>::iterator iter = listPointF.begin(); iter != listPointF.end() - 1;)
+		for (std::vector<ClipperLibXYZ::IntPoint>::iterator iter = listPointF.begin(); iter != listPointF.end() - 1;)
 		{
-			for (std::vector<ClipperLib::IntPoint>::iterator iterB = iter + 1; iterB != listPointF.end(); iterB++)
+			for (std::vector<ClipperLibXYZ::IntPoint>::iterator iterB = iter + 1; iterB != listPointF.end(); iterB++)
 			{
 				i = iter - listPointF.begin();
 				j = iterB - listPointF.begin();
@@ -113,14 +113,14 @@ namespace fmesh
 		}
 	}
 
-	int reversePoint(std::vector<ClipperLib::IntPoint>& listPointF, std::vector<ClipperLib::IntPoint>& listPointE, ClipperLib::IntPoint pointF, ClipperLib::IntPoint pointE)
+	int reversePoint(std::vector<ClipperLibXYZ::IntPoint>& listPointF, std::vector<ClipperLibXYZ::IntPoint>& listPointE, ClipperLibXYZ::IntPoint pointF, ClipperLibXYZ::IntPoint pointE)
 	{
 		int count = 0;
 		for (size_t i = 0; i < listPointE.size(); i++)
 		{
 			if (pointE == listPointE[i] && pointF != listPointF[i])
 			{
-				ClipperLib::IntPoint p = listPointE[i];
+				ClipperLibXYZ::IntPoint p = listPointE[i];
 				listPointE[i] = listPointF[i];
 				listPointF[i] = p;
 				++count;
@@ -130,7 +130,7 @@ namespace fmesh
 		return count;
 	}
 
-	int findCount(std::vector<ClipperLib::IntPoint>& listPointF, ClipperLib::IntPoint point)
+	int findCount(std::vector<ClipperLibXYZ::IntPoint>& listPointF, ClipperLibXYZ::IntPoint point)
 	{
 		int count = 0;
 		if (listPointF.size() == 0)
@@ -147,7 +147,7 @@ namespace fmesh
 		return count;
 	}
 
-	int findPos(std::vector<ClipperLib::IntPoint>& listPointF, ClipperLib::IntPoint point)
+	int findPos(std::vector<ClipperLibXYZ::IntPoint>& listPointF, ClipperLibXYZ::IntPoint point)
 	{
 		int pos = 0;
 		for (size_t i = 0; i < listPointF.size(); i++)
@@ -160,7 +160,7 @@ namespace fmesh
 		return pos;
 	}
 
-	int findPoint(std::vector<ClipperLib::IntPoint>& listPointF, std::vector<ClipperLib::IntPoint>& optimalPoint)
+	int findPoint(std::vector<ClipperLibXYZ::IntPoint>& listPointF, std::vector<ClipperLibXYZ::IntPoint>& optimalPoint)
 	{
 		int pos = -1;
 		for (size_t i = 0; i < optimalPoint.size(); i++)
@@ -177,7 +177,7 @@ namespace fmesh
 		return pos;
 	}
 
-	void findOptimalPoints(std::vector<ClipperLib::IntPoint>& listPointF, std::vector<ClipperLib::IntPoint>& optimalPoint, ClipperLib::IntPoint point)
+	void findOptimalPoints(std::vector<ClipperLibXYZ::IntPoint>& listPointF, std::vector<ClipperLibXYZ::IntPoint>& optimalPoint, ClipperLibXYZ::IntPoint point)
 	{
 		bool bOptimal = false;
 		for (size_t i = 0; i < listPointF.size(); i++)
@@ -193,14 +193,14 @@ namespace fmesh
 		}
 	}
 
-	int findOptimalPos(std::vector<ClipperLib::IntPoint>& listPointF, std::vector<ClipperLib::IntPoint>& listPointE)
+	int findOptimalPos(std::vector<ClipperLibXYZ::IntPoint>& listPointF, std::vector<ClipperLibXYZ::IntPoint>& listPointE)
 	{
 		int pos = 0;
 		for (size_t i = 0; i < listPointF.size(); i++)
 		{
 			if (pos != i && listPointF[pos] == listPointF[i])
 			{
-				ClipperLib::IntPoint p = listPointE[pos];
+				ClipperLibXYZ::IntPoint p = listPointE[pos];
 				listPointE[pos] = listPointF[pos];
 				listPointF[pos] = p;
 				break;
@@ -209,7 +209,7 @@ namespace fmesh
 		return pos;
 	}
 
-	bool deletePoints(std::vector<ClipperLib::IntPoint>& listPointF, std::vector<ClipperLib::IntPoint>& listPointE, ClipperLib::IntPoint pointF, ClipperLib::IntPoint pointE)
+	bool deletePoints(std::vector<ClipperLibXYZ::IntPoint>& listPointF, std::vector<ClipperLibXYZ::IntPoint>& listPointE, ClipperLibXYZ::IntPoint pointF, ClipperLibXYZ::IntPoint pointE)
 	{
 		for (size_t i = 0; i < listPointF.size(); i++)
 		{
@@ -224,7 +224,7 @@ namespace fmesh
 		return false;
 	}
 
-	bool deletePoint(std::vector<ClipperLib::IntPoint>& listPoint, ClipperLib::IntPoint point)
+	bool deletePoint(std::vector<ClipperLibXYZ::IntPoint>& listPoint, ClipperLibXYZ::IntPoint point)
 	{
 		for (size_t i = 0; i < listPoint.size(); i++)
 		{
@@ -237,7 +237,7 @@ namespace fmesh
 		return false;
 	}
 
-	double averageLen(ClipperLib::PolyTree& source, ClipperLib::Paths& paths)
+	double averageLen(ClipperLibXYZ::PolyTree& source, ClipperLibXYZ::Paths& paths)
 	{
 		double alen = 0.0f;
 		if (paths.size() == 0)
@@ -315,7 +315,7 @@ namespace fmesh
 		return alen;
 	}
 
-	double PointTolines(ClipperLib::IntPoint const& a, ClipperLib::IntPoint const& b, ClipperLib::IntPoint const& p) {
+	double PointTolines(ClipperLibXYZ::IntPoint const& a, ClipperLibXYZ::IntPoint const& b, ClipperLibXYZ::IntPoint const& p) {
 		double ap_ab = (b.X - a.X) * (p.X - a.X) + (b.Y - a.Y) * (p.Y - a.Y);//cross( a , p , b );
 		if (ap_ab <= 0)
 			return sqrt((p.X - a.X) * (p.X - a.X) + (p.Y - a.Y) * (p.Y - a.Y));
@@ -329,14 +329,14 @@ namespace fmesh
 		return sqrt((p.X - px) * (p.X - px) + (p.Y - py) * (p.Y - py));
 	}
 
-	double getMinLen(ClipperLib::PolyTree& source, ClipperLib::IntPoint point)
+	double getMinLen(ClipperLibXYZ::PolyTree& source, ClipperLibXYZ::IntPoint point)
 	{
 		bool bInit = true;
 		double min = -1.0f;
 		double value = 0.0f;
-		for (ClipperLib::PolyNode* n : source.Childs)
+		for (ClipperLibXYZ::PolyNode* n : source.Childs)
 		{	//inside ploygon
-			if (0 != ClipperLib::PointInPolygon(point, n->Contour))
+			if (0 != ClipperLibXYZ::PointInPolygon(point, n->Contour))
 			{
 				for (int k = 0; k < n->Contour.size() - 1; k++)
 				{
@@ -356,7 +356,7 @@ namespace fmesh
 		return min;
 	}
 
-	bool isIntersect(ClipperLib::Paths& paths, ClipperLib::IntPoint point)
+	bool isIntersect(ClipperLibXYZ::Paths& paths, ClipperLibXYZ::IntPoint point)
 	{
 		size_t count = 0;
 		for (int i = 0; i < paths.size(); i++)
@@ -373,7 +373,7 @@ namespace fmesh
 		return false;
 	}
 
-	bool isEnds(ClipperLib::PolyTree& source, std::vector<ClipperLib::IntPoint>& path, std::vector<ClipperLib::IntPoint>::iterator iter, double alen, bool& allDel)
+	bool isEnds(ClipperLibXYZ::PolyTree& source, std::vector<ClipperLibXYZ::IntPoint>& path, std::vector<ClipperLibXYZ::IntPoint>::iterator iter, double alen, bool& allDel)
 	{
 		if (iter == path.begin())
 		{
@@ -392,7 +392,7 @@ namespace fmesh
 		return true;
 	}
 
-	bool needDelPath(ClipperLib::PolyTree& source, ClipperLib::Path& path, double alen)
+	bool needDelPath(ClipperLibXYZ::PolyTree& source, ClipperLibXYZ::Path& path, double alen)
 	{
 		for (int i = 0; i < path.size(); i++)
 		{

@@ -15,24 +15,24 @@ namespace fmesh
 		return ear.earClippingFromRefPoly(poly);
 	}
 
-	Patch* fillSimplePolyTree(ClipperLib::Path* path)
+	Patch* fillSimplePolyTree(ClipperLibXYZ::Path* path)
 	{
 		EarPolygon ear;
 		return ear.earClippingFromPath(path);
 	}
 
-	Patch* fillSimplePolyTree(ClipperLib::PolyNode* poly)
+	Patch* fillSimplePolyTree(ClipperLibXYZ::PolyNode* poly)
 	{
 		EarPolygon ear;
 		return ear.earClippingFromRefPoly(poly);
 	}
 
-	void fillComplexPolyTree(ClipperLib::PolyTree* polyTree, std::vector<Patch*>& patches, bool muesEven)
+	void fillComplexPolyTree(ClipperLibXYZ::PolyTree* polyTree, std::vector<Patch*>& patches, bool muesEven)
 	{
 		if (!polyTree)
 			return;
 
-		polyNodeFunc func = [&muesEven , &patches](ClipperLib::PolyNode* node) {
+		polyNodeFunc func = [&muesEven , &patches](ClipperLibXYZ::PolyNode* node) {
 			if (muesEven && node->ChildCount() == 0)
 				return;
 
@@ -47,28 +47,28 @@ namespace fmesh
 		fmesh::loopPolyTree(func, polyTree);
 	}
 
-	void fillComplexPolyTreeReverseInner(ClipperLib::PolyTree* polyTree, std::vector<Patch*>& patches, bool invert)
+	void fillComplexPolyTreeReverseInner(ClipperLibXYZ::PolyTree* polyTree, std::vector<Patch*>& patches, bool invert)
 	{
 		if (!polyTree)
 			return;
 
 		//savePolyTree(polyTree, "xxxxx");
-		std::vector<ClipperLib::PolyNode*> source;
-		std::vector<ClipperLib::PolyNode*> tmp;
+		std::vector<ClipperLibXYZ::PolyNode*> source;
+		std::vector<ClipperLibXYZ::PolyNode*> tmp;
 
-		for (ClipperLib::PolyNode* node : polyTree->Childs)
+		for (ClipperLibXYZ::PolyNode* node : polyTree->Childs)
 			if (!node->IsHole())
 				source.push_back(node);
 
 		int parentChilds = 0;
 		while (source.size() > 0)
 		{
-			for (ClipperLib::PolyNode* node : source)
+			for (ClipperLibXYZ::PolyNode* node : source)
 			{
 				if (node->ChildCount() == 0)
 					continue;
 #ifdef _DEBUG
-				//double area = ClipperLib::Area(node->Contour);
+				//double area = ClipperLibXYZ::Area(node->Contour);
 				//std::cout << area << std::endl;
 #endif
 				Patch* patch = fillOneLevelPolyNode(node);
@@ -78,7 +78,7 @@ namespace fmesh
 					if (outer)
 					{
 						int gson = 0;
-						for (ClipperLib::PolyNode* n : node->Childs)
+						for (ClipperLibXYZ::PolyNode* n : node->Childs)
 							gson += (int)n->ChildCount();
 						if(gson == 0)
 							outer = false;
@@ -114,9 +114,9 @@ namespace fmesh
 					patches.push_back(patch);
 				}
 
-				for (ClipperLib::PolyNode* n : node->Childs)
+				for (ClipperLibXYZ::PolyNode* n : node->Childs)
 				{
-					for (ClipperLib::PolyNode* cn : n->Childs)
+					for (ClipperLibXYZ::PolyNode* cn : n->Childs)
 					{
 						if (!cn->IsHole())
 							tmp.push_back(cn);
@@ -130,28 +130,28 @@ namespace fmesh
 		}
 	}
 	
-	void fillComplexPolyTreeReverse(ClipperLib::PolyTree* polyTree, std::vector<Patch*>& patches, bool isOuter)
+	void fillComplexPolyTreeReverse(ClipperLibXYZ::PolyTree* polyTree, std::vector<Patch*>& patches, bool isOuter)
 	{
 		if (!polyTree)
 			return;
 
 		//savePolyTree(polyTree, "f:/mypoly");
-		std::vector<ClipperLib::PolyNode*> source;
-		std::vector<ClipperLib::PolyNode*> tmp;
+		std::vector<ClipperLibXYZ::PolyNode*> source;
+		std::vector<ClipperLibXYZ::PolyNode*> tmp;
 
-		for (ClipperLib::PolyNode* node : polyTree->Childs)
+		for (ClipperLibXYZ::PolyNode* node : polyTree->Childs)
 			if (!node->IsHole())
 				source.push_back(node);
 
 		int parentChilds = 0;
 		while (source.size() > 0)
 		{
-			for (ClipperLib::PolyNode* node : source)
+			for (ClipperLibXYZ::PolyNode* node : source)
 			{
 				if (node->ChildCount() == 0)
 					continue;
 #ifdef _DEBUG
-				//double area = ClipperLib::Area(node->Contour);
+				//double area = ClipperLibXYZ::Area(node->Contour);
 				//std::cout << area << std::endl;
 #endif
 				Patch* patch = fillOneLevelPolyNode(node);
@@ -172,9 +172,9 @@ namespace fmesh
 					patches.push_back(patch);
 				}
 
-				for (ClipperLib::PolyNode* n : node->Childs)
+				for (ClipperLibXYZ::PolyNode* n : node->Childs)
 				{
-					for (ClipperLib::PolyNode* cn : n->Childs)
+					for (ClipperLibXYZ::PolyNode* cn : n->Childs)
 					{
 						if (!cn->IsHole())
 							tmp.push_back(cn);
@@ -188,28 +188,28 @@ namespace fmesh
 		}
 	}
 
-	void fillComplexPolyTreeReverseInnerNew(ClipperLib::PolyTree* polyTree, std::vector<Patch*>& patches, bool invert)
+	void fillComplexPolyTreeReverseInnerNew(ClipperLibXYZ::PolyTree* polyTree, std::vector<Patch*>& patches, bool invert)
 	{
 		if (!polyTree)
 			return;
 
 		//savePolyTree(polyTree, "f:/mypoly");
-		std::vector<ClipperLib::PolyNode*> source;
-		std::vector<ClipperLib::PolyNode*> tmp;
+		std::vector<ClipperLibXYZ::PolyNode*> source;
+		std::vector<ClipperLibXYZ::PolyNode*> tmp;
 
-		for (ClipperLib::PolyNode* node : polyTree->Childs)
+		for (ClipperLibXYZ::PolyNode* node : polyTree->Childs)
 			if (!node->IsHole())
 				source.push_back(node);
 
 		int parentChilds = 0;
 		while (source.size() > 0)
 		{
-			for (ClipperLib::PolyNode* node : source)
+			for (ClipperLibXYZ::PolyNode* node : source)
 			{
 				if (node->ChildCount() == 0)
 					continue;
 #ifdef _DEBUG
-				//double area = ClipperLib::Area(node->Contour);
+				//double area = ClipperLibXYZ::Area(node->Contour);
 				//std::cout << area << std::endl;
 #endif
 				Patch* patch = fillOneLevelPolyNode(node);
@@ -222,9 +222,9 @@ namespace fmesh
 					patches.push_back(patch);
 				}
 
-				for (ClipperLib::PolyNode* n : node->Childs)
+				for (ClipperLibXYZ::PolyNode* n : node->Childs)
 				{
-					for (ClipperLib::PolyNode* cn : n->Childs)
+					for (ClipperLibXYZ::PolyNode* cn : n->Childs)
 					{
 						if (!cn->IsHole())
 							tmp.push_back(cn);
@@ -238,28 +238,28 @@ namespace fmesh
 		}
 	}
 
-	void fillComplexPolyTree_onePloy(ClipperLib::PolyTree* polyTree, std::vector<Patch*>& patches, bool invert /*= false*/)
+	void fillComplexPolyTree_onePloy(ClipperLibXYZ::PolyTree* polyTree, std::vector<Patch*>& patches, bool invert /*= false*/)
 	{
 		if (!polyTree)
 			return;
 
 		//savePolyTree(polyTree, "xxxxx");
-		std::vector<ClipperLib::PolyNode*> source;
-		std::vector<ClipperLib::PolyNode*> tmp;
+		std::vector<ClipperLibXYZ::PolyNode*> source;
+		std::vector<ClipperLibXYZ::PolyNode*> tmp;
 
-		for (ClipperLib::PolyNode* node : polyTree->Childs)
+		for (ClipperLibXYZ::PolyNode* node : polyTree->Childs)
 			if (!node->IsHole())
 				source.push_back(node);
 
 		int parentChilds = 0;
 		while (source.size() > 0)
 		{
-			for (ClipperLib::PolyNode* node : source)
+			for (ClipperLibXYZ::PolyNode* node : source)
 			{
 				if (node->ChildCount() == 0)
 					continue;
 #ifdef _DEBUG
-				//double area = ClipperLib::Area(node->Contour);
+				//double area = ClipperLibXYZ::Area(node->Contour);
 				//std::cout << area << std::endl;
 #endif
 				Patch* patch = fillOneLevelPolyNode(node);
@@ -269,7 +269,7 @@ namespace fmesh
 					if (outer)
 					{
  						int gson = 0;
- 						for (ClipperLib::PolyNode* n : node->Childs)
+ 						for (ClipperLibXYZ::PolyNode* n : node->Childs)
  							gson += (int)n->ChildCount();
  						if (gson == 0)
  							outer = false;
@@ -306,9 +306,9 @@ namespace fmesh
 					patches.push_back(patch);
 				}
 
-				for (ClipperLib::PolyNode* n : node->Childs)
+				for (ClipperLibXYZ::PolyNode* n : node->Childs)
 				{
-					for (ClipperLib::PolyNode* cn : n->Childs)
+					for (ClipperLibXYZ::PolyNode* cn : n->Childs)
 					{
 						if (!cn->IsHole())
 							tmp.push_back(cn);
@@ -322,7 +322,7 @@ namespace fmesh
 		}
 	}
 
-	Patch* fillOneLevelPolyNode(ClipperLib::PolyNode* polyNode, bool invert)
+	Patch* fillOneLevelPolyNode(ClipperLibXYZ::PolyNode* polyNode, bool invert)
 	{
 		//SimplePoly poly;
 		//merge2SimplePoly(polyNode, &poly, invert);
@@ -338,28 +338,28 @@ namespace fmesh
 		
 	}
 
-	void fillFirstLevelPolyNode(ClipperLib::PolyTree* polyTree, std::vector<Patch*>& patches)
+	void fillFirstLevelPolyNode(ClipperLibXYZ::PolyTree* polyTree, std::vector<Patch*>& patches)
 	{
 		if (!polyTree)
 			return;
 
-		for (ClipperLib::PolyNode* node : polyTree->Childs)
+		for (ClipperLibXYZ::PolyNode* node : polyTree->Childs)
 		{
 			Patch* patch = fillSimplePolyTree(&node->Contour);
 			if (patch) patches.push_back(patch);
 		}
 	}
 
-	void fillPolyTreeDepth14(ClipperLib::PolyTree* polyTree, std::vector<Patch*>& patches)
+	void fillPolyTreeDepth14(ClipperLibXYZ::PolyTree* polyTree, std::vector<Patch*>& patches)
 	{
 		if (!polyTree)
 			return;
 		
-		std::vector<ClipperLib::PolyNode*> nodes1;
-		std::vector<ClipperLib::PolyNode*> nodes4;
-		std::vector<ClipperLib::PolyNode*> nodes5;
-		std::vector<ClipperLib::PolyNode*> nodes8;
-		polyNodeFunc func = [&patches, &nodes1, &nodes4, &nodes5, &nodes8](ClipperLib::PolyNode* node) {
+		std::vector<ClipperLibXYZ::PolyNode*> nodes1;
+		std::vector<ClipperLibXYZ::PolyNode*> nodes4;
+		std::vector<ClipperLibXYZ::PolyNode*> nodes5;
+		std::vector<ClipperLibXYZ::PolyNode*> nodes8;
+		polyNodeFunc func = [&patches, &nodes1, &nodes4, &nodes5, &nodes8](ClipperLibXYZ::PolyNode* node) {
 			int depth = testPolyNodeDepth(node);
 			if (depth == 1)
 				nodes1.push_back(node);
@@ -373,27 +373,27 @@ namespace fmesh
 
 		fmesh::loopPolyTree(func, polyTree);
 
-		ClipperLib::PolyTree out;
+		ClipperLibXYZ::PolyTree out;
 		xor2PolyNodes(nodes1, nodes4, out);
 
 		fillComplexPolyTree(&out, patches,false);
 
-		ClipperLib::PolyTree out_;
+		ClipperLibXYZ::PolyTree out_;
 		xor2PolyNodes(nodes5, nodes8, out_);
 
 		fillComplexPolyTree(&out_, patches, false);
 	}
 
-	void fillPolyTreeDepth23(ClipperLib::PolyTree* polyTree, std::vector<Patch*>& patches)
+	void fillPolyTreeDepth23(ClipperLibXYZ::PolyTree* polyTree, std::vector<Patch*>& patches)
 	{
 		if (!polyTree)
 			return;
 
-		std::vector<ClipperLib::PolyNode*> nodes2;
-		std::vector<ClipperLib::PolyNode*> nodes3;
-		std::vector<ClipperLib::PolyNode*> nodes6;
-		std::vector<ClipperLib::PolyNode*> nodes7;
-		polyNodeFunc func = [&patches, &nodes2, &nodes3, &nodes6, &nodes7](ClipperLib::PolyNode* node) {
+		std::vector<ClipperLibXYZ::PolyNode*> nodes2;
+		std::vector<ClipperLibXYZ::PolyNode*> nodes3;
+		std::vector<ClipperLibXYZ::PolyNode*> nodes6;
+		std::vector<ClipperLibXYZ::PolyNode*> nodes7;
+		polyNodeFunc func = [&patches, &nodes2, &nodes3, &nodes6, &nodes7](ClipperLibXYZ::PolyNode* node) {
 			int depth = testPolyNodeDepth(node);
 			if (depth == 2)
 				nodes2.push_back(node);
@@ -407,51 +407,51 @@ namespace fmesh
 
 		fmesh::loopPolyTree(func, polyTree);
 
-		ClipperLib::PolyTree out;
+		ClipperLibXYZ::PolyTree out;
 		xor2PolyNodes(nodes2, nodes3, out);
 
 		fillComplexPolyTree(&out, patches, false);
 
-		ClipperLib::PolyTree out_;
+		ClipperLibXYZ::PolyTree out_;
 		xor2PolyNodes(nodes6, nodes7, out_);
 
 		fillComplexPolyTree(&out_, patches, false);
 	}
 
-	void fillPolyTreeDepthOnePoly(ClipperLib::PolyTree* polyTree, std::vector<Patch*>& patches)
+	void fillPolyTreeDepthOnePoly(ClipperLibXYZ::PolyTree* polyTree, std::vector<Patch*>& patches)
 	{
 		if (!polyTree)
 			return;
 
-		std::vector<ClipperLib::PolyNode*> nodes1;
-		std::vector<ClipperLib::PolyNode*> nodes4;
-		std::vector<ClipperLib::PolyNode*> nodes5;
-		std::vector<ClipperLib::PolyNode*> nodes8;
-		polyNodeFunc func = [&patches, &nodes1, &nodes4, &nodes5, &nodes8](ClipperLib::PolyNode* node) {
+		std::vector<ClipperLibXYZ::PolyNode*> nodes1;
+		std::vector<ClipperLibXYZ::PolyNode*> nodes4;
+		std::vector<ClipperLibXYZ::PolyNode*> nodes5;
+		std::vector<ClipperLibXYZ::PolyNode*> nodes8;
+		polyNodeFunc func = [&patches, &nodes1, &nodes4, &nodes5, &nodes8](ClipperLibXYZ::PolyNode* node) {
 			int depth = testPolyNodeDepth(node);
 				nodes1.push_back(node);
 		};
 
 		fmesh::loopPolyTree(func, polyTree);
 
-		ClipperLib::PolyTree out;
+		ClipperLibXYZ::PolyTree out;
 		xor2PolyNodes(nodes1, nodes4, out);
 
 		fillComplexPolyTree(&out, patches, false);
 
-		ClipperLib::PolyTree out_;
+		ClipperLibXYZ::PolyTree out_;
 		xor2PolyNodes(nodes5, nodes8, out_);
 
 		fillComplexPolyTree(&out_, patches, false);
 	}
 
-	void fillPolyNodeInner(ClipperLib::PolyTree* polyTree, std::vector<Patch*>& patches)
+	void fillPolyNodeInner(ClipperLibXYZ::PolyTree* polyTree, std::vector<Patch*>& patches)
 	{
 		if (!polyTree)
 			return;
 
-		std::vector<ClipperLib::PolyNode*> nodes2;
-		polyNodeFunc func = [&patches, &nodes2](ClipperLib::PolyNode* node) {
+		std::vector<ClipperLibXYZ::PolyNode*> nodes2;
+		polyNodeFunc func = [&patches, &nodes2](ClipperLibXYZ::PolyNode* node) {
 			int depth = testPolyNodeDepth(node);
 			if (depth == 2 || depth == 6)
 				nodes2.push_back(node);
@@ -459,7 +459,7 @@ namespace fmesh
 
 		fmesh::loopPolyTree(func, polyTree);
 
-		for (ClipperLib::PolyNode* node : nodes2)
+		for (ClipperLibXYZ::PolyNode* node : nodes2)
 		{
 			Patch* patch = fillOneLevelPolyNode(node, true);
 			if (patch)
@@ -467,7 +467,7 @@ namespace fmesh
 		}
 	}
 
-	void fillPolyNodeOutline(ClipperLib::PolyTree* polyTree1, std::vector<Patch*>& patches)
+	void fillPolyNodeOutline(ClipperLibXYZ::PolyTree* polyTree1, std::vector<Patch*>& patches)
 	{
 		if (!polyTree1 )
 			return;
@@ -479,11 +479,11 @@ namespace fmesh
 
 	}
 
-	void dealPolyTreeAxisZ(ClipperLib::PolyTree* polyTree, double slope,double min, double height)
+	void dealPolyTreeAxisZ(ClipperLibXYZ::PolyTree* polyTree, double slope,double min, double height)
 	{
 		if (!polyTree)
 			return;
-		polyNodeFunc func = [&slope,&height,&min](ClipperLib::PolyNode* node) {
+		polyNodeFunc func = [&slope,&height,&min](ClipperLibXYZ::PolyNode* node) {
 			for (size_t i = 0; i < node->Contour.size(); i++)
 			{
   				node->Contour.at(i).Z += slope * (node->Contour.at(i).Y- min*1000)+ height*1000;
@@ -493,10 +493,10 @@ namespace fmesh
 		fmesh::loopPolyTree(func, polyTree);
 	}
 
-	ClipperLib::cInt pathMaxX(ClipperLib::Path& path)
+	ClipperLibXYZ::cInt pathMaxX(ClipperLibXYZ::Path& path)
 	{
-		ClipperLib::cInt x = -999999;
-		for (ClipperLib::IntPoint& point : path)
+		ClipperLibXYZ::cInt x = -999999;
+		for (ClipperLibXYZ::IntPoint& point : path)
 		{
 			if (point.X > x)
 				x = point.X;
@@ -504,10 +504,10 @@ namespace fmesh
 		return x;
 	}
 
-	ClipperLib::cInt pathMaxZ(ClipperLib::Path& path)
+	ClipperLibXYZ::cInt pathMaxZ(ClipperLibXYZ::Path& path)
 	{
-		ClipperLib::cInt z = -999999;
-		for (ClipperLib::IntPoint& point : path)
+		ClipperLibXYZ::cInt z = -999999;
+		for (ClipperLibXYZ::IntPoint& point : path)
 		{
 			if (point.Z > z)
 				z = point.Z;
@@ -515,27 +515,27 @@ namespace fmesh
 		return z;
 	}
 
-	ClipperLib::cInt pathMaxZ(ClipperLib::PolyNode* node)
+	ClipperLibXYZ::cInt pathMaxZ(ClipperLibXYZ::PolyNode* node)
 	{
-		ClipperLib::cInt z = -999999;
-		ClipperLib::cInt tmp = 0;
-		for (ClipperLib::PolyNode* n : node->Childs)
+		ClipperLibXYZ::cInt z = -999999;
+		ClipperLibXYZ::cInt tmp = 0;
+		for (ClipperLibXYZ::PolyNode* n : node->Childs)
 			if (z < (tmp = pathMaxZ(n->Contour)))
 				z = tmp;
 		return z;
 	}
 
-	void merge2SimplePoly(ClipperLib::PolyNode* polyNode, SimplePoly* newPoly, bool invert)
+	void merge2SimplePoly(ClipperLibXYZ::PolyNode* polyNode, SimplePoly* newPoly, bool invert)
 	{
 		if (!polyNode || !newPoly)
 			return;
 
 		size_t size = polyNode->Contour.size();
 		size_t childCount = polyNode->Childs.size();
-		std::list<ClipperLib::PolyNode*> insertedPolys;
+		std::list<ClipperLibXYZ::PolyNode*> insertedPolys;
 		if (childCount > 0)
 		{
-			std::vector<ClipperLib::cInt> maxX(childCount);
+			std::vector<ClipperLibXYZ::cInt> maxX(childCount);
 			std::vector<int> nodes(childCount);
 			for (size_t i = 0; i < childCount; ++i)
 			{
@@ -564,16 +564,16 @@ namespace fmesh
 		}
 		else
 		{
-			for (ClipperLib::IntPoint& p : polyNode->Contour)
+			for (ClipperLibXYZ::IntPoint& p : polyNode->Contour)
 				newPoly->push_back(&p);
 		}
 
 		while (insertedPolys.size() > 0)
 		{
-			//ClipperLib::Path* insertPoly = nullptr;
-			std::vector<ClipperLib::IntPoint*> insertPoly;
+			//ClipperLibXYZ::Path* insertPoly = nullptr;
+			std::vector<ClipperLibXYZ::IntPoint*> insertPoly;
 			int cSize = (int)insertedPolys.back()->Contour.size();
-			ClipperLib::Path& insertPath = insertedPolys.back()->Contour;
+			ClipperLibXYZ::Path& insertPath = insertedPolys.back()->Contour;
 			insertPoly.reserve(cSize);
 			if (invert && cSize > 0)
 			{
@@ -591,7 +591,7 @@ namespace fmesh
 			int innerSize = (int)insertPoly.size();
 			float mx = -10000000.0f;
 
-			ClipperLib::IntPoint* maxVertex = nullptr;
+			ClipperLibXYZ::IntPoint* maxVertex = nullptr;
 			int vertexIndex = -1;
 			for (int i = 0; i < innerSize; ++i)
 			{
@@ -721,7 +721,7 @@ namespace fmesh
 
 				if (mutaulIndex >= 0)
 				{// merge mutaulIndex in outer and vertexIndex in inner
-					std::vector<ClipperLib::IntPoint*> mergedPolygon;
+					std::vector<ClipperLibXYZ::IntPoint*> mergedPolygon;
 					for (i = 0; i < nvert; ++i)
 					{
 						mergedPolygon.push_back(newPoly->at(i));

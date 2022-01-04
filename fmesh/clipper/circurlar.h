@@ -1,16 +1,16 @@
 #ifndef MMESH_CIRCURLAR_1603379885432_H
 #define MMESH_CIRCURLAR_1603379885432_H
-#include <clipper/clipper.hpp>
+#include <clipperxyz/clipper.hpp>
 
 namespace fmesh
 {
-	void loopPolyTree(polyNodeFunc func, ClipperLib::PolyNode* polyNode);
-	void level2PolyNode(polyNodeFunc func, ClipperLib::PolyNode* polyNode);
-	void seperatePolyTree(ClipperLib::PolyTree* polyTree,
-		std::vector<ClipperLib::Path*>& exterior, std::vector<ClipperLib::Path*>& interior);
+	void loopPolyTree(polyNodeFunc func, ClipperLibXYZ::PolyNode* polyNode);
+	void level2PolyNode(polyNodeFunc func, ClipperLibXYZ::PolyNode* polyNode);
+	void seperatePolyTree(ClipperLibXYZ::PolyTree* polyTree,
+		std::vector<ClipperLibXYZ::Path*>& exterior, std::vector<ClipperLibXYZ::Path*>& interior);
 
-	void seperatePolyTree(ClipperLib::PolyTree* polyTree,
-		std::vector<ClipperLib::Path*>& exterior, std::vector<ClipperLib::Path*>& interior,
+	void seperatePolyTree(ClipperLibXYZ::PolyTree* polyTree,
+		std::vector<ClipperLibXYZ::Path*>& exterior, std::vector<ClipperLibXYZ::Path*>& interior,
 		std::vector<int>& iexterior, std::vector<int>& iinterior);
 }
 

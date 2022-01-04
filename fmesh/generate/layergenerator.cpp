@@ -21,7 +21,7 @@ namespace fmesh
 	void LayerGenerator::build()
 	{
 		size_t drumHCount = 5;
-		std::vector<ClipperLib::PolyTree> middlePolys;
+		std::vector<ClipperLibXYZ::PolyTree> middlePolys;
 #if 0
 		//float shape_bottom_height = m_adParam.shape_bottom_height;
 		//float shape_top_height = m_adParam.shape_top_height;
@@ -32,7 +32,7 @@ namespace fmesh
 		//
 		//size_t drumHCount = 32;
 		//double drumDelta = middleHeight / (double)drumHCount;
-		//std::vector<ClipperLib::PolyTree> middlePolys(1 + drumHCount);
+		//std::vector<ClipperLibXYZ::PolyTree> middlePolys(1 + drumHCount);
 		//
 		//float offset = 3.1415926 / drumHCount;
 		//
@@ -63,7 +63,7 @@ namespace fmesh
 		int index = m_tracer ? m_tracer->index() : 0;
 		if(index >= 0 && index < drumHCount - 1)
 		{
-			ClipperLib::PolyTree out;
+			ClipperLibXYZ::PolyTree out;
 			//_buildFromDiffPolyTree_drum(&middlePolys.at(index), &middlePolys.at(index + 1), 0, out);
 			if (out.ChildCount() > 0)
 			{
@@ -74,11 +74,11 @@ namespace fmesh
 			{
 				//m_tracer->impl(middlePolys.at(index), middlePolys.at(index + 1));
 				
-				ClipperLib::PolyTree tree;
-				polyNodeFunc func = [&func](ClipperLib::PolyNode* node) {
-					for (ClipperLib::IntPoint& point : node->Contour)
+				ClipperLibXYZ::PolyTree tree;
+				polyNodeFunc func = [&func](ClipperLibXYZ::PolyNode* node) {
+					for (ClipperLibXYZ::IntPoint& point : node->Contour)
 						point.Z = 0;
-					for (ClipperLib::PolyNode* n : node->Childs)
+					for (ClipperLibXYZ::PolyNode* n : node->Childs)
 						func(n);
 				};
 
@@ -89,12 +89,12 @@ namespace fmesh
 		}
 	}
 
-	void LayerGenerator::saveXOR(ClipperLib::PolyTree& tree, const ADParam& param)
+	void LayerGenerator::saveXOR(ClipperLibXYZ::PolyTree& tree, const ADParam& param)
 	{
 		size_t drumHCount = 32;
 		float shape_middle_width = param.shape_middle_width;
 		float thickness = param.extend_width / 2.0;
-		std::vector<ClipperLib::PolyTree> middlePolys(1 + drumHCount);
+		std::vector<ClipperLibXYZ::PolyTree> middlePolys(1 + drumHCount);
 
 		float offset = 3.1415926 / drumHCount;
 		for (size_t i = 0; i < drumHCount + 1; i++)
@@ -133,28 +133,28 @@ namespace fmesh
 
 		for (size_t i = 0; i < drumHCount - 1; i++)
 		{
-			ClipperLib::PolyTree out;
+			ClipperLibXYZ::PolyTree out;
 			buildXORFrom2PolyTree(&middlePolys.at(i), &middlePolys.at(i + 1), out);
 
-			std::vector<ClipperLib::PolyNode*> source;
-			std::vector<ClipperLib::PolyNode*> tmp;
+			std::vector<ClipperLibXYZ::PolyNode*> source;
+			std::vector<ClipperLibXYZ::PolyNode*> tmp;
 
-			for (ClipperLib::PolyNode* node : out.Childs)
+			for (ClipperLibXYZ::PolyNode* node : out.Childs)
 				if (!node->IsHole())
 					source.push_back(node);
 
 			int parentChilds = 0;
 			while (source.size() > 0)
 			{
-				for (ClipperLib::PolyNode* node : source)
+				for (ClipperLibXYZ::PolyNode* node : source)
 				{
 					SimplePoly poly;
 					merge2SimplePoly(node, &poly, false);
 					saveSimplePoly(poly, time_string());
 
-					for (ClipperLib::PolyNode* n : node->Childs)
+					for (ClipperLibXYZ::PolyNode* n : node->Childs)
 					{
-						for (ClipperLib::PolyNode* cn : n->Childs)
+						for (ClipperLibXYZ::PolyNode* cn : n->Childs)
 						{
 							if (!cn->IsHole())
 								tmp.push_back(cn);

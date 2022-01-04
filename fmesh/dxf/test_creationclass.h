@@ -63,17 +63,17 @@ public:
 
     void printAttributes();
 	//Block תpaths
-    void myblock2Paths(ClipperLib::Paths* paths);
+    void myblock2Paths(ClipperLibXYZ::Paths* paths);
 
-    void myblock2MultiPaths(std::vector<ClipperLib::Paths*>& vctPaths);
+    void myblock2MultiPaths(std::vector<ClipperLibXYZ::Paths*>& vctPaths);
 
 private:
-    void dealLine(vector<DXFLine>& lines, ClipperLib::Paths* paths);
-    void dealCircle(vector<DXFCircle>& circles, ClipperLib::Paths* paths);
-    void dealEllipse(vector<DXFEllipse>& ellipses, ClipperLib::Paths* paths);
-    void dealPolylineentities(vector<DXFPolyLineEntities>& polylineentitiess, ClipperLib::Paths* paths);
-    void dealArc(vector<DXFArc>& arcs, ClipperLib::Paths* paths);
-    void dealSplines(vector<cdrdxf::DXFSpline>& spliness, ClipperLib::Paths* paths);
+    void dealLine(vector<DXFLine>& lines, ClipperLibXYZ::Paths* paths);
+    void dealCircle(vector<DXFCircle>& circles, ClipperLibXYZ::Paths* paths);
+    void dealEllipse(vector<DXFEllipse>& ellipses, ClipperLibXYZ::Paths* paths);
+    void dealPolylineentities(vector<DXFPolyLineEntities>& polylineentitiess, ClipperLibXYZ::Paths* paths);
+    void dealArc(vector<DXFArc>& arcs, ClipperLibXYZ::Paths* paths);
+    void dealSplines(vector<cdrdxf::DXFSpline>& spliness, ClipperLibXYZ::Paths* paths);
 protected:
     cdrdxf::DXFSpline* m_currentSpline;
 };

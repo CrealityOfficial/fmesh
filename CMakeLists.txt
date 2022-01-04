@@ -1,15 +1,19 @@
-__find_librevenge()
-__find_tinyxml()
-__find_freetype()
-__find_dxflib()
+__assert_target(tinyxml)
+__assert_target(freetype)
+__assert_target(dxflib)
 
 __files_group(${CMAKE_CURRENT_SOURCE_DIR}/fmesh/ SRCS)
 
-set(LIBS trimesh2 clipper mmesh cmesh freetype dxflib librevenge tinyxml)
+set(LIBS trimesh2 clipper mmesh cmesh freetype dxflib tinyxml librevenge)
 set(DEFS FMESH_DLL TIXML_USE_STL)
-__add_real_target(fmesh dll SOURCE ${SRCS} INC ${INCS} LIB ${LIBS} DEF ${DEFS})
 
-set_property(TARGET fmesh PROPERTY INTERFACE_INCLUDE_DIRECTORIES ${CMAKE_CURRENT_SOURCE_DIR})
+__add_real_target(fmesh dll SOURCE ${SRCS}
+							INC ${INCS} ${RAPIDJSON_INCLUDE_DIRS}
+							LIB ${LIBS}
+							DEF ${DEFS}
+							INC ${CMAKE_CURRENT_SOURCE_DIR}
+							INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}
+							)
 
 if(APPLE)
 	__add_openmp_lib(fmesh)

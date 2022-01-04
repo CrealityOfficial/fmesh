@@ -21,7 +21,7 @@ namespace fmesh
 		//m_adParam.bottom_type = ADBottomType::adbt_none;
 
 		double middleoffset = 0;
-		std::vector<ClipperLib::PolyTree> middlePolys;
+		std::vector<ClipperLibXYZ::PolyTree> middlePolys;
 		buildMiddle(middlePolys, middleoffset);
 		if (middlePolys.size() == 0)
 			return;
@@ -33,17 +33,17 @@ namespace fmesh
 		m_adParam.bottom_type = ADBottomType::adbt_none;
 
 		double middleoffset = 0;
-		std::vector<ClipperLib::PolyTree> middlePolys;
+		std::vector<ClipperLibXYZ::PolyTree> middlePolys;
 		buildMiddle(middlePolys, middleoffset, true);
 		if (middlePolys.size() == 0)
 			return;
 		_buildTopBottom_onepoly(nullptr, &middlePolys.back(), 0, 0);
 	}
 
-	void LampGenerator::buildBoard(ClipperLib::PolyTree& topTree, ClipperLib::PolyTree& bottomTree)
+	void LampGenerator::buildBoard(ClipperLibXYZ::PolyTree& topTree, ClipperLibXYZ::PolyTree& bottomTree)
 	{
 		double middleoffset = 0;
-		std::vector<ClipperLib::PolyTree> middlePolys;
+		std::vector<ClipperLibXYZ::PolyTree> middlePolys;
 		buildMiddle(middlePolys, middleoffset, true);
 		if (middlePolys.size() == 0)
 			return;
@@ -51,7 +51,7 @@ namespace fmesh
 		offsetPolyType(middlePolys.front(), m_adParam.exoprtParam.bottom_offset, bottomTree, m_adParam.bluntSharpCorners);
 	}
 
-	void LampGenerator::buildMiddle(std::vector<ClipperLib::PolyTree>& middlePolys, double& middleoffset, bool onePoly)
+	void LampGenerator::buildMiddle(std::vector<ClipperLibXYZ::PolyTree>& middlePolys, double& middleoffset, bool onePoly)
 	{
 		//initTestData();
 		float thickness = m_adParam.extend_width / 2.0;
@@ -72,53 +72,53 @@ namespace fmesh
 		else
 			offsetAndExtendpolyType(m_poly, offset, thickness, thicknessH, middlePolys.at(2), m_adParam.bluntSharpCorners);
 
-		ClipperLib::Path* path = new ClipperLib::Path;
+		ClipperLibXYZ::Path* path = new ClipperLibXYZ::Path;
 		cmesh::skeletonPoints(&m_poly, path);
 
-		ClipperLib::Paths paths;
+		ClipperLibXYZ::Paths paths;
 		sortPath(path, &paths);
 
-		ClipperLib::Paths inPaths;
-		ClipperLib::Paths outPaths;
+		ClipperLibXYZ::Paths inPaths;
+		ClipperLibXYZ::Paths outPaths;
 		generateLines(paths, inPaths, m_adParam.roundGap, m_adParam.roundRadius, true);
 		generateRounds(inPaths, outPaths, m_adParam.roundGap, m_adParam.roundRadius);
 
-		ClipperLib::Clipper clipper;
+		ClipperLibXYZ::Clipper clipper;
 		int flag = 0;
 		//bottom
-		polyNodeFunc func1 = [&func1, &clipper, &flag](ClipperLib::PolyNode* node) {
+		polyNodeFunc func1 = [&func1, &clipper, &flag](ClipperLibXYZ::PolyNode* node) {
 			if (checkFlag(node, flag))
 			{
 				if (2 == flag)
 				{
-					ClipperLib::ReversePath(node->Contour);
-					clipper.AddPath(node->Contour, ClipperLib::ptClip, true);
+					ClipperLibXYZ::ReversePath(node->Contour);
+					clipper.AddPath(node->Contour, ClipperLibXYZ::ptClip, true);
 				}
 				else
-					clipper.AddPath(node->Contour, ClipperLib::ptClip, true);
+					clipper.AddPath(node->Contour, ClipperLibXYZ::ptClip, true);
 			}
 				
 		};
 		flag = 3;//outer
 		fmesh::loopPolyTree(func1, &middlePolys.at(0));
-		for (ClipperLib::Path& path : outPaths)
+		for (ClipperLibXYZ::Path& path : outPaths)
 		{
-			ClipperLib::ReversePath(path);
-			clipper.AddPath(path, ClipperLib::ptClip, true);
+			ClipperLibXYZ::ReversePath(path);
+			clipper.AddPath(path, ClipperLibXYZ::ptClip, true);
 		}
-		ClipperLib::PolyTree newPolyB;
-		clipper.Execute(ClipperLib::ctUnion, newPolyB, ClipperLib::pftNonZero, ClipperLib::pftNonZero);
+		ClipperLibXYZ::PolyTree newPolyB;
+		clipper.Execute(ClipperLibXYZ::ctUnion, newPolyB, ClipperLibXYZ::pftNonZero, ClipperLibXYZ::pftNonZero);
 
 		//top
 		clipper.Clear();
 		flag = 2;//inner
 		fmesh::loopPolyTree(func1, &middlePolys.at(1));
-		for (ClipperLib::Path& path : outPaths)
+		for (ClipperLibXYZ::Path& path : outPaths)
 		{
-			clipper.AddPath(path, ClipperLib::ptClip, true);
+			clipper.AddPath(path, ClipperLibXYZ::ptClip, true);
 		}
-		ClipperLib::PolyTree newPolyT;
-		clipper.Execute(ClipperLib::ctUnion, newPolyT, ClipperLib::pftNonZero, ClipperLib::pftNonZero);
+		ClipperLibXYZ::PolyTree newPolyT;
+		clipper.Execute(ClipperLibXYZ::ctUnion, newPolyT, ClipperLibXYZ::pftNonZero, ClipperLibXYZ::pftNonZero);
 		setPolyTreeZ(newPolyT, thicknessH);
 		
 		_buildFromSamePolyTree(&middlePolys.at(0), &middlePolys.at(1), 3);

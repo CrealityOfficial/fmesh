@@ -19,7 +19,7 @@ namespace fmesh
 		//m_adParam.bottom_layers = 2;
 
 		double middleoffset = 0;
-		std::vector<ClipperLib::PolyTree> middlePolys;
+		std::vector<ClipperLibXYZ::PolyTree> middlePolys;
 		buildMiddle(middlePolys, middleoffset);
 		if (middlePolys.size() == 0)
 			return;
@@ -32,17 +32,17 @@ namespace fmesh
 		//m_adParam.bottom_layers = 2;
 
 		double middleoffset = 0;
-		std::vector<ClipperLib::PolyTree> middlePolys;
+		std::vector<ClipperLibXYZ::PolyTree> middlePolys;
 		buildMiddle(middlePolys, middleoffset,true);
 		if (middlePolys.size() == 0)
 			return;
 		_buildTopBottom_onepoly(&middlePolys.back(), &middlePolys.front(), 0, middleoffset);
 	}
 
-	void NeonGenerator::buildBoard(ClipperLib::PolyTree& topTree, ClipperLib::PolyTree& bottomTree)
+	void NeonGenerator::buildBoard(ClipperLibXYZ::PolyTree& topTree, ClipperLibXYZ::PolyTree& bottomTree)
 	{
 		double middleoffset = 0;
-		std::vector<ClipperLib::PolyTree> middlePolys;
+		std::vector<ClipperLibXYZ::PolyTree> middlePolys;
 		buildMiddle(middlePolys, middleoffset, true);
 		if (middlePolys.size() == 0)
 			return;
@@ -50,7 +50,7 @@ namespace fmesh
 		offsetPolyType(middlePolys.front(), m_adParam.exoprtParam.bottom_offset, bottomTree, m_adParam.bluntSharpCorners);
 	}
 
-	void NeonGenerator::buildMiddle(std::vector<ClipperLib::PolyTree>& middlePolys, double& middleoffset, bool onePoly)
+	void NeonGenerator::buildMiddle(std::vector<ClipperLibXYZ::PolyTree>& middlePolys, double& middleoffset, bool onePoly)
 	{
 		//initTestData();
 
@@ -81,7 +81,7 @@ namespace fmesh
 		float offset = middleHeight * std::sin(m_adParam.shape_angle / 2 * 3.1415926 / 180.0) / (float)count;
 		float h = middleHeight / (float)count;
 
-		std::vector<ClipperLib::PolyTree> Steppolys(1);
+		std::vector<ClipperLibXYZ::PolyTree> Steppolys(1);
 		size_t num = (h > 0) ? (count - topHeight / h) : 0;
 		//middle
 		middlePolys.resize(count + 1);

@@ -13,7 +13,7 @@ namespace fmesh
 		void build() override;
 
 		void buildShell() override;
-		void buildBoard(ClipperLib::PolyTree& topTree, ClipperLib::PolyTree& bottomTree) override;
+		void buildBoard(ClipperLibXYZ::PolyTree& topTree, ClipperLibXYZ::PolyTree& bottomTree) override;
 	};
 }
 

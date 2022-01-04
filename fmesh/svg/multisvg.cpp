@@ -9,7 +9,7 @@ namespace fmesh
 	{
 		m_isBigchars = false;
 		m_BezierPoint.first = false;
-		m_BezierPoint.second = ClipperLib::DoublePoint(0, 0);
+		m_BezierPoint.second = ClipperLibXYZ::DoublePoint(0, 0);
 	}
 
 	MultiSVG::~MultiSVG()
@@ -20,8 +20,8 @@ namespace fmesh
 	void MultiSVG::addRect(float width, float height,
 		float leftTopX, float leftTopY)
 	{
-		//ClipperLib::Paths* paths = new ClipperLib::Paths(1);
-		ClipperLib::Path* path = new ClipperLib::Path;
+		//ClipperLibXYZ::Paths* paths = new ClipperLibXYZ::Paths(1);
+		ClipperLibXYZ::Path* path = new ClipperLibXYZ::Path;
 
 		path->push_back(CLIPPERPOINT(leftTopX, leftTopY));
 		path->push_back(CLIPPERPOINT(leftTopX, leftTopY + height));
@@ -33,8 +33,8 @@ namespace fmesh
 
 	void MultiSVG::addLine(float start_x, float start_y, float end_x, float end_y)
 	{
-		//ClipperLib::Paths* paths = new ClipperLib::Paths(1);
-		ClipperLib::Path* path = new ClipperLib::Path;
+		//ClipperLibXYZ::Paths* paths = new ClipperLibXYZ::Paths(1);
+		ClipperLibXYZ::Path* path = new ClipperLibXYZ::Path;
 
 		path->push_back(CLIPPERPOINT(start_x, start_y));
 		path->push_back(CLIPPERPOINT(end_x, end_y));
@@ -43,8 +43,8 @@ namespace fmesh
 
 	void MultiSVG::addPolyLine(const std::string& polygon)
 	{
-		//ClipperLib::Paths* paths = new ClipperLib::Paths(1);
-		ClipperLib::Path* path = new ClipperLib::Path;
+		//ClipperLibXYZ::Paths* paths = new ClipperLibXYZ::Paths(1);
+		ClipperLibXYZ::Path* path = new ClipperLibXYZ::Path;
 
 		std::vector<std::string> Vctdest;
 		SplitString(polygon, Vctdest, " ");
@@ -64,8 +64,8 @@ namespace fmesh
 
 	void MultiSVG::addEllipse(float cx, float cy, float rx, float ry, int precision)
 	{
-		//ClipperLib::Paths* paths = new ClipperLib::Paths(1);
-		ClipperLib::Path* path = new ClipperLib::Path;
+		//ClipperLibXYZ::Paths* paths = new ClipperLibXYZ::Paths(1);
+		ClipperLibXYZ::Path* path = new ClipperLibXYZ::Path;
 
 		double delta = 2.0 * _PI / (double)precision;
 		for (unsigned int i = 0; i < precision; i++)//Ë³Ê±ÕëÈ¡µã
@@ -81,8 +81,8 @@ namespace fmesh
 
 	void MultiSVG::addPolygonS(const std::string& polygon)
 	{
-		//ClipperLib::Paths* paths = new ClipperLib::Paths(1);
-		ClipperLib::Path* path = new ClipperLib::Path;
+		//ClipperLibXYZ::Paths* paths = new ClipperLibXYZ::Paths(1);
+		ClipperLibXYZ::Path* path = new ClipperLibXYZ::Path;
 
 		std::vector<std::string> Vctdest;
 		SplitString(polygon, Vctdest, " ");
@@ -103,7 +103,7 @@ namespace fmesh
 
 	void MultiSVG::addPathS(const std::string& strPath)
 	{
-		ClipperLib::Paths* paths = new ClipperLib::Paths();
+		ClipperLibXYZ::Paths* paths = new ClipperLibXYZ::Paths();
 
 		std::vector<std::string> vctString;
 		bool flagBegin = false;
@@ -222,9 +222,9 @@ namespace fmesh
 		m_pathses.push_back(paths);
 	}
 
-	std::vector<ClipperLib::Paths*> MultiSVG::take()
+	std::vector<ClipperLibXYZ::Paths*> MultiSVG::take()
 	{
-		std::vector<ClipperLib::Paths*> tmp;
+		std::vector<ClipperLibXYZ::Paths*> tmp;
 
 		for (size_t i = 0; i < m_pathses.size(); i++)
 		{
@@ -247,7 +247,7 @@ namespace fmesh
 		{
 			areaAABB[0] = 0;
 		}
-		std::vector<ClipperLib::Paths*> pathses;
+		std::vector<ClipperLibXYZ::Paths*> pathses;
 		for (size_t i = 0; i < m_path.size(); i++)
 		{
 			for (size_t j = 0; j < m_path.size(); j++)
@@ -270,10 +270,10 @@ namespace fmesh
 
 		for (size_t i = 0; i < m_path.size(); i++)
 		{
-			ClipperLib::Paths* paths = nullptr;
+			ClipperLibXYZ::Paths* paths = nullptr;
 			if (i == areaAABB[i])
 			{
-				paths = new ClipperLib::Paths;
+				paths = new ClipperLibXYZ::Paths;
 				paths->push_back(*m_path[i]);			
 				for (size_t j = i+1; j < areaAABB.size(); j++)
 				{
@@ -506,10 +506,10 @@ namespace fmesh
 		SplitStringS(stringPoint, VctPoint, VctS);
 		for (int n = 5; n < VctPoint.size(); n += 6)
 		{
-			ClipperLib::DoublePoint bezierStart = m_currentPosition;
+			ClipperLibXYZ::DoublePoint bezierStart = m_currentPosition;
 			if (m_isBigchars)
 			{
-				std::vector<ClipperLib::DoublePoint> vctBasePoint;
+				std::vector<ClipperLibXYZ::DoublePoint> vctBasePoint;
 				vctBasePoint.push_back(m_currentPosition);
 				m_currentPosition.X = atof(VctPoint[n - 5].data());
 				m_currentPosition.Y = -atof(VctPoint[n - 4].data());
@@ -522,7 +522,7 @@ namespace fmesh
 				vctBasePoint.push_back(m_currentPosition);
 				for (int tm = 1; tm <= 50; tm++)
 				{
-					ClipperLib::DoublePoint FT_Temp;
+					ClipperLibXYZ::DoublePoint FT_Temp;
 					float t = tm / 50.0;
 					FT_Temp.X = vctBasePoint[0].X * pow(1 - t, 3) + vctBasePoint[1].X * t * pow(1 - t, 2) * 3 + vctBasePoint[2].X * pow(t, 2) * (1 - t) * 3 + vctBasePoint[3].X * pow(t, 3);
 					FT_Temp.Y = vctBasePoint[0].Y * pow(1 - t, 3) + vctBasePoint[1].Y * t * pow(1 - t, 2) * 3 + vctBasePoint[2].Y * pow(t, 2) * (1 - t) * 3 + vctBasePoint[3].Y * pow(t, 3);
@@ -534,7 +534,7 @@ namespace fmesh
 			}
 			else
 			{
-				std::vector<ClipperLib::DoublePoint> vctBasePoint;
+				std::vector<ClipperLibXYZ::DoublePoint> vctBasePoint;
 				vctBasePoint.push_back(m_currentPosition);
 				m_currentPosition.X = bezierStart.X + atof(VctPoint[n - 5].data());
 				m_currentPosition.Y = bezierStart.Y - atof(VctPoint[n - 4].data());
@@ -547,7 +547,7 @@ namespace fmesh
 				vctBasePoint.push_back(m_currentPosition);
 				for (int tm = 1; tm <= 50; tm++)
 				{
-					ClipperLib::DoublePoint FT_Temp;
+					ClipperLibXYZ::DoublePoint FT_Temp;
 					float t = tm / 50.0;
 					FT_Temp.X = vctBasePoint[0].X * pow(1 - t, 3) + vctBasePoint[1].X * t * pow(1 - t, 2) * 3 + vctBasePoint[2].X * pow(t, 2) * (1 - t) * 3 + vctBasePoint[3].X * pow(t, 3);
 					FT_Temp.Y = vctBasePoint[0].Y * pow(1 - t, 3) + vctBasePoint[1].Y * t * pow(1 - t, 2) * 3 + vctBasePoint[2].Y * pow(t, 2) * (1 - t) * 3 + vctBasePoint[3].Y * pow(t, 3);
@@ -581,7 +581,7 @@ namespace fmesh
 		{
 			if (m_isBigchars)
 			{
-				std::vector<ClipperLib::DoublePoint> vctBasePoint;
+				std::vector<ClipperLibXYZ::DoublePoint> vctBasePoint;
 				vctBasePoint.push_back(m_currentPosition);
 				m_currentPosition.X = atof(VctPoint[n - 3].data());
 				m_currentPosition.Y = -atof(VctPoint[n - 2].data());
@@ -591,7 +591,7 @@ namespace fmesh
 				vctBasePoint.push_back(m_currentPosition);
 				for (int tm = 1; tm <= 50; tm++)
 				{
-					ClipperLib::DoublePoint FT_Temp;
+					ClipperLibXYZ::DoublePoint FT_Temp;
 					float t = tm / 50.0;
 					FT_Temp.X = vctBasePoint[0].X * pow(1 - t, 2) + 2 * t * (1 - t) * vctBasePoint[1].X + pow(t, 2) * vctBasePoint[2].X;
 					FT_Temp.Y = vctBasePoint[0].Y * pow(1 - t, 2) + 2 * t * (1 - t) * vctBasePoint[1].Y + pow(t, 2) * vctBasePoint[2].Y;
@@ -603,8 +603,8 @@ namespace fmesh
 			}
 			else
 			{
-				ClipperLib::DoublePoint bezierStart = m_currentPosition;
-				std::vector<ClipperLib::DoublePoint> vctBasePoint;
+				ClipperLibXYZ::DoublePoint bezierStart = m_currentPosition;
+				std::vector<ClipperLibXYZ::DoublePoint> vctBasePoint;
 				vctBasePoint.push_back(m_currentPosition);
 				m_currentPosition.X = bezierStart.X + atof(VctPoint[n - 3].data());
 				m_currentPosition.Y = bezierStart.Y - atof(VctPoint[n - 2].data());
@@ -614,7 +614,7 @@ namespace fmesh
 				vctBasePoint.push_back(m_currentPosition);
 				for (int tm = 1; tm <= 50; tm++)
 				{
-					ClipperLib::DoublePoint FT_Temp;
+					ClipperLibXYZ::DoublePoint FT_Temp;
 					float t = tm / 50.0;
 					FT_Temp.X = vctBasePoint[0].X * pow(1 - t, 2) + 2 * t * (1 - t) * vctBasePoint[1].X + pow(t, 2) * vctBasePoint[2].X;
 					FT_Temp.Y = vctBasePoint[0].Y * pow(1 - t, 2) + 2 * t * (1 - t) * vctBasePoint[1].Y + pow(t, 2) * vctBasePoint[2].Y;
@@ -647,8 +647,8 @@ namespace fmesh
 		{
 			if (m_isBigchars)
 			{
-				ClipperLib::DoublePoint bezierStart = m_currentPosition;
-				std::vector<ClipperLib::DoublePoint> vctBasePoint;
+				ClipperLibXYZ::DoublePoint bezierStart = m_currentPosition;
+				std::vector<ClipperLibXYZ::DoublePoint> vctBasePoint;
 				if (m_BezierPoint.first)
 				{
 					vctBasePoint.push_back(m_currentPosition);
@@ -667,7 +667,7 @@ namespace fmesh
 				}
 				for (int tm = 1; tm <= 50; tm++)
 				{
-					ClipperLib::DoublePoint FT_Temp;
+					ClipperLibXYZ::DoublePoint FT_Temp;
 					float t = tm / 50.0;
 					FT_Temp.X = vctBasePoint[0].X * pow(1 - t, 2) + 2 * t * (1 - t) * vctBasePoint[1].X + pow(t, 2) * vctBasePoint[2].X;
 					FT_Temp.Y = vctBasePoint[0].Y * pow(1 - t, 2) + 2 * t * (1 - t) * vctBasePoint[1].Y + pow(t, 2) * vctBasePoint[2].Y;
@@ -679,8 +679,8 @@ namespace fmesh
 			}
 			else
 			{
-				ClipperLib::DoublePoint bezierStart = m_currentPosition;
-				std::vector<ClipperLib::DoublePoint> vctBasePoint;
+				ClipperLibXYZ::DoublePoint bezierStart = m_currentPosition;
+				std::vector<ClipperLibXYZ::DoublePoint> vctBasePoint;
 				if (m_BezierPoint.first)
 				{
 					vctBasePoint.push_back(m_currentPosition);
@@ -699,7 +699,7 @@ namespace fmesh
 				}
 				for (int tm = 1; tm <= 50; tm++)
 				{
-					ClipperLib::DoublePoint FT_Temp;
+					ClipperLibXYZ::DoublePoint FT_Temp;
 					float t = tm / 50.0;
 					FT_Temp.X = vctBasePoint[0].X * pow(1 - t, 2) + 2 * t * (1 - t) * vctBasePoint[1].X + pow(t, 2) * vctBasePoint[2].X;
 					FT_Temp.Y = vctBasePoint[0].Y * pow(1 - t, 2) + 2 * t * (1 - t) * vctBasePoint[1].Y + pow(t, 2) * vctBasePoint[2].Y;
@@ -732,8 +732,8 @@ namespace fmesh
 		{
 			if (m_isBigchars)
 			{
-				ClipperLib::DoublePoint bezierStart = m_currentPosition;
-				std::vector<ClipperLib::DoublePoint> vctBasePoint;
+				ClipperLibXYZ::DoublePoint bezierStart = m_currentPosition;
+				std::vector<ClipperLibXYZ::DoublePoint> vctBasePoint;
 				if (m_BezierPoint.first)
 				{
 					vctBasePoint.push_back(m_currentPosition);
@@ -759,7 +759,7 @@ namespace fmesh
 				}
 				for (int tm = 1; tm <= 50; tm++)
 				{
-					ClipperLib::DoublePoint FT_Temp;
+					ClipperLibXYZ::DoublePoint FT_Temp;
 					float t = tm / 50.0;
 					FT_Temp.X = vctBasePoint[0].X * pow(1 - t, 3) + vctBasePoint[1].X * t * pow(1 - t, 2) * 3 + vctBasePoint[2].X * pow(t, 2) * (1 - t) * 3 + vctBasePoint[3].X * pow(t, 3);
 					FT_Temp.Y = vctBasePoint[0].Y * pow(1 - t, 3) + vctBasePoint[1].Y * t * pow(1 - t, 2) * 3 + vctBasePoint[2].Y * pow(t, 2) * (1 - t) * 3 + vctBasePoint[3].Y * pow(t, 3);
@@ -771,8 +771,8 @@ namespace fmesh
 			}
 			else
 			{
-				ClipperLib::DoublePoint bezierStart = m_currentPosition;
-				std::vector<ClipperLib::DoublePoint> vctBasePoint;
+				ClipperLibXYZ::DoublePoint bezierStart = m_currentPosition;
+				std::vector<ClipperLibXYZ::DoublePoint> vctBasePoint;
 				if (m_BezierPoint.first)
 				{
 					vctBasePoint.push_back(m_currentPosition);
@@ -798,7 +798,7 @@ namespace fmesh
 				}
 				for (int tm = 1; tm <= 50; tm++)
 				{
-					ClipperLib::DoublePoint FT_Temp;
+					ClipperLibXYZ::DoublePoint FT_Temp;
 					float t = tm / 50.0;
 					FT_Temp.X = vctBasePoint[0].X * pow(1 - t, 3) + vctBasePoint[1].X * t * pow(1 - t, 2) * 3 + vctBasePoint[2].X * pow(t, 2) * (1 - t) * 3 + vctBasePoint[3].X * pow(t, 3);
 					FT_Temp.Y = vctBasePoint[0].Y * pow(1 - t, 3) + vctBasePoint[1].Y * t * pow(1 - t, 2) * 3 + vctBasePoint[2].Y * pow(t, 2) * (1 - t) * 3 + vctBasePoint[3].Y * pow(t, 3);
@@ -816,7 +816,7 @@ namespace fmesh
 		savePenultPoint();
 	}
 
-	void MultiSVG::savePenultPoint(ClipperLib::DoublePoint penultPoint, ClipperLib::DoublePoint endPoint, bool isBezier)
+	void MultiSVG::savePenultPoint(ClipperLibXYZ::DoublePoint penultPoint, ClipperLibXYZ::DoublePoint endPoint, bool isBezier)
 	{
 		m_BezierPoint.first = isBezier;
 		m_BezierPoint.second.X = endPoint.X * 2 - penultPoint.X;
@@ -828,10 +828,10 @@ namespace fmesh
 		m_BezierPoint.first = isBezier;
 	}
 	
-	aabb MultiSVG::getAABB(ClipperLib::Path* path)
+	aabb MultiSVG::getAABB(ClipperLibXYZ::Path* path)
 	{
 		aabb _aabb;
-		for (const ClipperLib::IntPoint& p : *path)
+		for (const ClipperLibXYZ::IntPoint& p : *path)
 		{
 			if (_aabb.pMax.X < p.X)
 				_aabb.pMax.X = p.X;
@@ -850,18 +850,18 @@ namespace fmesh
 
 	bool MultiSVG::intersectAABB(const aabb& a,const aabb& b)
 	{
-		ClipperLib::Path pathA;
-		pathA.push_back(ClipperLib::IntPoint(a.pMmin.X, a.pMmin.Y));
-		pathA.push_back(ClipperLib::IntPoint(a.pMmin.X, a.pMax.Y));
-		pathA.push_back(ClipperLib::IntPoint(a.pMax.X, a.pMmin.Y));
-		pathA.push_back(ClipperLib::IntPoint(a.pMax.X, a.pMax.Y));
-		ClipperLib::Path pathB;
-		pathB.push_back(ClipperLib::IntPoint(b.pMmin.X, b.pMmin.Y));
-		pathB.push_back(ClipperLib::IntPoint(b.pMmin.X, b.pMax.Y));
-		pathB.push_back(ClipperLib::IntPoint(b.pMax.X, b.pMmin.Y));
-		pathB.push_back(ClipperLib::IntPoint(b.pMax.X, b.pMax.Y));
+		ClipperLibXYZ::Path pathA;
+		pathA.push_back(ClipperLibXYZ::IntPoint(a.pMmin.X, a.pMmin.Y));
+		pathA.push_back(ClipperLibXYZ::IntPoint(a.pMmin.X, a.pMax.Y));
+		pathA.push_back(ClipperLibXYZ::IntPoint(a.pMax.X, a.pMmin.Y));
+		pathA.push_back(ClipperLibXYZ::IntPoint(a.pMax.X, a.pMax.Y));
+		ClipperLibXYZ::Path pathB;
+		pathB.push_back(ClipperLibXYZ::IntPoint(b.pMmin.X, b.pMmin.Y));
+		pathB.push_back(ClipperLibXYZ::IntPoint(b.pMmin.X, b.pMax.Y));
+		pathB.push_back(ClipperLibXYZ::IntPoint(b.pMax.X, b.pMmin.Y));
+		pathB.push_back(ClipperLibXYZ::IntPoint(b.pMax.X, b.pMax.Y));
 
-		for (const ClipperLib::IntPoint& point: pathA)
+		for (const ClipperLibXYZ::IntPoint& point: pathA)
 		{
 
 			if (point.X>= b.pMmin.X 
@@ -873,7 +873,7 @@ namespace fmesh
 			}
 		}
 
-		for (const ClipperLib::IntPoint& point : pathB)
+		for (const ClipperLibXYZ::IntPoint& point : pathB)
 		{
 			if (point.X >= a.pMmin.X
 				&& point.X <= a.pMax.X
