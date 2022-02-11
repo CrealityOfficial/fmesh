@@ -23,3 +23,7 @@ endif()
 if(INSTALL_FMESH)
 	INSTALL(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/fmesh DESTINATION include/ FILES_MATCHING PATTERN "*.h")
 endif()
+
+if(CC_INSTALL_FMESH)
+	__install_directory_specif(${CMAKE_CURRENT_SOURCE_DIR}/ fmesh)
+endif()
