@@ -1,7 +1,7 @@
 #ifndef FMESH_MULTISVG_1609985536284_H
 #define FMESH_MULTISVG_1609985536284_H
 #include "clipperxyz/clipper.hpp"
-//#include <limits>
+#include <limits>
 
 #define CLIPPERPOINT(x, y) ClipperLibXYZ::IntPoint((int)(1000.0f * x), (int)(1000.0f * y))
 namespace fmesh
