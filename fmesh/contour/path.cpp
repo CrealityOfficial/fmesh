@@ -1,5 +1,5 @@
 #include "path.h"
-
+#include<algorithm>
 namespace fmesh
 {
 	void pathBox(const ClipperLibXYZ::Path& path, ClipperLibXYZ::IntPoint& bmin, ClipperLibXYZ::IntPoint& bmax)
