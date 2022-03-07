@@ -5,7 +5,14 @@ __assert_target(librevenge)
 
 __files_group(${CMAKE_CURRENT_SOURCE_DIR}/fmesh/ SRCS)
 
-set(LIBS trimesh2 clipper mmesh cmesh freetype dxflib tinyxml librevenge OpenMP::OpenMP_CXX)
+
+set(LIBS trimesh2 clipper mmesh cmesh freetype dxflib tinyxml librevenge)
+
+if(TARGET  OpenMP::OpenMP_CXX)
+	message(STATUS "build fmesh use openmp")
+	list(APPEND LIBS OpenMP::OpenMP_CXX)
+endif()
+
 set(DEFS FMESH_DLL TIXML_USE_STL)
 
 __add_real_target(fmesh dll SOURCE ${SRCS}
