@@ -4,7 +4,7 @@
 #include "fmesh/clipper/circurlar.h"
 #include "specialpoly.h"
 #include <cmath>
-#include "cmesh/mesh/roof.h"
+#include "cmesh/poly/roof.h"
 
 namespace fmesh
 {
