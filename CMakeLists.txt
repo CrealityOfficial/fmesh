@@ -1,5 +1,5 @@
 __assert_target(tinyxml)
-__assert_target(freetype)
+#__assert_target(freetype)
 __assert_target(dxflib)
 __assert_target(librevenge)
 
