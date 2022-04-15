@@ -1,7 +1,7 @@
 __assert_target(tinyxml)
 #__assert_target(freetype)
-__assert_target(dxflib)
-__assert_target(librevenge)
+#__assert_target(dxflib)
+#__assert_target(librevenge)
 
 __files_group(${CMAKE_CURRENT_SOURCE_DIR}/fmesh/ SRCS)
 
