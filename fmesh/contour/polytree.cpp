@@ -3,7 +3,7 @@
 
 #include "fmesh/generate/polyfiller.h"
 #include "fmesh/generate/triangularization.h"
-#include "cmesh/mesh/roof.h"
+#include "cmesh/poly/roof.h"
 #include <algorithm>
 #include "skeleton2polytree.h"
 
