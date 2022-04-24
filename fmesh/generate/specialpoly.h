@@ -16,8 +16,8 @@ namespace fmesh
 		{}
 	}aabb;
 
-	void generateLines(ClipperLibXYZ::Paths& originPloy, ClipperLibXYZ::Paths& newPaths, const double& laceGap, const double& laceRadius, bool isskeleton = false);
-	void generateRounds(const ClipperLibXYZ::Paths& originPath, ClipperLibXYZ::Paths& newPloy, const double& laceGap, const double& laceRadius);
+	void FMESH_API generateLines(ClipperLibXYZ::Paths& originPloy, ClipperLibXYZ::Paths& newPaths, const double& laceGap, const double& laceRadius, bool isskeleton = false);
+	void FMESH_API generateRounds(const ClipperLibXYZ::Paths& originPath, ClipperLibXYZ::Paths& newPloy, const double& laceGap, const double& laceRadius);
 
 	bool isCollision(const ClipperLibXYZ::Paths& paths, const ClipperLibXYZ::IntPoint& point, const double& smallest_dist);
 
@@ -29,7 +29,7 @@ namespace fmesh
 	int pathCount(ClipperLibXYZ::Path* path, const ClipperLibXYZ::IntPoint& p);
 	bool deletePoint(ClipperLibXYZ::Path* path, int index);
 	int findNext(ClipperLibXYZ::Path* path, ClipperLibXYZ::IntPoint point);
-	void sortPath(ClipperLibXYZ::Path* path, ClipperLibXYZ::Paths* paths,bool getPerLine = false);
+	void FMESH_API sortPath(ClipperLibXYZ::Path* path, ClipperLibXYZ::Paths* paths,bool getPerLine = false);
 
 	float PointTOline(ClipperLibXYZ::IntPoint const& a, ClipperLibXYZ::IntPoint const& b, ClipperLibXYZ::IntPoint const& p);
 	float getMinLen(const ClipperLibXYZ::Paths& paths, const ClipperLibXYZ::IntPoint point);
