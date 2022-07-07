@@ -35,7 +35,16 @@ svg::svg()
 	m_BezierPoint.second = ClipperLibXYZ::DoublePoint(0, 0);
 	m_scaleX = 1.0;
 	m_scaleY = 1.0;
-	m_currentMatrix3x3[3][3] = { 0 };
+
+	m_currentMatrix3x3[0][0] = 1;
+	m_currentMatrix3x3[0][1] = 0;
+	m_currentMatrix3x3[0][2] = 0;
+	m_currentMatrix3x3[1][0] = 0;
+	m_currentMatrix3x3[1][1] = 1;
+	m_currentMatrix3x3[1][2] = 0;
+	m_currentMatrix3x3[2][0] = 0;
+	m_currentMatrix3x3[2][1] = 0;
+	m_currentMatrix3x3[2][2] = 1;
 }
 
 svg::~svg()
