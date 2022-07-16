@@ -62,6 +62,7 @@ public:
     std::vector<cdrdxf::DXFSpline*> splines();
 
     void printAttributes();
+    void subBlockDeal();
 	//Block תpaths
     void myblock2Paths(ClipperLibXYZ::Paths* paths);
 

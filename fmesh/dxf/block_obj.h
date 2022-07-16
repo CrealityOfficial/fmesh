@@ -93,6 +93,7 @@ public:
 	vector<DXFPolyLineEntities> polylineentities;
 	vector<DXFArc> arc;
 	std::vector<cdrdxf::DXFSpline> splines;
+	std::vector<BlockObj> subBlock;
 	bool drawflag;
 };
 

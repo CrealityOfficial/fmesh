@@ -171,13 +171,15 @@ void Test_CreationClass::addInsert(const DL_InsertData & data)
 	{
 		if (!itor->name.compare(data.name))//插入块名称比较，相同则表示插入该块
 		{
-			itor->ipx = data.ipx;
-			itor->ipy = data.ipy;
-			itor->ipz = data.ipz;
-			itor->sx = data.sx;
-			itor->sy = data.sy;
-			itor->sz = data.sz;
-			itor->drawflag = true;//只有被插入的对象才进行绘制
+			BlockObj subBlock;
+			subBlock.name = data.name;
+			subBlock.ipx = itor->ipx + data.ipx;
+			subBlock.ipy = itor->ipy + data.ipy;
+			subBlock.ipz = itor->ipz + data.ipz;
+			subBlock.sx = itor->sx * data.sx;
+			subBlock.sy = itor->sy * data.sy;
+			subBlock.sz = itor->sz * data.sz;
+			myblock.back().subBlock.push_back(subBlock);
 			break;
 		}
 		itor++;
@@ -267,21 +269,111 @@ void Test_CreationClass::printAttributes()
     printf(" Type: %s\n", attributes.getLinetype().c_str());
 }
 
+void Test_CreationClass::subBlockDeal()
+{
+	for (BlockObj& block : myblock)
+	{
+		for (BlockObj subBlock : block.subBlock)
+		{
+			vector<BlockObj> ::iterator itor;
+			itor = myblock.begin();
+			while (itor != myblock.end())
+			{
+				if (!itor->name.compare(subBlock.name))
+				{
+					for (DXFLine line : itor->line)
+					{
+						line.beginpoint = ClipperLibXYZ::IntPoint(line.beginpoint.X + subBlock.ipx * subBlock.sx,
+							line.beginpoint.Y + subBlock.ipy * subBlock.sy,
+							line.beginpoint.Z + subBlock.ipz * subBlock.sz);
+						line.endpoint = ClipperLibXYZ::IntPoint(line.endpoint.X + subBlock.ipx * subBlock.sx,
+							line.endpoint.Y + subBlock.ipy * subBlock.sy,
+							line.endpoint.Z + subBlock.ipz * subBlock.sz);
+						block.line.push_back(line);
+					}
+
+					for (DXFCircle circle : itor->circle)
+					{
+						circle.centerpoint = ClipperLibXYZ::IntPoint(circle.centerpoint.X + subBlock.ipx * subBlock.sx,
+							circle.centerpoint.Y + subBlock.ipy * subBlock.sy,
+							circle.centerpoint.Z + subBlock.ipz * subBlock.sz);
+						block.circle.push_back(circle);
+					}
+
+					for (DXFEllipse ellipse : itor->ellipse)
+					{
+						ellipse.cx += subBlock.ipx * subBlock.sx;
+						ellipse.cy += subBlock.ipy * subBlock.sy;
+						ellipse.cz += subBlock.ipz * subBlock.sz;
+						ellipse.mx += subBlock.ipx * subBlock.sx;
+						ellipse.my += subBlock.ipy * subBlock.sy;
+						ellipse.mz += subBlock.ipz * subBlock.sz;
+						block.ellipse.push_back(ellipse);
+					}
+
+					for (DXFArc arc : itor->arc)
+					{
+						arc.centerpoint = ClipperLibXYZ::IntPoint(arc.centerpoint.X + subBlock.ipx * subBlock.sx,
+							arc.centerpoint.Y + subBlock.ipy * subBlock.sy,
+							arc.centerpoint.Z + subBlock.ipz * subBlock.sz);
+						block.arc.push_back(arc);
+					}
+
+					for (DXFPolyLineEntities PolyLineEntities : itor->polylineentities)
+					{
+						for (ClipperLibXYZ::IntPoint& pt: PolyLineEntities.vertex)
+							pt = ClipperLibXYZ::IntPoint(pt.X + subBlock.ipx * subBlock.sx,
+								pt.Y + subBlock.ipy * subBlock.sy,
+								pt.Z + subBlock.ipz * subBlock.sz);
+						block.polylineentities.push_back(PolyLineEntities);
+					}
+
+					for (cdrdxf::DXFSpline DXFSpine : itor->splines)
+					{
+						for (cdrdxf::Point& pt : DXFSpine.controlPoints)
+						{
+							pt.x += subBlock.ipx;
+							pt.y += subBlock.ipy;
+							pt.z += subBlock.ipz;
+						}
+						block.splines.push_back(DXFSpine);
+					}
+
+					break;
+				}
+				itor++;
+			}
+		}
+	}
+}
+
 void Test_CreationClass::myblock2Paths(ClipperLibXYZ::Paths* paths)
 {
+	subBlockDeal();
+
 	for (BlockObj block : myblock)
 	{
+		if (!block.drawflag) continue;
 		//如果line 是闭合的则添加，否则不添加
 		if (block.line.size() /*&& block.line[0].beginpoint == block.line[block.line.size() - 1].endpoint*/)
 		{
 			ClipperLibXYZ::Path linePath;
 			for (DXFLine line : block.line)
-			{
-				linePath.push_back(line.beginpoint);
-				linePath.push_back(line.endpoint);
-
+			{	
+				if (!linePath.empty() && line.beginpoint != linePath.back())
+				{
+					paths->push_back(linePath);
+					linePath.clear();
+				}
+				if(linePath.empty())
+					linePath.push_back(ClipperLibXYZ::IntPoint(line.beginpoint.X + block.ipx* block.sx,
+						line.beginpoint.Y + block.ipy * block.sy,
+						line.beginpoint.Z + block.ipz * block.sz));
+				linePath.push_back(ClipperLibXYZ::IntPoint(line.endpoint.X + block.ipx * block.sx,
+					line.endpoint.Y + block.ipy * block.sy,
+					line.endpoint.Z + block.ipz * block.sz));
 			}
-			paths->push_back(linePath); 
+			paths->push_back(linePath);
 		}
 
 		for (DXFCircle circle : block.circle)
