@@ -16,7 +16,6 @@ __assert_target(trimesh2)
 __assert_target(clipper)
 __assert_target(mmesh)
 __assert_target(cmesh)
-__assert_target(rapidjson)
 
 __files_group(${CMAKE_CURRENT_SOURCE_DIR}/fmesh/ SRCS)
 
