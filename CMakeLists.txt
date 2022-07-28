@@ -1,7 +1,20 @@
+__cc_find(Tinyxml)
+__cc_find(Freetype)
+__cc_find(Dxflib)
+__cc_find(Librevenge)
+__cc_find(Trimesh2)
+__cc_find(Clipper)
+__cc_find(MMesh)
+__cc_find(CMesh)
+
 __assert_target(tinyxml)
 __assert_target(freetype)
 __assert_target(dxflib)
 __assert_target(librevenge)
+__assert_target(trimesh2)
+__assert_target(clipper)
+__assert_target(mmesh)
+__assert_target(cmesh)
 
 __files_group(${CMAKE_CURRENT_SOURCE_DIR}/fmesh/ SRCS)
 
