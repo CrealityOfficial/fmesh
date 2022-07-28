@@ -6,6 +6,7 @@ __cc_find(Trimesh2)
 __cc_find(Clipper)
 __cc_find(MMesh)
 __cc_find(CMesh)
+__cc_find(Rapidjson)
 
 __assert_target(tinyxml)
 __assert_target(freetype)
@@ -15,8 +16,13 @@ __assert_target(trimesh2)
 __assert_target(clipper)
 __assert_target(mmesh)
 __assert_target(cmesh)
+__assert_target(rapidjson)
 
 __files_group(${CMAKE_CURRENT_SOURCE_DIR}/fmesh/ SRCS)
+
+if(NOT RAPIDJSON_INCLUDE_DIRS)
+	message(FATAL_ERROR "Please Specified RAPIDJSON_INCLUDE_DIRS")
+endif()
 
 
 set(LIBS trimesh2 clipper mmesh cmesh freetype dxflib tinyxml librevenge)
