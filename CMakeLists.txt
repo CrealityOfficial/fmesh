@@ -22,14 +22,6 @@ __files_group(${CMAKE_CURRENT_SOURCE_DIR}/fmesh/ SRCS)
 if(NOT RAPIDJSON_INCLUDE_DIRS)
 	message(FATAL_ERROR "Please Specified RAPIDJSON_INCLUDE_DIRS")
 endif()
-if(NOT FREETYPE_INCLUDE_DIRS)
-	message(FATAL_ERROR "Please Specified FREETYPE_INCLUDE_DIRS")
-endif()
-if(NOT LIBREVENGE_INCLUDE_DIRS)
-	message(FATAL_ERROR "Please Specified LIBREVENGE_INCLUDE_DIRS")
-endif()
-
-
 
 set(LIBS trimesh2 clipper mmesh cmesh freetype dxflib tinyxml librevenge)
 
@@ -41,7 +33,7 @@ endif()
 set(DEFS FMESH_DLL TIXML_USE_STL)
 
 __add_real_target(fmesh dll SOURCE ${SRCS}
-							INC ${INCS} ${RAPIDJSON_INCLUDE_DIRS} ${FREETYPE_INCLUDE_DIRS} ${LIBREVENGE_INCLUDE_DIRS}
+							INC ${INCS} ${RAPIDJSON_INCLUDE_DIRS}
 							LIB ${LIBS}
 							DEF ${DEFS}
 							INC ${CMAKE_CURRENT_SOURCE_DIR}
